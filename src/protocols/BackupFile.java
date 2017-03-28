@@ -7,13 +7,15 @@ import filefunc.*;
 public class BackupFile extends Ufile
 {
     private String fileId;
+    private int senderId;
     private ArrayList<Set<String>> replicas;
     private int desiredReplicationDeg;
 
 
-    public BackupFile(String fileName, int desiredReplicationDeg)
+    public BackupFile(String fileName, int senderId, int desiredReplicationDeg)
     {
         super(fileName);
+        this.senderId = senderId;
         fileId = sha256();
         replicas = new ArrayList<Set<String>>();
         this.desiredReplicationDeg = desiredReplicationDeg;
@@ -33,8 +35,8 @@ public class BackupFile extends Ufile
 
     public ArrayList<Set<String>> getReplicas() { return replicas;}
 
-    public String getAllAddress()
-    {
+    public String getAllAddress(){
+    	
         int i=0;
         LinkedHashSet<String> l;
         String s = "{ ";
@@ -68,13 +70,13 @@ public class BackupFile extends Ufile
         return true;
     }
 
-    public void incrSTORED(int index, String address)
-    {
+    public void incrSTORED(int index, String address){
+    	
         replicas.get(index).add(address);
     }
 
-    public void decrSTORED(int index, String address)
-    {
+    public void decrSTORED(int index, String address){
+    	
         String temp;
 
         for (Iterator<String> it = replicas.get(index).iterator(); it.hasNext();)
@@ -89,8 +91,8 @@ public class BackupFile extends Ufile
     }
 
     @Override
-    public String toString()
-    {
+    public String toString(){
+    	
         return "BackupFile{" +
                 super.toString() +
                 "fileId='" + fileId + '\'' +
@@ -100,8 +102,8 @@ public class BackupFile extends Ufile
     }
 
     @Override
-    public String fileName()
-    {
+    public String fileName(){
+    	
         return  super.fileName() + " , " +
                 fileId + " , " +
                 desiredReplicationDeg + " , " +
@@ -152,4 +154,10 @@ public class BackupFile extends Ufile
 
         return null;
     }
+
+	public int getSenderId() {
+		return senderId;
+	}
+
+
 }

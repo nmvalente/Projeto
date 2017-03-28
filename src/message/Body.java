@@ -1,36 +1,31 @@
 package message;
 public class Body
 {
-	private String msg; // char
+	private String message;
 
-	public Body()
-	{
-		msg = "";
+	public Body(){
+		message = "";
 	}
 
-	public Body(String content)
-	{
-		msg = content;
+	public Body(String message){
+		this.message = message;
 	}
 
-	public Body(String[] content, int start, int end)
-	{
+	public Body(String[] message, int start, int end){
+
 		for (int i = start; i < end; i++)
-		{
-			msg += content;
-		}
+			this.message += message;
 	}
 
-	public String getMsg()
-	{
-		return msg;
+	public String getMessage(){
+		return this.message;
 	}
 
 	@Override
-	public String toString()
-	{
+	public String toString(){
+
 		return "Body{" +
-				"msg='" + msg + '\'' +
+				"message='" + this.message + '\'' +
 				'}';
 	}
 }

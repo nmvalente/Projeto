@@ -9,8 +9,10 @@ import java.io.File;
 
 public class Peer
 {
-    private String localhost;
-
+    private int WAITING_TIMES_PUTCHUNK = 5;
+    private static int Id = 1;
+	private String localhost;
+	private int peerId;
     public Inbox  inbox;
     public FileManager  files;
     public Chunks chunks;
@@ -23,15 +25,20 @@ public class Peer
         inbox  = new Inbox();
         files  = new FileManager();
         chunks = new Chunks();
+        peerId = Id;
+        Id++;
     }
 
     public String getLocalhost() { return localhost; }
 
+    public int getPeerId(){return this.peerId;}
+    
     public int backup(){
     	
         BackupFile b;
 
-        Scanner in = new Scanner(System.in);
+        @SuppressWarnings("resource")
+		Scanner in = new Scanner(System.in);
 
         int index=0,
             desiredReplicationDeg=0,
@@ -60,7 +67,7 @@ public class Peer
             // ficheiro não pode estar em backup
             if ( !(files.getFileList().get(index) instanceof BackupFile) )
             {
-                b = files.backup(index, desiredReplicationDeg);
+                b = files.backup(index, this.peerId, desiredReplicationDeg);
 
                 try {
 
@@ -78,8 +85,8 @@ public class Peer
                         msg = new String(b.file(i), "utf-8");
 
                         do
-                        {
-                            inbox.newRequest("PUTCHUNK","1.0",b.getFileId(),i,desiredReplicationDeg,msg);
+                        { 
+                            inbox.newRequest("PUTCHUNK","1.0", b.getSenderId() ,b.getFileId(),i,desiredReplicationDeg,msg);
 
                             //inbox.list(0);
 
@@ -99,7 +106,7 @@ public class Peer
                             count++;
                             nStored = b.getNSTORED(i);
 
-                        } while( count<5 && nStored<desiredReplicationDeg );
+                        } while( count<WAITING_TIMES_PUTCHUNK && nStored<desiredReplicationDeg );
                     }
             		System.out.println("\n**************************************************");
                     System.out.println(" File backup finished. " + ((b.isBackupReplicatedEnough()) ? "Successful" : "Incomplete") + ".\n");
@@ -130,7 +137,8 @@ public class Peer
     	
         BackupFile b;
 
-        Scanner in = new Scanner(System.in);
+        @SuppressWarnings("resource")
+		Scanner in = new Scanner(System.in);
 
         int     index=0,
                 i=0,
@@ -159,7 +167,7 @@ public class Peer
 
                 for (i=0; i < b.getNChunks(); i++)
                 {
-                    inbox.newRequest("GETCHUNK","1.0",b.getFileId(),i,1,"");
+                    inbox.newRequest("GETCHUNK","1.0", b.getSenderId(),b.getFileId(),i,1,"");
                 }
 
                 System.out.println(" Receiving chunk restore information");
@@ -190,7 +198,7 @@ public class Peer
                 if ( restoreFile.isComplete() )
                 {
                     restoreFile.merge();
-                    restoreFile.removeDirectory( new File(b.getFileId()) );
+                    Ufile.removeDirectory( new File(b.getFileId()) );
                     restoreFile = null;
                 }
 
@@ -204,7 +212,7 @@ public class Peer
         {
             System.out.println(" Invalid file index.");
         }
-        
+
         return 0;
     }
 
@@ -212,7 +220,8 @@ public class Peer
     	
         BackupFile b;
 
-        Scanner in = new Scanner(System.in);
+        @SuppressWarnings("resource")
+		Scanner in = new Scanner(System.in);
 
         int index=0,
                 i=0,
@@ -236,7 +245,7 @@ public class Peer
             {
                 b = (BackupFile) files.getFileList().get(index);
 
-                inbox.newRequest("DELETE", "1.0",  b.getFileId(), i, 0, "");
+                inbox.newRequest("DELETE", "1.0", b.getSenderId(),  b.getFileId(), i, 0, "");
 
                 // remover fisico
                 b.removeFile(b.getFileName());
@@ -255,7 +264,13 @@ public class Peer
         {
             System.out.println("Invalid file index.");
         }
+        
         return 0;
     }
+
+	public int reclaim() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
 }

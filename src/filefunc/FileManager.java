@@ -1,8 +1,8 @@
 package filefunc;
 import java.util.ArrayList;
 import java.util.Iterator;
-
 import protocols.BackupFile;
+import protocols.Peer;
 
 import java.io.File;
 
@@ -193,10 +193,10 @@ public class FileManager
 		}
 	}
 
-	public BackupFile backup(int fileIndex, int desiredReplicationDeg)
+	public BackupFile backup(int fileIndex, int senderID, int desiredReplicationDeg)
 	{
 		Ufile u  = fileList.get(fileIndex);
-		BackupFile b = new BackupFile(u.getFileName(), desiredReplicationDeg);
+		BackupFile b = new BackupFile(u.getFileName(), senderID ,desiredReplicationDeg);
 
 		fileList.set(fileIndex, b);
 
@@ -204,18 +204,4 @@ public class FileManager
 
 		return b;
 	} 	
-	
-	public void menu(){
-		
-		System.out.println("\n**************************************************");
-		System.out.println(" \t   Distributed Backup Service");
-		System.out.println("**************************************************");
-		System.out.println("");
-		System.out.println("1 - Backup File");
-		System.out.println("2 - Restore File");
-		System.out.println("3 - Delete File\n");
-		System.out.println("0 - Quit\n");
-		System.out.printf("Option [0-3] > ");
-	}
-
 }

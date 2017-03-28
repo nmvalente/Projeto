@@ -52,27 +52,35 @@ public class Inbox
 
             unread.add(m);
 
-            return m.simple();
+            return m.getHeader().printHeader();
         }
         catch (IllegalArgumentException e)
         {
+        	System.out.println(address.substring(1));
+        	System.out.println(port);
+        	System.out.println(s);
+        	
+        	System.out.println("FIM \n\n\n\n\n\n");
+
+        	
+
             e.getMessage();
         }
 
         return "Error in newMessage";
     }
 
-    public String newRequest(String msgtype, String version, String fileId, int chunkNo, int repl, String msg)
+    public String newRequest(String msgtype, String version, int senderId, String fileId, int chunkNo, int replicationDeg, String msg)
     {
         Message m=null;
 
         try
         {
-            m = new Message(msgtype, version, fileId, chunkNo, repl, msg);
+            m = new Message(msgtype, version, senderId, fileId, chunkNo, replicationDeg, msg);
 
             unread.add(m);
 
-            return m.simple();
+            return m.getHeader().printHeader();
         }
         catch (IllegalArgumentException e)
         {
@@ -88,16 +96,16 @@ public class Inbox
         int i=0;
 
         System.out.println("\n List of Messages " + ((c==0)?"Unread":"Read"));
-        System.out.println("==========================================" );
+		System.out.println("\n**************************************************");
 
         for (Iterator<Message> it = ((c==0)?unread:read).iterator(); it.hasNext();)
         {
             temp = it.next();
             i++;
-            System.out.printf("%2d ~ %s\n", i, temp.simple());
+            System.out.printf("%2d ~ %s\n", i, temp.getHeader().printHeader());
         }
 
-        System.out.println("==========================================" );
+		System.out.println("\n**************************************************");
         System.out.printf( " Listed %d message%s.\n", i, ((i==1)?"":"s"));
     }
 

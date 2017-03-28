@@ -17,9 +17,9 @@ public class Chunk
 
     Chunk(Message m)
     {
-        this.fileId = m.head.getFileId();
-        this.chunkNo = m.head.getChunkNo();
-        this.replicationDeg = m.head.getReplicationDeg();
+        this.fileId = m.header.getFileId();
+        this.chunkNo = m.header.getChunkNo();
+        this.replicationDeg = m.header.getReplicationDeg();
     }
 
     public String getFileId()

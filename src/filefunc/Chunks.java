@@ -22,12 +22,12 @@ public class Chunks
     public void add(Message m)
     {
         String ip   = m.getAddress();
-        String name = ip + File.separator + m.head.getFileId() + ".part" + m.head.getChunkNo() ;
+        String name = ip + File.separator + m.header.getFileId() + ".part" + m.header.getChunkNo() ;
 
         try
         {
             addFolder( ip );
-            addChunk( name, m.body.getMsg() );
+            addChunk( name, m.body.getMessage() );
 
             Chunk c = new Chunk(m);
 

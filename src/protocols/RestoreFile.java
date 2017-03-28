@@ -71,13 +71,13 @@ public class RestoreFile extends Ufile
 
     public void add(Message m)
     {
-        int chunkNo = m.head.getChunkNo();
+        int chunkNo = m.header.getChunkNo();
         String name = fileId + File.separator +  fileId + ".part" + chunkNo ;
 
         try
         {
             addFolder( fileId );
-            addChunk( name, m.body.getMsg() );
+            addChunk( name, m.body.getMessage() );
 
             if( !chunkList[chunkNo] )
             {
