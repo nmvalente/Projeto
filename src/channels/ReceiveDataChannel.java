@@ -69,7 +69,7 @@ public class ReceiveDataChannel extends Thread{
 
 				if ( !dg.getAddress().toString().substring(1).equals(peer.getLocalhost()) )
 				{
-					msg = peer.inbox.newMessage(dg.getAddress().toString(), dg.getPort() , dgString );
+					msg = peer.inbox.addToUnseenMessages(dg.getAddress().toString(), dg.getPort() , dgString );
 
 					try
 					{

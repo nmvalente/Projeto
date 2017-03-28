@@ -67,11 +67,11 @@ public class SendDataChannel extends Thread{
 				try{Thread.sleep(10);}catch(InterruptedException e){}
 
 				// Message handler
-				while( peer.inbox.hasNewMessage() )
+				while( peer.inbox.hasUnseenMessages() )
 				{
 					try{Thread.sleep(10);}catch(InterruptedException e){}
 
-					m = peer.inbox.getNewMessage();
+					m = peer.inbox.getOneUnseenMessage();
 					peer.inbox.setAsRead();
 
 					request = null;
@@ -82,22 +82,22 @@ public class SendDataChannel extends Thread{
 						switch( m.header.getMessageType() )
 						{
 						case "PUTCHUNK":
-							request = m.build();
+							request = m.makeMessage();
 							group = MDB;
 							break;
 
 						case "GETCHUNK":
-							request = m.build();
+							request = m.makeMessage();
 							group = MC;
 							break;
 
 						case "DELETE":
-							request = m.build();
+							request = m.makeMessage();
 							group = MC;
 							break;
 
 						case "REMOVED":
-							request = m.build();
+							request = m.makeMessage();
 							group = MC;
 							break;
 						}
@@ -123,7 +123,7 @@ public class SendDataChannel extends Thread{
 						{
 						case "PUTCHUNK": // responde com STORED
 							peer.chunks.add( m );
-							reply = m.reply();
+							reply = m.makeAnswer();
 							group = MC;
 							break;
 
@@ -134,7 +134,7 @@ public class SendDataChannel extends Thread{
 								try {
 									String content;
 									content = new String(peer.chunks.file(m.getAddress(), c), "UTF-8");
-									reply = m.reply() + content;
+									reply = m.makeAnswer() + content;
 								} catch (IOException e) // nao existe o ficheiro chunk
 								{
 									// remove referencia do chunk
@@ -179,7 +179,7 @@ public class SendDataChannel extends Thread{
 
 							try
 							{
-								Main.windows.printlnSendChannel( getCurrentTime() + " -   REPLY SENT - " + m.reply() );
+								Main.windows.printlnSendChannel( getCurrentTime() + " -   REPLY SENT - " + m.makeAnswer() );
 							}
 							catch (ArithmeticException ex)
 							{

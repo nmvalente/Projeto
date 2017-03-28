@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 import filefunc.*;
-import message.Inbox;
+import message.MessageManager;
 
 import java.io.File;
 
@@ -13,7 +13,7 @@ public class Peer
     private static int Id = 1;
 	private String localhost;
 	private int peerId;
-    public Inbox  inbox;
+    public MessageManager  inbox;
     public FileManager  files;
     public Chunks chunks;
 
@@ -22,7 +22,7 @@ public class Peer
     public Peer(String localhost)
     {
         this.localhost = localhost;
-        inbox  = new Inbox();
+        inbox  = new MessageManager();
         files  = new FileManager();
         chunks = new Chunks();
         peerId = Id;
@@ -86,7 +86,7 @@ public class Peer
 
                         do
                         { 
-                            inbox.newRequest("PUTCHUNK","1.0", b.getSenderId() ,b.getFileId(),i,desiredReplicationDeg,msg);
+                            inbox.query("PUTCHUNK","1.0", b.getSenderId() ,b.getFileId(),i,desiredReplicationDeg,msg);
 
                             //inbox.list(0);
 
@@ -167,7 +167,7 @@ public class Peer
 
                 for (i=0; i < b.getNChunks(); i++)
                 {
-                    inbox.newRequest("GETCHUNK","1.0", b.getSenderId(),b.getFileId(),i,1,"");
+                    inbox.query("GETCHUNK","1.0", b.getSenderId(),b.getFileId(),i,1,"");
                 }
 
                 System.out.println(" Receiving chunk restore information");
@@ -245,7 +245,7 @@ public class Peer
             {
                 b = (BackupFile) files.getFileList().get(index);
 
-                inbox.newRequest("DELETE", "1.0", b.getSenderId(),  b.getFileId(), i, 0, "");
+                inbox.query("DELETE", "1.0", b.getSenderId(),  b.getFileId(), i, 0, "");
 
                 // remover fisico
                 b.removeFile(b.getFileName());
