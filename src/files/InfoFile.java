@@ -1,80 +1,50 @@
-package filefunc;
+package files;
 import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Ufile
+public class InfoFile
 {
-    private static final int PARTSIZE = 64000;
-
+    private static final int CHUNK_MAX_SIZE = 64000;
     private String fileName;
     private int fileSize;
     private int nChunks;
     private File file = null;
 
-    public Ufile(String fileName)
-    {
+    public InfoFile(String fileName){
         this.fileName = fileName;
-
         file = new File(fileName);
         fileSize = (int) file.length();
-        nChunks  = (int) Math.ceil(fileSize / Math.max(1.0, PARTSIZE *1.0));
+        nChunks  = (int) Math.ceil(fileSize / Math.max(1.0, CHUNK_MAX_SIZE * 1.0));
+        //nChunks  = (int) Math.ceil(fileSize/CHUNK_MAX_SIZE);
     }
 
-    public Ufile(Ufile u)
-    {
-        this.fileName = u.fileName;
-        fileSize = u.fileSize;
-        nChunks  = u.nChunks;
+    public InfoFile(InfoFile file){
+        this.fileName = file.getFileName();
+        this.fileSize = file.getFileSize();
+        this.nChunks  = file.getNChunks();
     }
 
-    public String getFileName()
-    {
-        return fileName;
-    }
+    public String getFileName(){return fileName;}
 
-    public int getPartSize()
-    {
-        return PARTSIZE;
-    }
+    public int getPartSize(){return CHUNK_MAX_SIZE;}
 
-    public int getFileSize()
-    {
-        return fileSize;
-    }
+    public int getFileSize(){return fileSize;}
 
-    public int getNChunks()
-    {
-        return nChunks;
-    }
+    public int getNChunks(){return nChunks;}
 
-    public File getFile() { return file; }
+    public File getFile() {return file;}
 
     @Override
     public String toString() {
-        return "Ufile{" +
+        return "InfoFile{" +
                 "fileName='" + fileName + '\'' +
                 ", fileSize=" + fileSize +
                 ", nChunks=" + nChunks +
                 ", file=" + file +
                 '}';
-    }
-
-    public String fileName() {
-        return  fileName;
-    }
-    
-    public int fileSize() {
-        return  fileSize;
-    }
-
-    public void info()
-    {
-        System.out.println("file     : " + fileName);
-        System.out.println("exists   ? " + file.exists());
-        System.out.println("readable ? " + file.canRead());
     }
 
     public void split()
@@ -86,7 +56,7 @@ public class Ufile
         int     i,
                 chunkNo = 0,
                 read = 0,
-                readLength = PARTSIZE,
+                readLength = CHUNK_MAX_SIZE,
                 currentFileSize = fileSize;
 
         byte[] byteChunkPart;
@@ -102,7 +72,7 @@ public class Ufile
 
             for (i = 0; currentFileSize > 0; i++, chunkNo++)
             {
-                readLength = Math.min(currentFileSize, PARTSIZE);
+                readLength = Math.min(currentFileSize, CHUNK_MAX_SIZE);
 
                 // System.out.println(" " + currentFileSize + " / " + readLength);
 
@@ -236,8 +206,8 @@ public class Ufile
         fos.write(content.getBytes() );
     }
 
-    // source from http://www.java2s.com/Tutorial/Java/0180__File/Removeadirectoryandallofitscontents.htm
-    public static boolean removeDirectory(File directory)
+    // removi static
+    public boolean removeDirectory(File directory)
     {
         // System.out.println("removeDirectory " + directory);
 
@@ -281,5 +251,17 @@ public class Ufile
         {
             f.delete();
         }
+    }
+    
+    public void printHeadList(String id){
+    	System.out.println("\n List of chunks");
+		System.out.println(" file   : " + getFileName());
+		System.out.println(" fileId : " + id);
+		System.out.println("\n**************************************************");
+    }
+    
+    public void printTailList(int i){
+    	System.out.println("\n**************************************************");
+		System.out.printf( " Listed %d chunk%s.\n\n", i, ((i==1)?"":"s"));
     }
 }

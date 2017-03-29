@@ -1,24 +1,23 @@
-package filefunc;
+package files;
 import java.util.ArrayList;
 import java.util.Iterator;
-import protocols.BackupFile;
 
 import java.io.File;
 
 public class FileManager
 {
-	private ArrayList<Ufile> fileList;
+	private ArrayList<InfoFile> fileList;
 
 	public FileManager()
 	{
-		fileList = new ArrayList<Ufile>();
+		fileList = new ArrayList<InfoFile>();
 	}
 
-	public ArrayList<Ufile> getFileList() { return fileList; }
+	public ArrayList<InfoFile> getFileList() { return fileList; }
 
 	public int getNumberOfFiles(){return fileList.size();}
 	
-	public void add(Ufile u)
+	public void add(InfoFile u)
 	{
 		fileList.add(u);
 	}
@@ -31,7 +30,7 @@ public class FileManager
 			return false;
 		}
 
-		Ufile u = new Ufile(pathfile);
+		InfoFile u = new InfoFile(pathfile);
 		add(u);
 
 		return true;
@@ -39,9 +38,9 @@ public class FileManager
 
 	public boolean remove(String fileName)
 	{
-		Ufile temp;
+		InfoFile temp;
 
-		for (Iterator<Ufile> it = fileList.iterator(); it.hasNext();)
+		for (Iterator<InfoFile> it = fileList.iterator(); it.hasNext();)
 		{
 			temp = it.next();
 
@@ -55,11 +54,11 @@ public class FileManager
 		return false;
 	}
 
-	public Ufile find(String fileName)
+	public InfoFile find(String fileName)
 	{
-		Ufile temp;
+		InfoFile temp;
 
-		for (Iterator<Ufile> it = fileList.iterator(); it.hasNext();)
+		for (Iterator<InfoFile> it = fileList.iterator(); it.hasNext();)
 		{
 			temp = it.next();
 
@@ -90,32 +89,17 @@ public class FileManager
 		return String.format("%-" + length + "." + length + "s", text);
 	}
 
-	public int printAllFilesStored(int option){
+	public int printAllFilesStored(){
 
-		Ufile temp;
+		InfoFile temp;
 		int i=0;
 
 		System.out.println("\n**************************************************");
 		if(!fileList.isEmpty()){
 
-			System.out.printf("-> Files Stored to ");
+			System.out.printf("-> Files Stored : \n");
 
-			switch(option){
-			case 1:
-				System.out.printf("backup");
-				break;
-			case 2:
-				System.out.printf("restore");
-				break;
-			case 3:
-				System.out.printf("delete");
-				break;
-			}
-
-			System.out.println(" : \n" );
-
-
-			for (Iterator<Ufile> it = fileList.iterator(); it.hasNext(); i++){
+			for (Iterator<InfoFile> it = fileList.iterator(); it.hasNext(); i++){
 				temp = it.next();
 				if(i == 0)
 					System.out.println("Number  Name\t\t\t\tSize - bytes");
@@ -123,11 +107,11 @@ public class FileManager
 
 				System.out.printf("%d\t", i);
 
-				if(temp.fileName().length() > 22)
-					System.out.printf("%s...", temp.fileName().subSequence(0, 22));
-				else System.out.printf("%25s", rightpad(temp.fileName(), 25));
+				if(temp.getFileName().length() > 22)
+					System.out.printf("%s...", temp.getFileName().subSequence(0, 22));
+				else System.out.printf("%25s", rightpad(temp.getFileName(), 25));
 
-				System.out.printf("\t%d", temp.fileSize());  
+				System.out.printf("\t%d", temp.getFileSize());  
 
 				if(temp instanceof BackupFile)
 					System.out.printf("[backup]");
@@ -151,10 +135,10 @@ public class FileManager
 
 	public void addSTORED(String address, String fileId, int chunkNo)
 	{
-		Ufile temp;
+		InfoFile temp;
 		BackupFile b;
 
-		for (Iterator<Ufile> it = fileList.iterator(); it.hasNext();)
+		for (Iterator<InfoFile> it = fileList.iterator(); it.hasNext();)
 		{
 			temp = it.next();
 
@@ -174,10 +158,10 @@ public class FileManager
 
 	public void removeSTORED(String address, String fileId, int chunkNo)
 	{
-		Ufile temp;
+		InfoFile temp;
 		BackupFile b;
 
-		for (Iterator<Ufile> it = fileList.iterator(); it.hasNext();)
+		for (Iterator<InfoFile> it = fileList.iterator(); it.hasNext();)
 		{
 			temp = it.next();
 
@@ -196,7 +180,7 @@ public class FileManager
 
 	public BackupFile backup(int fileIndex, int senderID, int desiredReplicationDeg)
 	{
-		Ufile u  = fileList.get(fileIndex);
+		InfoFile u  = fileList.get(fileIndex);
 		BackupFile b = new BackupFile(u.getFileName(), senderID ,desiredReplicationDeg);
 
 		fileList.set(fileIndex, b);

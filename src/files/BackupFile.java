@@ -1,10 +1,8 @@
-package protocols;
+package files;
 import java.io.*;
 import java.util.*;
 
-import filefunc.*;
-
-public class BackupFile extends Ufile
+public class BackupFile extends InfoFile
 {
 	private String fileId;
 	private int senderId;
@@ -82,34 +80,25 @@ public class BackupFile extends Ufile
 	}
 
 	@Override
-	public String fileName(){
+	public String getFileName(){
 
-		return  super.fileName() + " , " +
+		return  super.getFileName() + " , " +
 				fileId + " , " +
 				desiredReplicationDeg + " , " +
 				getAllAddress();
 	}
 
-	public void list()
-	{
-		int i=0, lastpart;
-
-		System.out.println("\n List of STORED backup chunks" );
-		System.out.println(" file   : " + getFileName() );
-		System.out.println(" fileId : " + getFileId() );
-		System.out.println("\n**************************************************");
-
-		for (; i<getNChunks()-1; i++)
-		{
-			//System.out.println( temp.simple() );
+	public void displayBackupChunks(){
+		int i=0;
+		printHeadList(getFileId());
+		
+		for (; i<getNChunks()-1; i++){
 			System.out.printf("%2d ~ %d/%d , %s bytes\n", i, listChunks.get(i).size(), desiredReplicationDeg, getPartSize());
 		}
-
-		lastpart = getFileSize() - ((getNChunks()-1) * getPartSize());
+		int lastpart = getFileSize() - ((getNChunks()-1) * getPartSize());
 		System.out.printf("%2d ~ %d/%d , %s bytes\n", i, listChunks.get(i).size(), desiredReplicationDeg, lastpart);
 
-		System.out.println("\n**************************************************");
-		System.out.printf( " Listed %d chunk%s.\n\n", i, ((i==1)?"":"s"));
+		printTailList(i);
 	}
 
 	public byte[] file(int chunkNo) throws IOException{

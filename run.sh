@@ -29,7 +29,7 @@ mkdir -p $BIN
 echo 
 echo "*********************Compiling********************"
 echo 
-javac -d $BIN src/channels/*.java src/filefunc/*.java src/interfaces/*.java src/message/*.java src/protocols/*.java
+javac -d $BIN src/channels/*.java src/files/*.java src/interfaces/*.java src/message/*.java src/protocols/*.java src/utils/*.java
 echo " > Start Running..."
 cd storage
 java -cp ../$BIN interfaces.Main $MC_ADDRESS $MC_PORT $MCB_ADDRESS $MCB_PORT $MCR_ADDRESS $MCR_PORT

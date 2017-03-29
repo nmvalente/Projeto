@@ -1,21 +1,21 @@
-package filefunc;
+package files;
 
 import message.Message;
 
-public class Chunk
+public class ChunkFile
 {
     private String fileId;
     private int chunkNo;
     private int replicationDeg;
 
-    Chunk(String fileId, int chunkNo, int replicationDeg)
+    ChunkFile(String fileId, int chunkNo, int replicationDeg)
     {
         this.fileId = fileId;
         this.chunkNo = chunkNo;
         this.replicationDeg = replicationDeg;
     }
 
-    Chunk(Message m)
+    ChunkFile(Message m)
     {
         this.fileId = m.header.getFileId();
         this.chunkNo = m.header.getChunkNo();

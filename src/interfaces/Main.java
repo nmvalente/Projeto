@@ -6,8 +6,8 @@ import java.net.MulticastSocket;
 import java.net.UnknownHostException;
 import javax.swing.SwingUtilities;
 
-import filefunc.*;
 import protocols.Peer;
+import utils.Utils;
 
 public class Main
 {

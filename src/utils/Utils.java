@@ -1,4 +1,4 @@
-package filefunc;
+package utils;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -13,9 +13,7 @@ import protocols.Peer;
 
 public class Utils {
 
-	public Utils() {
-		// TODO Auto-generated constructor stub
-	}
+	
 
 	public void displayMenu(){
 
@@ -104,12 +102,12 @@ public class Utils {
 			switch (option)
 			{
 			case 1 :
-				if(peer.manageBackup() == -1)
+				if(peer.genericSubProtocol(1) == -1)
 					Main.exitNow = true;
 				break;
-
+ 
 			case 2 :
-				if(peer.restore() == -1)
+				if(peer.genericSubProtocol(2) == -1)
 					Main.exitNow = true;
 				break;
 
@@ -119,7 +117,7 @@ public class Utils {
 				break;
 
 			case 4 :
-				if(peer.delete() == -1)
+				if(peer.genericSubProtocol(4) == -1)
 					Main.exitNow = true;
 				break;
 

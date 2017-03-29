@@ -24,7 +24,7 @@ public class MessageManager{
 		return null;
 	}
 
-	public void setAsRead(){
+	public void setSeen(){
 
 		if (unseenMessages.size() > 0){
 
@@ -41,7 +41,6 @@ public class MessageManager{
 		Message message = null;
 
 		try	{
-
 			message = new Message(address.substring(1),port,s);
 
 			unseenMessages.add(message);
@@ -69,24 +68,6 @@ public class MessageManager{
 			e.getMessage();
 		}
 
-		return "Error in newRequest";
+		return "Error in message query";
 	}
-
-	/*public void list(int c){
-		
-		Message aux;
-		int i = 0;
-
-		System.out.println("\n List of Messages " + ((c==0)?"Unseen":"Seen"));
-		System.out.println("\n**************************************************");
-
-		for (Iterator<Message> it = ((c==0)?unseenMessages:seenMessages).iterator(); it.hasNext();){
-			aux = it.next();
-			i++;
-			System.out.printf("%2d ~ %s\n", i, aux.getHeader().printHeader());
-		}
-
-		System.out.println("\n**************************************************");
-		System.out.printf( " Listed %d message%s.\n", i, ((i==1)?"":"s"));
-	}*/
 }

@@ -1,6 +1,5 @@
 package channels;
 
-import filefunc.*;
 import interfaces.*;
 import message.Message;
 import protocols.Peer;
@@ -10,7 +9,9 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.util.Date;
-import java.util.Random; 
+import java.util.Random;
+
+import files.*; 
 
 public class SendDataChannel extends Thread{
 
@@ -54,7 +55,7 @@ public class SendDataChannel extends Thread{
 		try{
 			DatagramPacket dg;
 			Message unseenMessage;
-			Ufile u;
+			//InfoFile u;
 			String reply,request;
 			int group = MC, r = 0;
 			Random random = new Random();
@@ -67,7 +68,7 @@ public class SendDataChannel extends Thread{
 					try{Thread.sleep(10);}catch(InterruptedException e){}
 
 					unseenMessage = peer.inbox.getOneUnseenMessage();
-					peer.inbox.setAsRead();
+					peer.inbox.setSeen();
 
 					request = null;
 					reply = null;
@@ -116,7 +117,7 @@ public class SendDataChannel extends Thread{
 							break;
 
 						case "GETCHUNK": // responde com CHUNK
-							Chunk c  = peer.chunks.find( unseenMessage.getAddress() , unseenMessage.header.getFileId() , unseenMessage.header.getChunkNo() );
+							ChunkFile c  = peer.chunks.find( unseenMessage.getAddress() , unseenMessage.header.getFileId() , unseenMessage.header.getChunkNo() );
 							if (c!=null){
 								try {
 									String content;
