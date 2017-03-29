@@ -12,7 +12,7 @@ import protocols.Peer;
 public class Main
 {
 	public static boolean exitNow = false;
-	public static OutputWindow windows;
+	public static GUI windows;
 
 	public static void main(String[] args) throws UnknownHostException{
 
@@ -41,7 +41,7 @@ public class Main
 
 		
 		// Cria a janela grafica
-		windows = new OutputWindow();
+		windows = new GUI();
 		
 		
 		// Inicia os threads

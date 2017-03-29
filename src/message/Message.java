@@ -145,7 +145,6 @@ public class Message
 		} catch(NumberFormatException e) { 
 			return false; 
 		}
-		// only got here if we didn't return false
 		return true;
 
 	}

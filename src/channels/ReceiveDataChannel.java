@@ -9,7 +9,7 @@ import java.util.Date;
 
 public class ReceiveDataChannel extends Thread{
 
-	public static final int MAXBUFFER = 1024;
+	public static final int BUFFER_SIZE = 1024;
 
 	String name;
 	MulticastSocket socket;
@@ -30,8 +30,7 @@ public class ReceiveDataChannel extends Thread{
 
 	public void run(){
 
-		try
-		{
+		try{
 			if(name == "MC")
 				Main.windows.printlnReceiverMC(getCurrentTime() + " - Started receiver thread :: "+ name);
 			if(name == "MDB")
@@ -40,8 +39,7 @@ public class ReceiveDataChannel extends Thread{
 				Main.windows.printlnReceiverMDR(getCurrentTime() + " - Started receiver thread :: "+ name);
 
 		}
-		catch (ArithmeticException ex)
-		{
+		catch (ArithmeticException ex){
 			if(name == "MC")
 				Main.windows.printStackTraceReceiverMC(ex); 
 			if(name == "MDB")
@@ -50,36 +48,31 @@ public class ReceiveDataChannel extends Thread{
 				Main.windows.printStackTraceReceiverMDR(ex);
 		}
 
-		try
-		{
+		try{
 			byte[] buf;
 			DatagramPacket dg;
 			String dgString;
-			String msg;// char
+			String message;
 
-			do
-			{
+			do{
 				try{Thread.sleep(10);}catch(InterruptedException e){}
 
-				buf = new byte[ MAXBUFFER ];
+				buf = new byte[BUFFER_SIZE];
 
 				dg = new DatagramPacket( buf , buf.length );
 				socket.receive(dg);
 				dgString = new String( dg.getData() );
 
-				if ( !dg.getAddress().toString().substring(1).equals(peer.getLocalhost()) )
-				{
-					msg = peer.inbox.addToUnseenMessages(dg.getAddress().toString(), dg.getPort() , dgString );
+				if ( !dg.getAddress().toString().substring(1).equals(peer.getLocalhost()) ){
+					message = peer.inbox.addToUnseenMessages(dg.getAddress().toString(), dg.getPort() , dgString );
 
-					try
-					{
-
+					try{
 						if(name == "MC")
-							Main.windows.printlnReceiverMC(getCurrentTime() + " - RECEIVED - " + msg);
+							Main.windows.printlnReceiverMC(getCurrentTime() + " - RECEIVED - " + message);
 						if(name == "MDB")
-							Main.windows.printlnReceiverMDB(getCurrentTime() + " - RECEIVED - " + msg);
+							Main.windows.printlnReceiverMDB(getCurrentTime() + " - RECEIVED - " + message);
 						if(name == "MDR")
-							Main.windows.printlnReceiverMDR(getCurrentTime() + " - RECEIVED - " + msg);
+							Main.windows.printlnReceiverMDR(getCurrentTime() + " - RECEIVED - " + message);
 					}
 					catch (ArithmeticException ex)
 					{
@@ -92,19 +85,16 @@ public class ReceiveDataChannel extends Thread{
 					}
 				} 
 
-				try
-				{
+				try{
 					sleep(10);
 				}
-				catch(InterruptedException e)
-				{
+				catch(InterruptedException e){
 					e.getMessage();
 				}
 			} while(true);
 
 		}
-		catch(IOException n) 
-		{
+		catch(IOException n){
 			if(name == "MC")
 				Main.windows.printlnReceiverMC(getCurrentTime() + " - Connection terminated");
 			if(name == "MDB")

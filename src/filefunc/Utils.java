@@ -104,7 +104,7 @@ public class Utils {
 			switch (option)
 			{
 			case 1 :
-				if(peer.backup() == -1)
+				if(peer.manageBackup() == -1)
 					Main.exitNow = true;
 				break;
 

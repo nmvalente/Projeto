@@ -121,7 +121,7 @@ public class Header
 	}
 
 	private boolean isVersion(String vers){
-		return ( vers.equals("1.0") );
+		return (vers.equals("1.0"));
 	}
 
 	private boolean isReplicationDeg(int repl){

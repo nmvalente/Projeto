@@ -1,7 +1,6 @@
 package message;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class MessageManager{
 
@@ -73,7 +72,7 @@ public class MessageManager{
 		return "Error in newRequest";
 	}
 
-	public void list(int c){
+	/*public void list(int c){
 		
 		Message aux;
 		int i = 0;
@@ -89,5 +88,5 @@ public class MessageManager{
 
 		System.out.println("\n**************************************************");
 		System.out.printf( " Listed %d message%s.\n", i, ((i==1)?"":"s"));
-	}
+	}*/
 }

@@ -6,7 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.io.*;
 
-public class OutputWindow implements Runnable {
+public class GUI implements Runnable {
 
     private JFrame Windows;
     private JTextArea outputAreaSender;
@@ -18,7 +18,7 @@ public class OutputWindow implements Runnable {
     private JScrollPane scrollPaneReceiverMDB;
     private JScrollPane scrollPaneReceiverMDR;
 
-    public OutputWindow() {
+    public GUI() {
     	
         this.outputAreaSender = new JTextArea(12, 100);
         this.outputAreaSender.setEditable(false);

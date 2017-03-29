@@ -2,7 +2,6 @@ package filefunc;
 import java.util.ArrayList;
 import java.util.Iterator;
 import protocols.BackupFile;
-import protocols.Peer;
 
 import java.io.File;
 
@@ -17,6 +16,8 @@ public class FileManager
 
 	public ArrayList<Ufile> getFileList() { return fileList; }
 
+	public int getNumberOfFiles(){return fileList.size();}
+	
 	public void add(Ufile u)
 	{
 		fileList.add(u);
@@ -162,7 +163,7 @@ public class FileManager
 				if ( ((BackupFile) temp).getFileId().equals(fileId) )
 				{
 					b = (BackupFile) temp;
-					b.incrSTORED(chunkNo,address);
+					b.addAddressOfChunk(chunkNo,address);
 
 					return;
 				}
@@ -185,7 +186,7 @@ public class FileManager
 				if ( ((BackupFile) temp).getFileId().equals(fileId) )
 				{
 					b = (BackupFile) temp;
-					b.decrSTORED(chunkNo,address);
+					b.removeAddressOfChunk(chunkNo,address);
 
 					return;
 				}
