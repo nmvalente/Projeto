@@ -8,15 +8,18 @@ import java.io.File;
 
 public class Peer
 {
-	private int WAITING_TIMES_PUTCHUNK = 5;
+	private static final int WAITING_TIMES_PUTCHUNK = 5;
+	private static final String CHARSET_NAME = "utf-8";
 	private static int Id = 1;
 	private String localhost;
 	private int peerId;
 	public MessageManager  inbox;
 	public FileManager  files;
-	protected int numberOfFiles;
+	protected int indexToChose;
+	protected int indexChosed;
 	public Chunks chunks;
 	protected Scanner scanner = new Scanner(System.in);
+	private BackupFile backupFile;
 
 	public RestoreFile restoreFile = null;
 
@@ -27,22 +30,31 @@ public class Peer
 		chunks = new Chunks();
 		peerId = Id;
 		Id++;
-		this.numberOfFiles = files.getNumberOfFiles();
 	}
 
-	public String getLocalhost() { return localhost; }
+	public String getLocalhost() {return localhost;}
 
 	public int getPeerId(){return this.peerId;}
 
+	public void genericSubProtocol(int subProtocol){
+		switch(subProtocol){
+		case 1:
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		default:
+			break;
+		}
+	}
+
 	public int manageBackup(){
 
-		BackupFile backupFile;
-
-		int index,
-		desiredReplicationDeg=0,
-		i=0,
-		count=0,
-		nStored=0;
+		int desiredReplicationDeg=0,
+				i=0,
+				count=0,
+				nStored=0;
 
 		String msg = null;
 
@@ -50,18 +62,19 @@ public class Peer
 		if(files.printAllFilesStored(1) == -1)
 			return -1;
 
-		System.out.printf("\nOption [0-" + numberOfFiles +"] > ");        
+		this.indexToChose = this.files.getNumberOfFiles();
+		System.out.printf("\nOption [0-" + (this.indexToChose-1) +"] > ");        
 
-		index = scanner.nextInt();
+		indexChosed = scanner.nextInt();
 
 		// receber desiredReplicationDeg
 		System.out.printf("\nReplication Degree [1-9] > ");
 		desiredReplicationDeg = scanner.nextInt();
 
 		// validar index
-		if ( index >= 0 && index < numberOfFiles ){
-			if ( !(files.getFileList().get(index).getClass().isInstance(BackupFile.class))){
-				backupFile = files.backup(index, this.peerId, desiredReplicationDeg);
+		if ( indexChosed >= 0 && indexChosed < indexToChose ){
+			if ( !(files.getFileList().get(indexChosed).getClass().isInstance(BackupFile.class))){
+				backupFile = files.backup(indexChosed, this.peerId, desiredReplicationDeg);
 				try {
 					System.out.println(" Receiving chunk backup confirmation");
 
@@ -72,7 +85,7 @@ public class Peer
 						count=0;
 						nStored=0;
 
-						msg = new String(backupFile.file(i), "utf-8");
+						msg = new String(backupFile.file(i), CHARSET_NAME);
 
 						do{ 
 							inbox.query("PUTCHUNK","1.0", backupFile.getSenderId() ,backupFile.getFileId(),i,desiredReplicationDeg,msg);
@@ -108,20 +121,20 @@ public class Peer
 	}
 
 	public int restore(){
-		BackupFile backupFile;
-		int index=0, i=0, count=0;
+
+		int i=0, count=0;
 
 		// Lista de ficheiros
 		if(files.printAllFilesStored(2) == -1)
 			return -1;
 
-		System.out.printf("\nOption [0-" + (numberOfFiles-1) +"] > ");        
+		System.out.printf("\nOption [0-" + (indexToChose-1) +"] > ");        
 
-		index = scanner.nextInt();
+		indexChosed = scanner.nextInt();
 
-		if ( index>=0 && index<files.getFileList().size() ){
-			if ( (files.getFileList().get(index).getClass().isInstance(BackupFile.class))){
-				backupFile = (BackupFile) files.getFileList().get(index);
+		if ( indexChosed>=0 && indexChosed<files.getFileList().size() ){
+			if ( (files.getFileList().get(indexChosed).getClass().isInstance(BackupFile.class))){
+				backupFile = (BackupFile) files.getFileList().get(indexChosed);
 				restoreFile = new RestoreFile( (Ufile) backupFile );
 
 				for (i=0; i < backupFile.getNChunks(); i++){
@@ -162,25 +175,25 @@ public class Peer
 	}
 
 	public int delete(){
-		BackupFile backupFile;
-		int index=0, i=0;
+
+		int i=0;
 
 		if(files.printAllFilesStored(3) == -1)
 			return -1;
 
-		System.out.printf("\nOption [0-" + (numberOfFiles-1) +"] > ");        
-		index = scanner.nextInt();
+		System.out.printf("\nOption [0-" + (indexToChose-1) +"] > ");        
+		indexChosed = scanner.nextInt();
 
-		if ( index>=0 && index<files.getFileList().size() ){
-			if ((files.getFileList().get(index).getClass().isInstance(BackupFile.class))){
+		if ( indexChosed>=0 && indexChosed<files.getFileList().size() ){
+			if ((files.getFileList().get(indexChosed).getClass().isInstance(BackupFile.class))){
 
-				backupFile = (BackupFile) files.getFileList().get(index);
+				backupFile = (BackupFile) files.getFileList().get(indexChosed);
 
 				inbox.query("DELETE", "1.0", backupFile.getSenderId(),  backupFile.getFileId(), i, 0, "");
 
 
 				backupFile.removeFile(backupFile.getFileName());
-				files.getFileList().remove(index);
+				files.getFileList().remove(indexChosed);
 
 				System.out.println("File delete Successful.");
 			}
@@ -191,7 +204,6 @@ public class Peer
 	}
 
 	public int reclaim() {
-
 		return 0;
 	}
 }
