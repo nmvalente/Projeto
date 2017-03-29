@@ -17,7 +17,7 @@ public class InfoFile
         this.fileName = fileName;
         file = new File(fileName);
         fileSize = (int) file.length();
-        nChunks  = (int) Math.ceil(fileSize / Math.max(1.0, CHUNK_MAX_SIZE * 1.0));
+        nChunks  = (int) Math.ceil(fileSize / Math.max(1.0, CHUNK_MAX_SIZE));
         //nChunks  = (int) Math.ceil(fileSize/CHUNK_MAX_SIZE);
     }
 
