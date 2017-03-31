@@ -14,7 +14,7 @@ public class RestoreFile extends InfoFile
 	public RestoreFile(InfoFile u){
 		super(u);
 		chunkList = new boolean[super.getNChunks()];
-		fileId = sha256();
+		fileId = hashFileId();
 	}
 
 	public boolean[] getChunkList() {return chunkList;}
@@ -63,7 +63,7 @@ public class RestoreFile extends InfoFile
 		String name = fileId + File.separator +  fileId + ".part" + chunkNo ;
 
 		try{
-			addFolder(fileId);
+			makeDirectory(fileId);
 			addChunk(name, m.body.getMessage());
 
 			if(!chunkList[chunkNo]){

@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
-import java.io.*;
 
 public class GUI implements Runnable {
 
@@ -119,32 +118,4 @@ public class GUI implements Runnable {
     public void printlnReceiverMDR(String msg) {
         updateTextReceiverMR(msg + "\n");
     }
-    
-    public void printStackTraceSendChannel(Throwable t) {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        t.printStackTrace(pw);
-        this.printlnSendChannel(sw.toString());
-    }
-
-    public void printStackTraceReceiverMC(Throwable t) {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        t.printStackTrace(pw);
-        this.printlnReceiverMC(sw.toString());
-    }
-    
-    public void printStackTraceReceiverMDB(Throwable t) {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        t.printStackTrace(pw);
-        this.printlnReceiverMDB(sw.toString());
-    }
-    
-    public void printStackTraceReceiverMDR(Throwable t) {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        t.printStackTrace(pw);
-        this.printlnReceiverMDR(sw.toString());
-    } 
 }

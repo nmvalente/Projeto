@@ -8,29 +8,21 @@ public class ChunkFile
     private int chunkNo;
     private int replicationDeg;
 
-    ChunkFile(String fileId, int chunkNo, int replicationDeg)
-    {
+    ChunkFile(String fileId, int chunkNo, int replicationDeg){
         this.fileId = fileId;
         this.chunkNo = chunkNo;
         this.replicationDeg = replicationDeg;
     }
 
-    ChunkFile(Message m)
-    {
+    ChunkFile(Message m){
         this.fileId = m.header.getFileId();
         this.chunkNo = m.header.getChunkNo();
         this.replicationDeg = m.header.getReplicationDeg();
     }
 
-    public String getFileId()
-    {
-        return fileId;
-    }
+    public String getFileId(){return fileId;}
 
-    public int getChunkNo()
-    {
-        return chunkNo;
-    }
+    public int getChunkNo(){return chunkNo;}
 
     public int getReplicationDeg() { return replicationDeg; }
 
@@ -41,11 +33,5 @@ public class ChunkFile
                 ", chunkNo=" + chunkNo + '\'' +
                 ", replicationDeg=" + replicationDeg +
                 '}';
-    }
-
-    public String simple() {
-        return  fileId  + " , " +
-                chunkNo + " , " +
-                replicationDeg ;
     }
 }

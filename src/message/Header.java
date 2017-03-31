@@ -1,4 +1,5 @@
 package message;
+
 public class Header
 {
 	private String messageType;
@@ -12,20 +13,20 @@ public class Header
 	
 	// delete
 	public Header(String messageType, String version, int senderId, String fileId){
-		if (!(isMessageType(messageType) && isVersion(version)))
+		if (!(isMessageType(messageType)))
 			throw new IllegalArgumentException("Invalid Head Arguments");
 		this.messageType = messageType;
-		this.version = "1.0";
+		this.version = version;
 		this.senderId = senderId;
 		this.fileId = fileId;
 	}
 
-	// getchunk, remove, stored 			e chunk mas sem body
+	// getchunk, remove, stored e chunk mas sem body
 	public Header(String messageType, String version, int senderId, String fileId, int chunkNo){
-		if (!(isMessageType(messageType) && isVersion(version)))
+		if (!(isMessageType(messageType)))
 			throw new IllegalArgumentException("Invalid Head Arguments");
 		this.messageType = messageType;
-		this.version = "1.0";
+		this.version = version;
 		this.senderId = senderId;
 		this.fileId = fileId;
 		this.chunkNo = chunkNo;
@@ -33,98 +34,52 @@ public class Header
 
 	// putchunk
 	public Header(String messageType, String version, int senderId, String fileId, int chunkNo, int replicationDeg){
-		if (!(isMessageType(messageType) && isVersion(version) && isReplicationDeg(replicationDeg)))
+		if (!(isMessageType(messageType) && isReplicationDeg(replicationDeg)))
 			throw new IllegalArgumentException("Invalid Head Arguments");
 
 		this.messageType = messageType;
-		this.version = "1.0";
+		this.version = version;
 		this.senderId = senderId;
 		this.fileId = fileId;
 		this.chunkNo = chunkNo;
 		this.replicationDeg = replicationDeg;
 	}
 
-	public String getMessageType(){
-		return messageType;
-	}
+	public String getMessageType(){return messageType;}
 
-	public String getVersion(){
-		return version;
-	}
+	public String getVersion(){return version;}
 
-	public String getFileId(){
-		return fileId;
-	}
+	public String getFileId(){return fileId;}
 	
-	public int getSenderId(){
-		return senderId;
-	}
+	public int getSenderId(){return senderId;}
 
-	public int getChunkNo(){
-		return chunkNo;
-	}
+	public int getChunkNo(){return chunkNo;}
 
-	public int getReplicationDeg(){
-		return replicationDeg;
-	}
-
-	@Override
-	public String toString(){
-		return "Head{" +
-				"messageType='" + messageType + '\'' +
-				", replicationDeg=" + replicationDeg + '\'' +
-				", version='" + version + '\'' +
-				", senderId='" + senderId + '\'' +
-				", fileId='" + fileId + '\'' +
-				", chunkNo=" + chunkNo +
-				'}';
-	}
+	public int getReplicationDeg(){return replicationDeg;}
 
 	public String printHeader(){
-		switch (messageType){
+			
+		String build = this.messageType + " , " + version + " , " + senderId + " , " + fileId;
+		switch (this.messageType){
 			case "PUTCHUNK":
-				return 	messageType + " , " +
-						version + " , " +
-						senderId + " , " +
-						fileId + " , " +
-						chunkNo + " , " +
-						replicationDeg ;
-
+				return 	build + " , " + this.chunkNo + " , " + this.replicationDeg;
 			case "STORED":
 			case "GETCHUNK":
 			case "REMOVED":
 			case "CHUNK":
-				return 	messageType + " , " +
-						version + " , " +
-						senderId + " , " +
-						fileId + " , " +
-						chunkNo ;
-
+				return build + " , " + this.chunkNo;
 			case "DELETE":
-				return 	messageType + " , " +
-						version + " , " +
-						senderId + " , " +
-						fileId ;
-
+				return 	build;
 			default: return "Invalid message type.";
 		}
 	}
 
-	private boolean isMessageType(String msgtype){
-
-	    for (messageTypes enumTypes : messageTypes.values()) {
-	        if (enumTypes.name().equals(msgtype)) {
+	private boolean isMessageType(String messageType2){
+	    for (messageTypes enumTypes : messageTypes.values())
+	        if (enumTypes.name().equals(messageType2))
 	            return true;
-	        }
-	    }
 	    return false;
 	}
 
-	private boolean isVersion(String vers){
-		return (vers.equals("1.0"));
-	}
-
-	private boolean isReplicationDeg(int repl){
-		return (repl>=0 && repl<=9);
-	}
+	private boolean isReplicationDeg(int replicationDeg2){return (replicationDeg2>=0 && replicationDeg2<=9);}
 }

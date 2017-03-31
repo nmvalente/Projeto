@@ -8,7 +8,6 @@ public class Message
 	private String address = "";
 	private int port = 0;
 	private boolean request = false;
-
 	public Header header;
 	public Body body;
 
@@ -25,8 +24,7 @@ public class Message
 		if (tokens.length < 4)
 			throw new IllegalArgumentException("Invalid Message Size");
 
-		switch (tokens[0])
-		{
+		switch (tokens[0]){
 		case "PUTCHUNK":
 			header = new Header(
 					tokens[0],
@@ -39,7 +37,6 @@ public class Message
 
 			body = new Body(tokens,6,tokens.length);
 			break;
-
 		case "STORED":
 		case "GETCHUNK":
 		case "REMOVED":
@@ -52,7 +49,6 @@ public class Message
 					);
 			body = new Body();
 			break;
-
 		case "CHUNK":
 			header = new Header(
 					tokens[0],
@@ -63,33 +59,25 @@ public class Message
 					);
 			body = new Body(tokens,5,tokens.length);
 			break;
-
 		case "DELETE":
 			header = new Header(
 					tokens[0],
 					tokens[1],
 					Integer.parseInt(tokens[2]),				
 					tokens[3]
-
 					);
 			body = new Body();
 			break;
 		}
-
 	}
 
-	public Message(String msgtype, String version, int senderId, String fileId, int chunkNo, int repl, String msg)
-	{
-		try
-		{
+	public Message(String msgtype, String version, int senderId, String fileId, int chunkNo, int repl, String msg){
+		try{
 			request = true;
 			header = new Header(msgtype, version, senderId, fileId, chunkNo, repl);
 			body = new Body(msg);
 		}
-		catch (IllegalArgumentException e)
-		{
-			e.getMessage();
-		}
+		catch (IllegalArgumentException e){e.getMessage();}
 	}
 
 	public String getAddress() {return this.address;}
@@ -100,25 +88,23 @@ public class Message
 
 	public boolean isRequest() {return request;}
 
-	@Override
+	/*@Override
 	public String toString(){
 		return "Message{\n" +
 				header.toString() + '\n' +
 				body.toString() + '\n' +
 				'}';
 	}
-
+*/
 	public boolean isValidIP(String ip) {
 		try {
 			if ( ip == null || ip.isEmpty() ) {
 				return false;
 			}
-
 			String[] parts = ip.split( "\\." );
 			if ( parts.length != 4 ) {
 				return false;
 			}
-
 			for ( String s : parts ) {
 				int i = Integer.parseInt( s );
 				if ( (i < 0) || (i > 255) ) {
@@ -128,70 +114,58 @@ public class Message
 			if ( ip.endsWith(".") ) {
 				return false;
 			}
-
 			return true;
 		} catch (NumberFormatException nfe) {
 			return false;
 		}
 	}
 
-	private boolean isPort(int p){
-		return (p>=1 && p<=49151);
-	}
+	private boolean isPort(int p){return (p >= 1 && p <= 49151);}
 
 	public boolean isNumber(String s){
 		try { 
 			Integer.parseInt(s); 
-		} catch(NumberFormatException e) { 
+		}catch(NumberFormatException e) { 
 			return false; 
 		}
 		return true;
-
 	}
 
 	public String makeMessage(){
-		String ss = null;
+		String build = null;
+		String ss = header.getMessageType() + " " + header.getVersion()+ " " + header.getSenderId() + " " + header.getFileId();
 
-		switch (header.getMessageType())
-		{
+		switch (header.getMessageType()){
 		case "PUTCHUNK": 
-			ss = header.getMessageType() + " " + header.getVersion()+ " " + header.getSenderId() + " " + header.getFileId() + " " + header.getChunkNo() + " " + header.getReplicationDeg() + " " + CRLFCRLF + body.getMessage();
+			build = ss + " " + header.getChunkNo() + " " + header.getReplicationDeg() + " " + CRLFCRLF + body.getMessage();
 			break;
-
 		case "STORED":
 		case "GETCHUNK":
 		case "REMOVED":
-			ss = header.getMessageType() + " " + header.getVersion() + " " + header.getSenderId() + " " + header.getFileId() + " " + header.getChunkNo() + " " + CRLFCRLF;
+			build = ss + " " + header.getChunkNo() + " " + CRLFCRLF;
 			break;
-
 		case "CHUNK":
-			ss = header.getMessageType() + " " + header.getVersion() + " " + header.getSenderId() + " " + header.getFileId() + " " + header.getChunkNo() + " " + CRLFCRLF + body.getMessage();
+			build = ss + header.getChunkNo() + " " + CRLFCRLF + body.getMessage();
 			break;
-
 		case "DELETE":
-			ss = header.getMessageType() + " " + header.getVersion() + " " + header.getSenderId() + " " + header.getFileId() + " " + CRLFCRLF;
+			build = ss+ " " + CRLFCRLF;
 			break;
 		}
-
-		return ss;
+		return build;
 	}
 
 	public String makeAnswer(){
-		String ss = null;
-
-		switch (header.getMessageType())
-		{
+		String build = null;
+		String ss = " " + header.getVersion() + " " + header.getSenderId() + " " + header.getFileId() + " " + header.getChunkNo() + " " + CRLFCRLF;
+		switch (header.getMessageType()){
 		case "PUTCHUNK":
-			ss = "STORED" + " " + header.getVersion() + " " + header.getSenderId() + " " + header.getFileId() + " " + header.getChunkNo() + " " + CRLFCRLF;
+			build = "STORED" + ss; 
 			break;
-
 		case "GETCHUNK":
-			ss = "CHUNK" + " " + header.getVersion() + " " + header.getSenderId() + " " + header.getFileId() + " " + header.getChunkNo() + " " + CRLFCRLF;
+			build = "CHUNK" + ss; 
 			break;
 		}
-
-		return ss;
+		return build;
 	}
-
 }
 

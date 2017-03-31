@@ -12,7 +12,6 @@ public class Body
 	}
 
 	public Body(String[] message, int start, int end){
-
 		for (int i = start; i < end; i++)
 			this.message += message;
 	}
@@ -21,11 +20,6 @@ public class Body
 		return this.message;
 	}
 
-	@Override
-	public String toString(){
-
-		return "Body{" +
-				"message='" + this.message + '\'' +
-				'}';
-	}
+	//@Override
+//	public String toString(){return "Body{" + "message='" + this.message + '\'' + '}';}
 }

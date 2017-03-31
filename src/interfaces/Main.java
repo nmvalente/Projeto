@@ -14,12 +14,11 @@ public class Main
 	public static boolean exitNow = false;
 	public static GUI windows;
 
-	public static void main(String[] args) throws UnknownHostException{
+	public static void main(String[] args) throws IOException{
 
 		Utils util = new Utils();
 		Peer peer = new Peer( InetAddress.getLocalHost().getHostAddress() );
-	
-		
+			
 		// Analisa os argumentos
 		if(util.analyseArgs(args) == -1)
 			return;

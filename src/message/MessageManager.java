@@ -14,37 +14,30 @@ public class MessageManager{
 		unseenMessages = new ArrayList<Message>();
 	}
 
-	public boolean hasUnseenMessages() { return unseenMessages.size() > 0; }
+	public boolean hasUnseenMessages() {return unseenMessages.size() > 0;}
 
 	public Message getOneUnseenMessage(){
 
 		if (unseenMessages.size() > 0)
 			return unseenMessages.get(0);
-
 		return null;
 	}
 
 	public void setSeen(){
-
 		if (unseenMessages.size() > 0){
-
 			seenMessages.add( unseenMessages.get(0));
 			unseenMessages.remove(0);
-
 			if ( seenMessages.size() > MAX_LENGTH_SEEN_MESSAGES )
 				seenMessages.remove(0);
 		}
 	}
 
 	public String addToUnseenMessages(String address, int port, String s){
-
 		Message message = null;
 
 		try	{
 			message = new Message(address.substring(1),port,s);
-
 			unseenMessages.add(message);
-
 			return message.getHeader().printHeader();
 		}
 		catch (IllegalArgumentException e){

@@ -1,85 +1,75 @@
 package files;
 import java.util.ArrayList;
-import java.util.Iterator;
-
 import java.io.File;
 
 public class FileManager
 {
 	private ArrayList<InfoFile> fileList;
 
-	public FileManager()
-	{
+	public FileManager(){
 		fileList = new ArrayList<InfoFile>();
 	}
 
-	public ArrayList<InfoFile> getFileList() { return fileList; }
+	public ArrayList<InfoFile> getFileList() {return fileList;}
 
 	public int getNumberOfFiles(){return fileList.size();}
-	
-	public void add(InfoFile u)
-	{
-		fileList.add(u);
+
+	public void add(InfoFile info){
+		fileList.add(info);
 	}
 
-	public boolean add(String pathfile)
-	{
+	public boolean add(String pathfile){
 		File f = new File(pathfile);
-		if ( !f.isFile() )
-		{
+		if (!f.isFile()){
 			return false;
 		}
-
-		InfoFile u = new InfoFile(pathfile);
-		add(u);
+		InfoFile info = new InfoFile(pathfile);
+		add(info);
 
 		return true;
 	}
 
-	public boolean remove(String fileName)
-	{
+	public boolean remove(String fileName){
 		InfoFile temp;
-
-		for (Iterator<InfoFile> it = fileList.iterator(); it.hasNext();)
-		{
-			temp = it.next();
-
-			if (temp.getFileName().equals(fileName))
-			{
-				it.remove();
+		int i;
+		for(i = 0 ; i < fileList.size() ; i++){
+			temp = fileList.get(i);
+			if(temp.getFileName().equals(fileName)){
+				fileList.remove(i);
 				return true;
 			}
 		}
+		/*for (Iterator<InfoFile> it = fileList.iterator(); it.hasNext();){
+			temp = it.next();
 
+			if (temp.getFileName().equals(fileName)){
+				it.remove();
+				return true;
+			}
+		}*/
 		return false;
 	}
 
-	public InfoFile find(String fileName)
-	{
+	public InfoFile find(String fileName){
 		InfoFile temp;
 
-		for (Iterator<InfoFile> it = fileList.iterator(); it.hasNext();)
-		{
-			temp = it.next();
-
-			if (temp.getFileName().equals(fileName))
-			{
+		int i;
+		for(i = 0 ; i < fileList.size() ; i++){
+			temp = fileList.get(i);
+			if(temp.getFileName().equals(fileName)){
+				fileList.remove(i);
 				return temp;
 			}
 		}
-
 		return null;
 	}
 
-	public void getAllFilesFromStorage()
-	{
+	public void getAllFilesFromStorage(){
 		File folder = new File(".");
 		File[] listOfFiles = folder.listFiles();
 
-		for (int i = 0; i < listOfFiles.length; i++)
-		{ 
-			if (listOfFiles[i].isFile())
-			{
+		for(int i = 0; i < listOfFiles.length; i++){ 
+			if(listOfFiles[i].isFile()){
 				add(listOfFiles[i].getName());
 			}
 		}
@@ -96,14 +86,13 @@ public class FileManager
 
 		System.out.println("\n**************************************************");
 		if(!fileList.isEmpty()){
+			System.out.println("-> Files Stored : \n");
 
-			System.out.printf("-> Files Stored : \n");
+			for(i = 0 ; i < fileList.size() ; i++){
+				temp = fileList.get(i);
 
-			for (Iterator<InfoFile> it = fileList.iterator(); it.hasNext(); i++){
-				temp = it.next();
 				if(i == 0)
 					System.out.println("Number  Name\t\t\t\tSize - bytes");
-
 
 				System.out.printf("%d\t", i);
 
@@ -114,14 +103,14 @@ public class FileManager
 				System.out.printf("\t%d", temp.getFileSize());  
 
 				if(temp instanceof BackupFile)
-					System.out.printf("[backup]");
+					System.out.print("[backup]");
 				System.out.println("");
 
 			}
 			if(i == 1)
-				System.out.printf("\nTotal: %d file\n", i);
+				System.out.println("\nTotal: " + i + " file\n");
 			else
-				System.out.printf("\nTotal: %d files\n", i);
+				System.out.println("\nTotal: " + i + " files\n");
 		}else{
 
 			System.out.printf("\nNo files in current directory!\n");
@@ -133,60 +122,72 @@ public class FileManager
 		return 0;
 	}
 
-	public void addSTORED(String address, String fileId, int chunkNo)
-	{
+	public void addSTORED(String address, String fileId, int chunkNo){
 		InfoFile temp;
-		BackupFile b;
+		BackupFile backupFile;
 
-		for (Iterator<InfoFile> it = fileList.iterator(); it.hasNext();)
-		{
-			temp = it.next();
-
-			if ( temp instanceof BackupFile )
-			{
-				if ( ((BackupFile) temp).getFileId().equals(fileId) )
-				{
-					b = (BackupFile) temp;
-					b.addAddressOfChunk(chunkNo,address);
-
-					return;
-				}
-
-			}
-		}
-	}
-
-	public void removeSTORED(String address, String fileId, int chunkNo)
-	{
-		InfoFile temp;
-		BackupFile b;
-
-		for (Iterator<InfoFile> it = fileList.iterator(); it.hasNext();)
-		{
-			temp = it.next();
-
-			if ( temp instanceof BackupFile )
-			{
-				if ( ((BackupFile) temp).getFileId().equals(fileId) )
-				{
-					b = (BackupFile) temp;
-					b.removeAddressOfChunk(chunkNo,address);
-
+		int i;
+		for(i = 0 ; i < fileList.size() ; i++){
+			temp = fileList.get(i);
+			if(temp instanceof BackupFile){
+				if(((BackupFile) temp).getFileId().equals(fileId)){
+					backupFile = (BackupFile) temp;
+					backupFile.addAddressOfChunk(chunkNo,address);
 					return;
 				}
 			}
 		}
+
+
+
+		/*for (Iterator<InfoFile> it = fileList.iterator(); it.hasNext();){
+			temp = it.next();
+			if(temp instanceof BackupFile){
+				if(((BackupFile) temp).getFileId().equals(fileId)){
+					backupFile = (BackupFile) temp;
+					backupFile.addAddressOfChunk(chunkNo,address);
+					return;
+				}
+			}
+		}*/
 	}
 
-	public BackupFile backup(int fileIndex, int senderID, int desiredReplicationDeg)
-	{
-		InfoFile u  = fileList.get(fileIndex);
-		BackupFile b = new BackupFile(u.getFileName(), senderID ,desiredReplicationDeg);
+	public void removeSTORED(String address, String fileId, int chunkNo){
+		InfoFile temp;
+		BackupFile backupFile;
 
-		fileList.set(fileIndex, b);
+		int i;
+		for(i = 0 ; i < fileList.size() ; i++){
+			temp = fileList.get(i);
+			if(temp instanceof BackupFile){
+				if(((BackupFile) temp).getFileId().equals(fileId)){
+					backupFile = (BackupFile) temp;
+					backupFile.removeAddressOfChunk(chunkNo,address);
+					return;
+				}
+			}
+		}
 
-		b.split();
 
-		return b;
+		/*
+		for(Iterator<InfoFile> it = fileList.iterator(); it.hasNext();){
+			temp = it.next();
+			if(temp instanceof BackupFile){
+				if(((BackupFile) temp).getFileId().equals(fileId)){
+					backupFile = (BackupFile) temp;
+					backupFile.removeAddressOfChunk(chunkNo,address);
+					return;
+				}
+			}
+		}*/
+	}
+
+	public BackupFile backup(int fileIndex, int senderID, int desiredReplicationDeg){
+		InfoFile info  = fileList.get(fileIndex);
+		BackupFile backupFile = new BackupFile(info.getFileName(), senderID ,desiredReplicationDeg);
+
+		fileList.set(fileIndex, backupFile);
+		backupFile.splitFile();
+		return backupFile;
 	} 	
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 import channels.ReceiveDataChannel;
@@ -13,7 +14,29 @@ import protocols.Peer;
 
 public class Utils {
 
-	
+
+	public static final byte[] version = "1.0".getBytes();
+
+	public static String convertBytetoString(byte[] array){
+
+		String string = new String(array, StandardCharsets.UTF_8);
+		return string;	
+	}
+
+	public static int convertBytetoInt(byte[] array){
+
+		String string = new String(array, StandardCharsets.UTF_8);
+		int integer = Integer.parseInt(string);
+
+		return integer;
+	}
+
+	public static byte[] convertInttoByte(int number){
+		
+		String string = String.valueOf(number);
+		
+		return string.getBytes();
+	}
 
 	public void displayMenu(){
 
@@ -90,7 +113,7 @@ public class Utils {
 		return 0;
 	}
 
-	public void mainLoop(Peer peer) {
+	public void mainLoop(Peer peer) throws IOException {
 		int option;
 		Scanner in = new Scanner(System.in);
 
@@ -105,7 +128,7 @@ public class Utils {
 				if(peer.genericSubProtocol(1) == -1)
 					Main.exitNow = true;
 				break;
- 
+
 			case 2 :
 				if(peer.genericSubProtocol(2) == -1)
 					Main.exitNow = true;

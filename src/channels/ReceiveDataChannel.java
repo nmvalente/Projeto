@@ -10,26 +10,22 @@ import java.util.Date;
 public class ReceiveDataChannel extends Thread{
 
 	public static final int BUFFER_SIZE = 1024;
-
-	String name;
-	MulticastSocket socket;
-	Peer peer;
+	public String name;
+	public MulticastSocket socket;
+	public Peer peer;
 
 	public ReceiveDataChannel(String name, MulticastSocket s, Peer peer){
-
 		this.name = name;
 		this.socket = s;
 		this.peer   = peer;
 	}
 
 	public String getCurrentTime(){
-
 		Date date = new Date();
 		return date.toString();
 	}
 
 	public void run(){
-
 		try{
 			if(name == "MC")
 				Main.windows.printlnReceiverMC(getCurrentTime() + " - Started receiver thread :: "+ name);
@@ -37,26 +33,22 @@ public class ReceiveDataChannel extends Thread{
 				Main.windows.printlnReceiverMDB(getCurrentTime() + " - Started receiver thread :: "+ name);
 			if(name == "MDR")
 				Main.windows.printlnReceiverMDR(getCurrentTime() + " - Started receiver thread :: "+ name);
-
 		}
 		catch (ArithmeticException ex){
 			if(name == "MC")
-				Main.windows.printStackTraceReceiverMC(ex); 
+				Main.windows.printlnReceiverMC(getCurrentTime() + " - Error in starter Receiver MC"); 
 			if(name == "MDB")
-				Main.windows.printStackTraceReceiverMDB(ex);
+				Main.windows.printlnReceiverMC(getCurrentTime() + " - Error in starter Receiver MDB"); 
 			if(name == "MDR")
-				Main.windows.printStackTraceReceiverMDR(ex);
+				Main.windows.printlnReceiverMC(getCurrentTime() + " - Error in starter Receiver MDR"); 
 		}
-
 		try{
 			byte[] buf;
 			DatagramPacket dg;
 			String dgString;
 			String message;
-
 			do{
-				try{Thread.sleep(10);}catch(InterruptedException e){}
-
+				try{Thread.sleep(10);}catch(InterruptedException e){e.getMessage(); System.err.println("Error in sleep");}
 				buf = new byte[BUFFER_SIZE];
 
 				dg = new DatagramPacket( buf , buf.length );
@@ -74,25 +66,17 @@ public class ReceiveDataChannel extends Thread{
 						if(name == "MDR")
 							Main.windows.printlnReceiverMDR(getCurrentTime() + " - RECEIVED - " + message);
 					}
-					catch (ArithmeticException ex)
-					{
+					catch(ArithmeticException e){
 						if(name == "MC")
-							Main.windows.printStackTraceReceiverMC(ex); 
+							Main.windows.printlnReceiverMC(getCurrentTime() + " - Error in  Receiver MC"); 
 						if(name == "MDB")
-							Main.windows.printStackTraceReceiverMDB(ex);
+							Main.windows.printlnReceiverMC(getCurrentTime() + " - Error in  Receiver MDB"); 
 						if(name == "MDR")
-							Main.windows.printStackTraceReceiverMDR(ex);
+							Main.windows.printlnReceiverMC(getCurrentTime() + " - Error in  Receiver MDR");
 					}
 				} 
-
-				try{
-					sleep(10);
-				}
-				catch(InterruptedException e){
-					e.getMessage();
-				}
+				try{Thread.sleep(10);}catch(InterruptedException e){e.getMessage();System.err.println("Error in sleep");}
 			} while(true);
-
 		}
 		catch(IOException n){
 			if(name == "MC")

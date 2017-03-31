@@ -10,11 +10,10 @@ public class BackupFile extends InfoFile
 	private int desiredReplicationDeg;
 
 
-	public BackupFile(String fileName, int senderId, int desiredReplicationDeg)
-	{
+	public BackupFile(String fileName, int senderId, int desiredReplicationDeg){
 		super(fileName);
 		this.senderId = senderId;
-		fileId = sha256();
+		fileId = hashFileId();
 		listChunks = new ArrayList<Set<String>>();
 		this.desiredReplicationDeg = desiredReplicationDeg;
 
@@ -25,17 +24,14 @@ public class BackupFile extends InfoFile
 	public String getFileId() {return fileId;}
 
 	public String getAllAddress(){
-
-		int i=0;
-
-		String s = "{ ";
-
+		int i = 0;
+		String build = "{ ";
 		for (; i<getNChunks()-1; i++)
-			s += listChunks.get(i) + " , " ;
+			build += listChunks.get(i) + " , " ;
 
-		s += listChunks.get(i) + " }";
+		build += listChunks.get(i) + " }";
 
-		return s;
+		return build;
 	}
 
 	public int getDesiredReplicationDeg() { return this.desiredReplicationDeg; }
@@ -46,9 +42,8 @@ public class BackupFile extends InfoFile
 
 	public boolean isBackupReplicatedEnough(){
 		for (int i = 0; i < listChunks.size(); i++)
-			if ( listChunks.get(i).size() < desiredReplicationDeg )
+			if (listChunks.get(i).size() < desiredReplicationDeg)
 				return false;
-
 		return true;
 	}
 
@@ -56,16 +51,17 @@ public class BackupFile extends InfoFile
 		listChunks.get(index).add(address);
 	}
 
-	public void removeAddressOfChunk(int index, String address){
+	public boolean removeAddressOfChunk(int index, String address){
 		String temp;
 
 		for (Iterator<String> it = listChunks.get(index).iterator(); it.hasNext();){
 			temp = it.next();
 			if (temp.equals(address)){
 				it.remove();
-				return ;
+				return true ;
 			}
 		}
+		return false;
 	}
 
 	@Override

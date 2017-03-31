@@ -19,9 +19,9 @@ public class SendDataChannel extends Thread{
 	public static final int MDB = 1;
 	public static final int MDR = 2;
 
-	InetAddress[] address;
-	MulticastSocket[] socket;
-	Peer peer;
+	public InetAddress[] address;
+	public MulticastSocket[] socket;
+	public Peer peer;
 
 	public SendDataChannel(InetAddress[] address, MulticastSocket[] socket, Peer peer){
 
@@ -44,14 +44,12 @@ public class SendDataChannel extends Thread{
 	}
 
 	public void run(){
-
 		try{
 			Main.windows.printlnSendChannel( getCurrentTime() + " - Started sender thread" );
 		}
 		catch (ArithmeticException ex){
-			Main.windows.printStackTraceSendChannel(ex);
+			Main.windows.printlnSendChannel("Error in starter sender thread");
 		}
-
 		try{
 			DatagramPacket dg;
 			Message unseenMessage;
@@ -59,121 +57,97 @@ public class SendDataChannel extends Thread{
 			String reply,request;
 			int group = MC, r = 0;
 			Random random = new Random();
-
 			do{
-
-				try{Thread.sleep(10);}catch(InterruptedException e){}
-
+				try{Thread.sleep(10);}catch(InterruptedException e){e.getMessage();System.err.println("Error in sleep of thread");}
 				while(peer.inbox.hasUnseenMessages()){
 					try{Thread.sleep(10);}catch(InterruptedException e){}
-
 					unseenMessage = peer.inbox.getOneUnseenMessage();
 					peer.inbox.setSeen();
-
 					request = null;
 					reply = null;
-
-					if ( unseenMessage.isRequest() ){
-						switch( unseenMessage.header.getMessageType() ){
+					if(unseenMessage.isRequest()){
+						switch(unseenMessage.header.getMessageType()){
 						case "PUTCHUNK":
 							request = unseenMessage.makeMessage();
 							group = MDB;
 							break;
-
 						case "GETCHUNK":
 							request = unseenMessage.makeMessage();
 							group = MC;
 							break;
-
 						case "DELETE":
 							request = unseenMessage.makeMessage();
 							group = MC;
 							break;
-
 						case "REMOVED":
 							request = unseenMessage.makeMessage();
 							group = MC;
 							break;
 						}
-
 						if (request != null){
 							dg = new DatagramPacket( request.getBytes() , request.length() , address[group] , socket[group].getLocalPort() );
 							socket[group].send(dg);
-
 							try{
 								Main.windows.printlnSendChannel( getCurrentTime() + " - REQUEST SENT - " + unseenMessage.getHeader().printHeader());
 							}
 							catch (ArithmeticException ex){
-								Main.windows.printStackTraceSendChannel(ex);
+								Main.windows.printlnSendChannel("Error in request sender thread");
 							}
 						}
 					}
 					else{
-						switch( unseenMessage.header.getMessageType() ){
+						switch(unseenMessage.header.getMessageType()){
 						case "PUTCHUNK": // responde com STORED
-							peer.chunks.add( unseenMessage );
+							peer.chunks.add(unseenMessage);
 							reply = unseenMessage.makeAnswer();
 							group = MC;
 							break;
-
 						case "GETCHUNK": // responde com CHUNK
 							ChunkFile c  = peer.chunks.find( unseenMessage.getAddress() , unseenMessage.header.getFileId() , unseenMessage.header.getChunkNo() );
-							if (c!=null){
-								try {
+							if(c != null){
+								try{
 									String content;
 									content = new String(peer.chunks.file(unseenMessage.getAddress(), c), "UTF-8");
 									reply = unseenMessage.makeAnswer() + content;
-								} catch (IOException e){
+								}catch(IOException e){
 									// remove referencia do chunk
 									peer.chunks.remove(unseenMessage.getAddress(), unseenMessage.header.getFileId(), unseenMessage.header.getChunkNo());
 								}
 								group = MDR;
 							}
 							break;
-
 						case "DELETE": // apaga o ficheiro
 							peer.chunks.remove(unseenMessage.getAddress(), unseenMessage.header.getFileId());
 							break;
-
 						case "REMOVED": // actualiza dados do Backup e replicationDeg
 							peer.files.removeSTORED(unseenMessage.getAddress(), unseenMessage.header.getFileId(), unseenMessage.header.getChunkNo());
 							break;
-
 						case "CHUNK": // guarda o chunk para o Restauro
 							peer.restoreFile.add(unseenMessage);
 							break;
-
 						case "STORED": // actualiza dados do Backup
 							peer.files.addSTORED(unseenMessage.getAddress(), unseenMessage.header.getFileId(), unseenMessage.header.getChunkNo());
 							break;
 						}
-
 						if(reply != null){
 							dg = new DatagramPacket( reply.getBytes() , reply.length() , address[group] , socket[group].getLocalPort() );
 							try{
 								r = random.nextInt(401);
 								sleep(r);
 							}
-							catch(InterruptedException e){
-								e.getMessage();
-							}
-
+							catch(InterruptedException e){e.getMessage();System.err.println("Error doing random integer");}
 							socket[group].send(dg);
-
 							try{
 								Main.windows.printlnSendChannel( getCurrentTime() + " -   REPLY SENT - " + unseenMessage.makeAnswer() );
 							}
 							catch (ArithmeticException ex){
-								Main.windows.printStackTraceSendChannel(ex);
+								Main.windows.printlnSendChannel("Error in reply sender thread");
 							}
 						}
 					} 
 				}
-
-			} while(true);
+			}while(true);
 		}
-		catch(IOException e) {
-			Main.windows.printlnSendChannel(getCurrentTime() + " - Connection terminated");
-		}
+		catch(IOException e){Main.windows.printlnSendChannel(getCurrentTime() + " - Connection terminated");}
 	}
 }
