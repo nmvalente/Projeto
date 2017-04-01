@@ -1,5 +1,7 @@
 package message;
 
+import utils.Utils;
+
 public class Message{
 	
 	private static final String CRLFCRLF = "\r\n\r\n";
@@ -133,20 +135,20 @@ public class Message{
 
 	public String makeMessage(){
 		String build = null;
-		String ss = header.getMessageType() + " " + header.getVersion()+ " " + header.getSenderId() + " " + header.getFileId();
+		String ss = Utils.convertBytetoString(header.getMessageType()) + " " + Utils.convertBytetoString(header.getVersion())+ " " + Utils.convertBytetoString(header.getSenderId()) + " " + Utils.convertBytetoString(header.getFileId());
 
-		switch (header.getMessageType()){
+		switch (Utils.convertBytetoString(header.getMessageType())){
 		case "PUTCHUNK": 
-			build = ss + " " + header.getChunkNo() + " " + header.getReplicationDeg() + " " + CRLFCRLF + body.getMessage();
+			build = ss + " " + Utils.convertBytetoInt(header.getChunkNo()) + " " + Utils.convertBytetoInt(header.getReplicationDeg()) + " " + CRLFCRLF + body.getBody();
 			break;
 		case "STORED":
 		case "GETCHUNK":
 		case "REMOVED":
-			build = ss + " " + header.getChunkNo() + " " + CRLFCRLF;
+			build = ss + " " + Utils.convertBytetoInt(header.getChunkNo()) + " " + CRLFCRLF;
 			break;
 		case "CHUNK":
-			build = ss + header.getChunkNo() + " " + CRLFCRLF + body.getMessage();
-			break;
+			build = ss + Utils.convertBytetoInt(header.getChunkNo()) + " " + CRLFCRLF + body.getBody();
+			break; 
 		case "DELETE":
 			build = ss+ " " + CRLFCRLF;
 			break;
@@ -156,8 +158,8 @@ public class Message{
 
 	public String makeAnswer(){
 		String build = null;
-		String ss = " " + header.getVersion() + " " + header.getSenderId() + " " + header.getFileId() + " " + header.getChunkNo() + " " + CRLFCRLF;
-		switch (header.getMessageType()){
+		String ss = " " + Utils.convertBytetoString(header.getVersion()) + " " + Utils.convertBytetoString(header.getSenderId()) + " " + Utils.convertBytetoString(header.getFileId()) + " " + Utils.convertBytetoInt(header.getChunkNo()) + " " + CRLFCRLF;
+		switch (Utils.convertBytetoString(header.getMessageType())){
 		case "PUTCHUNK":
 			build = "STORED" + ss; 
 			break;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import message.Message;
+import utils.Utils;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -23,7 +24,7 @@ public class Chunks{
 
 		try{
 			addFolder( ip );
-			addChunk( name, m.getBody().getMessage() );
+			addChunk( name, Utils.convertBytetoString(m.getBody().getBody()));
 
 			ChunkFile c = new ChunkFile(m);
 
@@ -43,7 +44,7 @@ public class Chunks{
 			ChunkFile temp;
 			for (Iterator<ChunkFile> it = hashmap.get(address).iterator(); it.hasNext();){
 				temp = it.next();
-				if (temp.getFileId() == fileId && temp.getChunkNo() == chunkNo){
+				if (Utils.convertBytetoString(temp.getFileId()) == fileId && Utils.convertBytetoInt(temp.getChunkNo()) == chunkNo){
 					removeChunk(address+File.separator+fileId+".part"+chunkNo);
 					it.remove();
 					return true;
@@ -58,7 +59,7 @@ public class Chunks{
 			ChunkFile temp;
 			for(Iterator<ChunkFile> it = hashmap.get(address).iterator(); it.hasNext();){
 				temp = it.next();
-				if(temp.getFileId() == fileId){
+				if(Utils.convertBytetoString(temp.getFileId()) == fileId){
 					removeChunk(address + File.separator + fileId + ".part" + temp.getChunkNo());
 					it.remove();
 				}
@@ -81,7 +82,7 @@ public class Chunks{
 			ChunkFile temp;
 			for(Iterator<ChunkFile> it = hashmap.get(address).iterator(); it.hasNext();){
 				temp = it.next();
-				if(temp.getFileId() == fileId && temp.getChunkNo() == chunkNo){
+				if(Utils.convertBytetoString(temp.getFileId()) == fileId && Utils.convertBytetoInt(temp.getChunkNo()) == chunkNo){
 					return temp;
 				}
 			}
@@ -95,7 +96,7 @@ public class Chunks{
 			ChunkFile temp;
 			for (Iterator<ChunkFile> it = hashmap.get(address).iterator(); it.hasNext();){
 				temp = it.next();
-				if (temp.getFileId() == fileId){
+				if (Utils.convertBytetoString(temp.getFileId()) == fileId){
 					chunkList.add(temp);
 				}
 			}

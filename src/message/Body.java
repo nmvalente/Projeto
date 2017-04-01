@@ -2,16 +2,19 @@ package message;
 
 public class Body{
 	
-	protected String message;
+	protected byte[] body;
 
-	protected Body(){message = "";}
+	protected Body(){}//body = "";}
 
-	protected Body(String message){this.message = message;}
+	protected Body(String body){this.body = body.getBytes();}
 
-	protected Body(String[] message, int start, int end){
+	protected Body(String[] body, int start, int end){
+		String auxbody = "";
 		for (int i = start; i < end; i++)
-			this.message += message;
+			auxbody += body;
+		
+		this.body = auxbody.getBytes();
 	}
 
-	public String getMessage(){return this.message;}
+	public byte[] getBody(){return this.body;}
 }

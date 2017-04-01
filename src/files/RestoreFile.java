@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.*;
 
 import message.Message;
+import utils.Utils;
 
 
 public class RestoreFile extends InfoFile{
@@ -59,12 +60,12 @@ public class RestoreFile extends InfoFile{
 	}
 
 	public void add(Message m) throws FileNotFoundException{
-		int chunkNo = m.getHeader().getChunkNo();
+		int chunkNo = Utils.convertBytetoInt(m.getHeader().getChunkNo());
 		String name = fileId + File.separator +  fileId + ".part" + chunkNo ;
 
 		try{
 			makeDirectory(fileId);
-			addChunk(name, m.getBody().getMessage());
+			addChunk(name, Utils.convertBytetoString(m.getBody().getBody()));
 
 			if(!chunkList[chunkNo]){
 				chunkList[chunkNo] = true;

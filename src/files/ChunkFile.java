@@ -1,17 +1,18 @@
 package files;
 
 import message.Message;
+import utils.Utils;
 
 public class ChunkFile{
 	
-    private String fileId;
-    private int chunkNo;
-    private int replicationDeg;
+    private byte[] fileId;
+    private byte[] chunkNo;
+    private byte[] replicationDeg;
 
     ChunkFile(String fileId, int chunkNo, int replicationDeg){
-        this.fileId = fileId;
-        this.chunkNo = chunkNo;
-        this.replicationDeg = replicationDeg;
+        this.fileId = fileId.getBytes();
+        this.chunkNo = Utils.convertInttoByte(chunkNo);
+        this.replicationDeg =  Utils.convertInttoByte(replicationDeg);
     }
 
     ChunkFile(Message m){
@@ -20,11 +21,11 @@ public class ChunkFile{
         this.replicationDeg = m.getHeader().getReplicationDeg();
     }
 
-    public String getFileId(){return fileId;}
+    public byte[] getFileId(){return fileId;}
 
-    public int getChunkNo(){return chunkNo;}
+    public byte[] getChunkNo(){return chunkNo;}
 
-    public int getReplicationDeg() { return replicationDeg; }
+    public byte[] getReplicationDeg() { return replicationDeg; }
 
     @Override
     public String toString() {

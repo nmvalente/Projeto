@@ -1,13 +1,15 @@
 package message;
 
+import utils.Utils;
+
 public class Header{
 	
-	private String messageType;
-	private String version;
-	private int senderId;
-	private String fileId; 				    
-	private int chunkNo;
-	private int replicationDeg;
+	private byte[] messageType;
+	private byte[] version;
+	private byte[] senderId;
+	private byte[] fileId; 				    
+	private byte[] chunkNo;
+	private byte[] replicationDeg;
 	//private String headerEnd = "\r\n\r\n";
 	private enum messageTypes{PUTCHUNK,STORED,GETCHUNK,CHUNK,DELETE,REMOVED};
 	
@@ -15,21 +17,21 @@ public class Header{
 	public Header(String messageType, String version, int senderId, String fileId){
 		if (!(isMessageType(messageType)))
 			throw new IllegalArgumentException("Invalid Head Arguments");
-		this.messageType = messageType;
-		this.version = version;
-		this.senderId = senderId;
-		this.fileId = fileId;
+		this.messageType = messageType.getBytes();
+		this.version = version.getBytes();
+		this.senderId = Utils.convertInttoByte(senderId);
+		this.fileId = fileId.getBytes();
 	}
 
 	// getchunk, remove, stored e chunk mas sem body
 	public Header(String messageType, String version, int senderId, String fileId, int chunkNo){
 		if (!(isMessageType(messageType)))
 			throw new IllegalArgumentException("Invalid Head Arguments");
-		this.messageType = messageType;
-		this.version = version;
-		this.senderId = senderId;
-		this.fileId = fileId;
-		this.chunkNo = chunkNo;
+		this.messageType = messageType.getBytes();
+		this.version = version.getBytes();
+		this.senderId = Utils.convertInttoByte(senderId);
+		this.fileId = fileId.getBytes();
+		this.chunkNo = Utils.convertInttoByte(chunkNo);
 	}
 
 	// putchunk
@@ -37,37 +39,37 @@ public class Header{
 		if (!(isMessageType(messageType) && isReplicationDeg(replicationDeg)))
 			throw new IllegalArgumentException("Invalid Head Arguments");
 
-		this.messageType = messageType;
-		this.version = version;
-		this.senderId = senderId;
-		this.fileId = fileId;
-		this.chunkNo = chunkNo;
-		this.replicationDeg = replicationDeg;
+		this.messageType = messageType.getBytes();
+		this.version = version.getBytes();
+		this.senderId = Utils.convertInttoByte(senderId);
+		this.fileId = fileId.getBytes();
+		this.chunkNo = Utils.convertInttoByte(chunkNo);
+		this.replicationDeg = Utils.convertInttoByte(replicationDeg);
 	}
 
-	public String getMessageType(){return messageType;}
+	public byte[] getMessageType(){return messageType;}
 
-	protected String getVersion(){return version;}
+	protected byte[] getVersion(){return version;}
 
-	public String getFileId(){return fileId;}
+	public byte[] getFileId(){return fileId;}
 	
-	protected int getSenderId(){return senderId;}
+	protected byte[] getSenderId(){return senderId;}
 
-	public int getChunkNo(){return chunkNo;}
+	public byte[] getChunkNo(){return chunkNo;}
 
-	public int getReplicationDeg(){return replicationDeg;}
+	public byte[] getReplicationDeg(){return replicationDeg;}
 
 	public String printHeader(){
 			
-		String build = this.messageType + " , " + version + " , " + senderId + " , " + fileId;
-		switch (this.messageType){
+		String build = Utils.convertBytetoString(this.getMessageType()) + " , " + Utils.convertBytetoString(this.getVersion()) + " , " + Utils.convertBytetoInt(senderId) + " , " + Utils.convertBytetoString(fileId);
+		switch (Utils.convertBytetoString(this.getMessageType())){
 			case "PUTCHUNK":
-				return 	build + " , " + this.chunkNo + " , " + this.replicationDeg;
+				return 	build + " , " + Utils.convertBytetoInt(this.chunkNo) + " , " + Utils.convertBytetoInt(this.getReplicationDeg());
 			case "STORED":
 			case "GETCHUNK":
 			case "REMOVED":
 			case "CHUNK":
-				return build + " , " + this.chunkNo;
+				return build + " , " + Utils.convertBytetoInt(this.chunkNo);
 			case "DELETE":
 				return 	build;
 			default: return "Invalid message type.";
