@@ -41,4 +41,8 @@ public class ChunkFile{
                 ", replicationDeg=" + replicationDeg +
                 '}';
     }
+
+	public byte[] getSenderId() {
+		return getSenderId();
+	}
 }

@@ -159,6 +159,24 @@ public class Chunks{
 		System.out.println("==========================================" );
 		System.out.println( " Listed " + counter + " chunks.");
 	}
+	
+	public ChunkFile selectChunk(int selection){
+		ChunkFile temp = null;
+		int counter = 0;
+
+		for(Map.Entry<String, List<ChunkFile>> entry : hashmap.entrySet()){
+			System.out.println(" $ " + entry.getKey());
+
+			for(Iterator<ChunkFile> it = entry.getValue().iterator(); it.hasNext();){
+				temp = it.next();
+				counter++;
+				if(counter == selection)
+					return temp;
+			}
+		}
+		
+		return temp;
+	}
 
 	private void addChunk(String name, String content) throws IOException{
 		FileOutputStream fos;
