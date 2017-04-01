@@ -77,7 +77,7 @@ public class BackupFile extends InfoFile{
 
 	@Override
 	public String getFileName(){
-
+		
 		return  super.getFileName() + " , " +
 				fileId + " , " +
 				desiredReplicationDeg + " , " +
@@ -102,7 +102,7 @@ public class BackupFile extends InfoFile{
 			return null;
 
 		File f = new File( getFileId() + ".part" + chunkNo );
-
+		
 		if (f.exists()){
 			int fsize = (int) f.length();
 			FileInputStream fis = new FileInputStream( getFileId() + ".part" + chunkNo );

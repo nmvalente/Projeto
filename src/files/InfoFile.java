@@ -63,6 +63,7 @@ public class InfoFile{
 				currentFileSize -= read;
 
 				//assert (read == chunkPart.length);
+
 				newFileName = fileId + ".part" + chunkNo;
 
 				System.out.printf("%2d ~ %s , %d bytes\n", i, newFileName, readLength);
@@ -139,15 +140,7 @@ public class InfoFile{
 		for (byte byt : bytes) result.append(Integer.toString((byt & 0xff) + 0x100, 16).substring(1));
 		return result.toString();
 	}
-
-
-	protected void makeDirectory(String name){
-		File dir = new File(name);
-		if (!dir.exists()){
-			dir.mkdir();
-		}
-	}
-
+	
 	protected void addChunk(String name, String content) throws IOException{
 		FileOutputStream fos;
 		fos = new FileOutputStream(new File(name));

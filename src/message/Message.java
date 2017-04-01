@@ -139,7 +139,7 @@ public class Message{
 
 		switch (Utils.convertBytetoString(header.getMessageType())){
 		case "PUTCHUNK": 
-			build = ss + " " + Utils.convertBytetoInt(header.getChunkNo()) + " " + Utils.convertBytetoInt(header.getReplicationDeg()) + " " + CRLFCRLF + body.getBody();
+			build = ss + " " + Utils.convertBytetoInt(header.getChunkNo()) + " " + Utils.convertBytetoInt(header.getReplicationDeg()) + " " + CRLFCRLF + Utils.convertBytetoString(body.getBody());
 			break;
 		case "STORED":
 		case "GETCHUNK":
@@ -147,7 +147,7 @@ public class Message{
 			build = ss + " " + Utils.convertBytetoInt(header.getChunkNo()) + " " + CRLFCRLF;
 			break;
 		case "CHUNK":
-			build = ss + Utils.convertBytetoInt(header.getChunkNo()) + " " + CRLFCRLF + body.getBody();
+			build = ss + Utils.convertBytetoInt(header.getChunkNo()) + " " + CRLFCRLF + Utils.convertBytetoString(body.getBody());
 			break; 
 		case "DELETE":
 			build = ss+ " " + CRLFCRLF;

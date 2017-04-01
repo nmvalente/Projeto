@@ -61,10 +61,14 @@ public class RestoreFile extends InfoFile{
 
 	public void add(Message m) throws FileNotFoundException{
 		int chunkNo = Utils.convertBytetoInt(m.getHeader().getChunkNo());
+
 		String name = fileId + File.separator +  fileId + ".part" + chunkNo ;
 
 		try{
-			//makeDirectory(fileId);
+			File dir = new File(fileId);
+			if (!dir.exists())
+				dir.mkdir();
+				
 			addChunk(name, Utils.convertBytetoString(m.getBody().getBody()));
 
 			if(!chunkList[chunkNo]){

@@ -110,7 +110,7 @@ public class Utils{
 		}
 		return 0;
 	}
-
+	
 	public void mainLoop(Peer peer) throws IOException {
 		int option;
 		Scanner in = new Scanner(System.in);

@@ -20,10 +20,14 @@ public class Chunks{
 
 	public void add(Message m){
 		String ip   = m.getAddress();
-		String name = ip + File.separator + m.getHeader().getFileId() + ".part" + m.getHeader().getChunkNo() ;
+		String name = ip + File.separator + Utils.convertBytetoString(m.getHeader().getFileId()) + ".part" + Utils.convertBytetoInt(m.getHeader().getChunkNo()) ;
 
 		try{
-			addFolder( ip );
+			
+			File dir = new File(ip);
+			if (!dir.exists())
+				dir.mkdir();
+
 			addChunk( name, Utils.convertBytetoString(m.getBody().getBody()));
 
 			ChunkFile c = new ChunkFile(m);
@@ -150,12 +154,6 @@ public class Chunks{
 
 		System.out.println("==========================================" );
 		System.out.println( " Listed " + counter + " chunks.");
-	}
-
-	private void addFolder(String name) throws FileNotFoundException{
-		File dir = new File(name);
-		if (!dir.exists())
-			dir.mkdir();
 	}
 
 	private void addChunk(String name, String content) throws IOException{

@@ -86,6 +86,7 @@ public class SendDataChannel extends Thread{
 							break;
 						}
 						if (request != null){
+							//System.out.println(request);
 							dg = new DatagramPacket( request.getBytes() , request.length() , address[group] , socket[group].getLocalPort() );
 							socket[group].send(dg);
 							try{
