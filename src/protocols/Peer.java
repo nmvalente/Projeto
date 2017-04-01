@@ -44,16 +44,18 @@ public class Peer{
 
 	public int genericSubProtocol(int subProtocol) throws IOException{
 		int i=0;
-
-		// Lista de ficheiros
-		if(files.printAllFilesStored() == -1)
-			return -1;
-
-
-
-		this.indexToChose = this.files.getNumberOfFiles();
-		System.out.printf("\nOption [0-" + (this.indexToChose-1) +"] > ");        
-
+		if(subProtocol != 3){
+			// Lista de ficheiros
+			if(files.printAllFilesStored() == -1)
+				return -1;
+			this.indexToChose = this.files.getNumberOfFiles();
+		}
+		else{
+			// RECLAIM
+			chunks.list();
+			this.indexToChose = this.chunks.getChunksList().size();
+		}
+		System.out.printf("\nOption [0-" + (this.indexToChose-1) +"] > ");  
 		indexChosed = scanner.nextInt();
 
 		// validar index
@@ -111,15 +113,7 @@ public class Peer{
 					}
 				}
 				break;
-			case 3: // RECLAIM
-
-				chunks.list();
-
-				this.indexToChose = this.chunks.getChunksList().size();
-				System.out.printf("\nOption [0-" + (this.indexToChose-1) +"] > ");        
-
-				indexChosed = scanner.nextInt();
-
+			case 3:
 				/*
 					inbox.query("REMOVED", "1.0", this.chunks.getChunksList().get(key) pFile.getSenderId(),  backupFile.getFileId(), i, 0, "");
 
