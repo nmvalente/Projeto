@@ -64,7 +64,7 @@ public class RestoreFile extends InfoFile{
 		String name = fileId + File.separator +  fileId + ".part" + chunkNo ;
 
 		try{
-			makeDirectory(fileId);
+			//makeDirectory(fileId);
 			addChunk(name, Utils.convertBytetoString(m.getBody().getBody()));
 
 			if(!chunkList[chunkNo]){
