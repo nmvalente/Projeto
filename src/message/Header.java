@@ -53,7 +53,7 @@ public class Header{
 
 	public byte[] getFileId(){return fileId;}
 	
-	protected byte[] getSenderId(){return senderId;}
+	public byte[] getSenderId(){return senderId;}
 
 	public byte[] getChunkNo(){return chunkNo;}
 

@@ -8,7 +8,7 @@ import message.MessageManager;
 import java.io.File;
 
 public class Peer{
-	
+
 	private static final int WAITING_TIMES = 5;
 	private static final String CHARSET_NAME = "utf-8";
 	private static int Id = 1;
@@ -22,7 +22,7 @@ public class Peer{
 	protected Scanner scanner = new Scanner(System.in);
 	private BackupFile backupFile;
 	private Random random;
-	
+
 	public RestoreFile restoreFile = null;
 
 	public Peer(String localhost){
@@ -39,7 +39,7 @@ public class Peer{
 	public MessageManager getInbox(){return inbox;}
 	public FileManager getFiles(){return files;}
 	public Chunks getChunks(){return chunks;}
-	
+
 	public int getPeerId(){return this.peerId;}
 
 	public int genericSubProtocol(int subProtocol) throws IOException{
@@ -48,6 +48,8 @@ public class Peer{
 		// Lista de ficheiros
 		if(files.printAllFilesStored() == -1)
 			return -1;
+
+
 
 		this.indexToChose = this.files.getNumberOfFiles();
 		System.out.printf("\nOption [0-" + (this.indexToChose-1) +"] > ");        
@@ -110,6 +112,25 @@ public class Peer{
 				}
 				break;
 			case 3: // RECLAIM
+
+				chunks.list();
+
+				this.indexToChose = this.chunks.getChunksList().size();
+				System.out.printf("\nOption [0-" + (this.indexToChose-1) +"] > ");        
+
+				indexChosed = scanner.nextInt();
+
+				/*
+					inbox.query("REMOVED", "1.0", this.chunks.getChunksList().get(key) pFile.getSenderId(),  backupFile.getFileId(), i, 0, "");
+
+
+
+					files.getFileList().get(indexChosed).
+					files.getFileList().get(indexChosed).deleteFile(files.getFileList().get(indexChosed).getFileName());
+
+					files.getFileList().remove(indexChosed);*/
+
+				System.out.println("> Reclaimed space!");
 				break;
 			case 4: // DELETE
 
@@ -167,9 +188,5 @@ public class Peer{
 
 		} while( count < WAITING_TIMES && nStored < desiredReplicationDeg );
 		return count;
-	}
-
-	public int reclaim() {
-		return 0;
 	}
 }

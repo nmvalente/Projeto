@@ -1,5 +1,7 @@
 package files;
 
+import java.io.File;
+
 import message.Message;
 import utils.Utils;
 
@@ -8,17 +10,13 @@ public class ChunkFile{
     private byte[] fileId;
     private byte[] chunkNo;
     private byte[] replicationDeg;
-
-    ChunkFile(String fileId, int chunkNo, int replicationDeg){
-        this.fileId = fileId.getBytes();
-        this.chunkNo = Utils.convertInttoByte(chunkNo);
-        this.replicationDeg =  Utils.convertInttoByte(replicationDeg);
-    }
+    private byte[] senderID;
 
     ChunkFile(Message m){
         this.fileId = m.getHeader().getFileId();
         this.chunkNo = m.getHeader().getChunkNo();
         this.replicationDeg = m.getHeader().getReplicationDeg();
+        this.senderID = m.getHeader().getSenderId();
     }
 
     public byte[] getFileId(){return fileId;}
@@ -26,11 +24,19 @@ public class ChunkFile{
     public byte[] getChunkNo(){return chunkNo;}
 
     public byte[] getReplicationDeg() { return replicationDeg; }
+    
+	public void deleteFile(String pathName){
+		File f = new File(pathName);
+		if (f.exists()){
+			f.delete();
+		}
+	}
 
     @Override
     public String toString() {
         return "Chunk{" +
                 ", fileId='" + fileId + '\'' +
+                ", senderId='" + senderID + '\'' +
                 ", chunkNo=" + chunkNo + '\'' +
                 ", replicationDeg=" + replicationDeg +
                 '}';

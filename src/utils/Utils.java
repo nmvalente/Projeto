@@ -133,7 +133,7 @@ public class Utils{
 				break;
 
 			case 3 :
-				if(peer.reclaim() == -1)
+				if(peer.genericSubProtocol(3) == -1)
 					Main.exitNow = true;
 				break;
 

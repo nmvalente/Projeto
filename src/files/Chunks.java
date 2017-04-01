@@ -17,6 +17,10 @@ public class Chunks{
 	public Chunks(){
 		hashmap = new HashMap<String, List<ChunkFile>>();
 	}
+	
+	public Map<String, List<ChunkFile>> getChunksList(){
+		return hashmap;
+	}
 
 	public void add(Message m){
 		String ip   = m.getAddress();
@@ -27,7 +31,7 @@ public class Chunks{
 			File dir = new File(ip);
 			if (!dir.exists())
 				dir.mkdir();
-
+			
 			addChunk( name, Utils.convertBytetoString(m.getBody().getBody()));
 
 			ChunkFile c = new ChunkFile(m);
