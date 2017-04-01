@@ -2,8 +2,8 @@ package files;
 import java.util.ArrayList;
 import java.io.File;
 
-public class FileManager
-{
+public class FileManager{
+	
 	private ArrayList<InfoFile> fileList;
 
 	public FileManager(){

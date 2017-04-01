@@ -7,18 +7,18 @@ import files.*;
 import message.MessageManager;
 import java.io.File;
 
-public class Peer
-{
+public class Peer{
+	
 	private static final int WAITING_TIMES = 5;
 	private static final String CHARSET_NAME = "utf-8";
 	private static int Id = 1;
 	private String localhost;
 	private int peerId;
-	public MessageManager  inbox;
-	public FileManager  files;
+	protected MessageManager  inbox;
+	protected FileManager  files;
 	protected int indexToChose;
 	protected int indexChosed;
-	public Chunks chunks;
+	protected Chunks chunks;
 	protected Scanner scanner = new Scanner(System.in);
 	private BackupFile backupFile;
 	private Random random;
@@ -36,7 +36,10 @@ public class Peer
 	}
 
 	public String getLocalhost() {return localhost;}
-
+	public MessageManager getInbox(){return inbox;}
+	public FileManager getFiles(){return files;}
+	public Chunks getChunks(){return chunks;}
+	
 	public int getPeerId(){return this.peerId;}
 
 	public int genericSubProtocol(int subProtocol) throws IOException{

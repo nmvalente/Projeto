@@ -2,8 +2,8 @@ package files;
 
 import message.Message;
 
-public class ChunkFile
-{
+public class ChunkFile{
+	
     private String fileId;
     private int chunkNo;
     private int replicationDeg;
@@ -15,9 +15,9 @@ public class ChunkFile
     }
 
     ChunkFile(Message m){
-        this.fileId = m.header.getFileId();
-        this.chunkNo = m.header.getChunkNo();
-        this.replicationDeg = m.header.getReplicationDeg();
+        this.fileId = m.getHeader().getFileId();
+        this.chunkNo = m.getHeader().getChunkNo();
+        this.replicationDeg = m.getHeader().getReplicationDeg();
     }
 
     public String getFileId(){return fileId;}

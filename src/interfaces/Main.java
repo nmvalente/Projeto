@@ -9,8 +9,8 @@ import javax.swing.SwingUtilities;
 import protocols.Peer;
 import utils.Utils;
 
-public class Main
-{
+public class Main{
+	
 	public static boolean exitNow = false;
 	public static GUI windows;
 
@@ -60,7 +60,7 @@ public class Main
 		
 		
 		// Obtem lista de todos os ficheiros da pasta storage
-		peer.files.getAllFilesFromStorage();
+		peer.getFiles().getAllFilesFromStorage();
 
 
 		// Ciclo principal menu

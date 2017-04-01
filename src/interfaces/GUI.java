@@ -5,7 +5,7 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
 
-public class GUI implements Runnable {
+public class GUI implements Runnable{
 
     private JFrame Windows;
     private JTextArea outputAreaSender;
@@ -40,28 +40,32 @@ public class GUI implements Runnable {
 		Windows.setResizable(false);
 		Windows.setTitle("SDIS - Distributed Backup Service"); 
 		Windows.setBackground(Color.WHITE);
-		Windows.setBounds(0, 0, 1125, 840);
+		Windows.setBounds(0, 0, 1125, 900);
 		Windows.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Windows.setLayout(null);
 		
         scrollPaneSender = new JScrollPane(outputAreaSender);
         JPanel outputPanelSender = new JPanel(new FlowLayout());
         outputPanelSender.setBounds(0, 0, 1120, 200);
+        scrollPaneSender.setBorder(BorderFactory.createTitledBorder("Sender"));
         outputPanelSender.add(scrollPaneSender);
         
         scrollPaneReceiverMC = new JScrollPane(outputAreaReceiverMC);
         JPanel outputPanelReceiverMC = new JPanel(new FlowLayout());
-        outputPanelReceiverMC.setBounds(0, 200, 1120, 200);
+        outputPanelReceiverMC.setBounds(0, 220, 1120, 200);
+        scrollPaneReceiverMC.setBorder(BorderFactory.createTitledBorder("MC"));
         outputPanelReceiverMC.add(scrollPaneReceiverMC);
         
         scrollPaneReceiverMDB = new JScrollPane(outputAreaReceiverMDB);
         JPanel outputPanelReceiverMDB = new JPanel(new FlowLayout());
-        outputPanelReceiverMDB.setBounds(0, 400, 1120, 200);
+        outputPanelReceiverMDB.setBounds(0, 440, 1120, 200);
+        scrollPaneReceiverMDB.setBorder(BorderFactory.createTitledBorder("MDB"));
         outputPanelReceiverMDB.add(scrollPaneReceiverMDB);
         
         scrollPaneReceiverMDR = new JScrollPane(outputAreaReceiverMDR);
         JPanel outputPanelReceiverMDR = new JPanel(new FlowLayout());
-        outputPanelReceiverMDR.setBounds(0, 600, 1120, 200);
+        outputPanelReceiverMDR.setBounds(0, 660, 1120, 200);
+        scrollPaneReceiverMDR.setBorder(BorderFactory.createTitledBorder("MDR"));
         outputPanelReceiverMDR.add(scrollPaneReceiverMDR);
 
         Windows.add(outputPanelSender);

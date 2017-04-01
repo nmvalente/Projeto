@@ -1,15 +1,15 @@
 package message;
 
-public class Header
-{
+public class Header{
+	
 	private String messageType;
-	private String version; 			    
-	private int senderId;			    
+	private String version;
+	private int senderId;
 	private String fileId; 				    
-	private int chunkNo; 				    
-	private int replicationDeg;		
-	public String headerEnd = "\r\n\r\n";
-	public enum messageTypes{PUTCHUNK,STORED,GETCHUNK,CHUNK,DELETE,REMOVED};
+	private int chunkNo;
+	private int replicationDeg;
+	//private String headerEnd = "\r\n\r\n";
+	private enum messageTypes{PUTCHUNK,STORED,GETCHUNK,CHUNK,DELETE,REMOVED};
 	
 	// delete
 	public Header(String messageType, String version, int senderId, String fileId){
@@ -47,11 +47,11 @@ public class Header
 
 	public String getMessageType(){return messageType;}
 
-	public String getVersion(){return version;}
+	protected String getVersion(){return version;}
 
 	public String getFileId(){return fileId;}
 	
-	public int getSenderId(){return senderId;}
+	protected int getSenderId(){return senderId;}
 
 	public int getChunkNo(){return chunkNo;}
 

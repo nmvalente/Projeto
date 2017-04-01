@@ -12,10 +12,9 @@ import channels.SendDataChannel;
 import interfaces.Main;
 import protocols.Peer;
 
-public class Utils {
+public class Utils{
 
-
-	public static final byte[] version = "1.0".getBytes();
+	public static final String version = "1.0";
 
 	public static String convertBytetoString(byte[] array){
 
@@ -32,9 +31,9 @@ public class Utils {
 	}
 
 	public static byte[] convertInttoByte(int number){
-		
+
 		String string = String.valueOf(number);
-		
+
 		return string.getBytes();
 	}
 
@@ -52,8 +51,7 @@ public class Utils {
 		System.out.printf("Option [0-4] > ");
 	}
 
-	public void initSockets(String[] args, String address, String port, MulticastSocket[] multicastSockets,
-			InetAddress[] group) throws UnknownHostException, IOException {
+	public void initSockets(String[] args, String address, String port, MulticastSocket[] multicastSockets,	InetAddress[] group) throws UnknownHostException, IOException {
 		group[0] = InetAddress.getByName( address );
 		multicastSockets[0] = new MulticastSocket(Integer.parseInt( port ));
 		multicastSockets[0].joinGroup(group[0]);
@@ -154,7 +152,6 @@ public class Utils {
 			}
 
 		} while( !Main.exitNow );
-
 		in.close();
 	}
 }

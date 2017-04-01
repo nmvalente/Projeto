@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.io.*;
 
-public class Chunks
-{
+public class Chunks{
+	
 	private Map<String, List<ChunkFile>> hashmap;
 
 	public Chunks(){
@@ -19,11 +19,11 @@ public class Chunks
 
 	public void add(Message m){
 		String ip   = m.getAddress();
-		String name = ip + File.separator + m.header.getFileId() + ".part" + m.header.getChunkNo() ;
+		String name = ip + File.separator + m.getHeader().getFileId() + ".part" + m.getHeader().getChunkNo() ;
 
 		try{
 			addFolder( ip );
-			addChunk( name, m.body.getMessage() );
+			addChunk( name, m.getBody().getMessage() );
 
 			ChunkFile c = new ChunkFile(m);
 

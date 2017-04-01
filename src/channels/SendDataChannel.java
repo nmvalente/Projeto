@@ -15,13 +15,13 @@ import files.*;
 
 public class SendDataChannel extends Thread{
 
-	public static final int MC  = 0;
-	public static final int MDB = 1;
-	public static final int MDR = 2;
+	protected static final int MC  = 0;
+	protected static final int MDB = 1;
+	protected static final int MDR = 2;
 
-	public InetAddress[] address;
-	public MulticastSocket[] socket;
-	public Peer peer;
+	private InetAddress[] address;
+	private MulticastSocket[] socket;
+	private Peer peer;
 
 	public SendDataChannel(InetAddress[] address, MulticastSocket[] socket, Peer peer){
 
@@ -59,14 +59,14 @@ public class SendDataChannel extends Thread{
 			Random random = new Random();
 			do{
 				try{Thread.sleep(10);}catch(InterruptedException e){e.getMessage();System.err.println("Error in sleep of thread");}
-				while(peer.inbox.hasUnseenMessages()){
+				while(peer.getInbox().hasUnseenMessages()){
 					try{Thread.sleep(10);}catch(InterruptedException e){}
-					unseenMessage = peer.inbox.getOneUnseenMessage();
-					peer.inbox.setSeen();
+					unseenMessage = peer.getInbox().getOneUnseenMessage();
+					peer.getInbox().setSeen();
 					request = null;
 					reply = null;
 					if(unseenMessage.isRequest()){
-						switch(unseenMessage.header.getMessageType()){
+						switch(unseenMessage.getHeader().getMessageType()){
 						case "PUTCHUNK":
 							request = unseenMessage.makeMessage();
 							group = MDB;
@@ -96,37 +96,37 @@ public class SendDataChannel extends Thread{
 						}
 					}
 					else{
-						switch(unseenMessage.header.getMessageType()){
+						switch(unseenMessage.getHeader().getMessageType()){
 						case "PUTCHUNK": // responde com STORED
-							peer.chunks.add(unseenMessage);
+							peer.getChunks().add(unseenMessage);
 							reply = unseenMessage.makeAnswer();
 							group = MC;
 							break;
 						case "GETCHUNK": // responde com CHUNK
-							ChunkFile c  = peer.chunks.find( unseenMessage.getAddress() , unseenMessage.header.getFileId() , unseenMessage.header.getChunkNo() );
+							ChunkFile c  = peer.getChunks().find( unseenMessage.getAddress() , unseenMessage.getHeader().getFileId() , unseenMessage.getHeader().getChunkNo() );
 							if(c != null){
 								try{
 									String content;
-									content = new String(peer.chunks.file(unseenMessage.getAddress(), c), "UTF-8");
+									content = new String(peer.getChunks().file(unseenMessage.getAddress(), c), "UTF-8");
 									reply = unseenMessage.makeAnswer() + content;
 								}catch(IOException e){
 									// remove referencia do chunk
-									peer.chunks.remove(unseenMessage.getAddress(), unseenMessage.header.getFileId(), unseenMessage.header.getChunkNo());
+									peer.getChunks().remove(unseenMessage.getAddress(), unseenMessage.getHeader().getFileId(), unseenMessage.getHeader().getChunkNo());
 								}
 								group = MDR;
 							}
 							break;
 						case "DELETE": // apaga o ficheiro
-							peer.chunks.remove(unseenMessage.getAddress(), unseenMessage.header.getFileId());
+							peer.getChunks().remove(unseenMessage.getAddress(), unseenMessage.getHeader().getFileId());
 							break;
 						case "REMOVED": // actualiza dados do Backup e replicationDeg
-							peer.files.removeSTORED(unseenMessage.getAddress(), unseenMessage.header.getFileId(), unseenMessage.header.getChunkNo());
+							peer.getFiles().removeSTORED(unseenMessage.getAddress(), unseenMessage.getHeader().getFileId(), unseenMessage.getHeader().getChunkNo());
 							break;
 						case "CHUNK": // guarda o chunk para o Restauro
 							peer.restoreFile.add(unseenMessage);
 							break;
 						case "STORED": // actualiza dados do Backup
-							peer.files.addSTORED(unseenMessage.getAddress(), unseenMessage.header.getFileId(), unseenMessage.header.getChunkNo());
+							peer.getFiles().addSTORED(unseenMessage.getAddress(), unseenMessage.getHeader().getFileId(), unseenMessage.getHeader().getChunkNo());
 							break;
 						}
 						if(reply != null){

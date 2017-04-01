@@ -2,8 +2,8 @@ package files;
 import java.io.*;
 import java.util.*;
 
-public class BackupFile extends InfoFile
-{
+public class BackupFile extends InfoFile{
+	
 	private String fileId;
 	private int senderId;
 	private ArrayList<Set<String>> listChunks;

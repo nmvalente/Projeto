@@ -6,8 +6,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InfoFile
-{
+public class InfoFile{
+	
 	private static final String HASH_TYPE = "SHA-256";
 	private static final int CHUNK_MAX_SIZE = 64000;
 	private String fileName;
@@ -141,14 +141,14 @@ public class InfoFile
 	}
 
 
-	public void makeDirectory(String name){
+	protected void makeDirectory(String name){
 		File dir = new File(name);
 		if (!dir.exists()){
 			dir.mkdir();
 		}
 	}
 
-	public void addChunk(String name, String content) throws IOException{
+	protected void addChunk(String name, String content) throws IOException{
 		FileOutputStream fos;
 		fos = new FileOutputStream(new File(name));
 		fos.write(content.getBytes());

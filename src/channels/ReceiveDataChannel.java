@@ -9,14 +9,14 @@ import java.util.Date;
 
 public class ReceiveDataChannel extends Thread{
 
-	public static final int BUFFER_SIZE = 1024;
-	public String name;
-	public MulticastSocket socket;
-	public Peer peer;
+	protected static final int BUFFER_SIZE = 1024;
+	private String name;
+	private MulticastSocket socket;
+	private Peer peer;
 
-	public ReceiveDataChannel(String name, MulticastSocket s, Peer peer){
+	public ReceiveDataChannel(String name, MulticastSocket ms, Peer peer){
 		this.name = name;
-		this.socket = s;
+		this.socket = ms;
 		this.peer   = peer;
 	}
 
@@ -56,7 +56,7 @@ public class ReceiveDataChannel extends Thread{
 				dgString = new String( dg.getData() );
 
 				if ( !dg.getAddress().toString().substring(1).equals(peer.getLocalhost()) ){
-					message = peer.inbox.addToUnseenMessages(dg.getAddress().toString(), dg.getPort() , dgString );
+					message = peer.getInbox().addToUnseenMessages(dg.getAddress().toString(), dg.getPort() , dgString );
 
 					try{
 						if(name == "MC")

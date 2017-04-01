@@ -1,15 +1,14 @@
 package message;
 
-public class Message
-{
-	public static final String CRLFCRLF = "\r\n\r\n";
-	public static final int SHA256LENGTH = 64;
-
+public class Message{
+	
+	private static final String CRLFCRLF = "\r\n\r\n";
+	//public static final int SHA256LENGTH = 64;
 	private String address = "";
 	private int port = 0;
 	private boolean request = false;
-	public Header header;
-	public Body body;
+	protected Header header;
+	protected Body body;
 
 	public Message(String address, int port, String s){
 
@@ -84,7 +83,8 @@ public class Message
 
 	public int getPort() {return this.port;}
 
-	public Header getHeader(){ return this.header;}
+	public Header getHeader(){return this.header;}
+	public Body getBody(){return this.body;}
 
 	public boolean isRequest() {return request;}
 
@@ -122,14 +122,14 @@ public class Message
 
 	private boolean isPort(int p){return (p >= 1 && p <= 49151);}
 
-	public boolean isNumber(String s){
+	/*public boolean isNumber(String s){
 		try { 
 			Integer.parseInt(s); 
 		}catch(NumberFormatException e) { 
 			return false; 
 		}
 		return true;
-	}
+	}*/
 
 	public String makeMessage(){
 		String build = null;

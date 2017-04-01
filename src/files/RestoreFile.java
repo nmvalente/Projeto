@@ -6,8 +6,8 @@ import java.util.*;
 import message.Message;
 
 
-public class RestoreFile extends InfoFile
-{
+public class RestoreFile extends InfoFile{
+	
 	private boolean[] chunkList;
 	private String fileId;
 
@@ -21,14 +21,14 @@ public class RestoreFile extends InfoFile
 
 	public String getFileId() {return fileId;}
 
-	@Override
+	/*@Override
 	public String toString() {
 		return "RestoreFile{" +
 				"chunkList=" + Arrays.toString(chunkList) +
 				", fileId='" + fileId + '\'' +
 				'}';
 	}
-
+*/
 	@Override
 	public String getFileName() {
 		return Arrays.toString(chunkList) + " , " +
@@ -59,12 +59,12 @@ public class RestoreFile extends InfoFile
 	}
 
 	public void add(Message m) throws FileNotFoundException{
-		int chunkNo = m.header.getChunkNo();
+		int chunkNo = m.getHeader().getChunkNo();
 		String name = fileId + File.separator +  fileId + ".part" + chunkNo ;
 
 		try{
 			makeDirectory(fileId);
-			addChunk(name, m.body.getMessage());
+			addChunk(name, m.getBody().getMessage());
 
 			if(!chunkList[chunkNo]){
 				chunkList[chunkNo] = true;
