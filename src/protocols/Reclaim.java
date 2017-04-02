@@ -10,7 +10,7 @@ public class Reclaim {
 				Utils.convertBytetoString(peer.chunks.selectChunk(indexChosed).getFileId()),
 				Utils.convertBytetoInt(peer.chunks.selectChunk(indexChosed).getChunkNo()), 0, "");
 
-		peer.chunks.remove(peer.chunks.getAdrresforSelection(indexChosed), Utils.convertBytetoString(peer.chunks.selectChunk(indexChosed).getFileId()));
+		peer.chunks.removeAll(peer.chunks.getAdrresforSelection(indexChosed), Utils.convertBytetoString(peer.chunks.selectChunk(indexChosed).getFileId()));
 
 		System.out.println("> Reclaimed space!");
 	}

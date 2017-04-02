@@ -21,7 +21,7 @@ public class Restore {
 			backupFile = (BackupFile) peer.getFiles().getFileList().get(indexChosed);
 			restoreFile = new RestoreFile( (InfoFile) backupFile );
 
-			for (int i=0; i < backupFile.getNChunks(); i++){
+			for (int i=0; i < backupFile.getNumberChunks(); i++){
 				peer.inbox.buildMessage("GETCHUNK","1.0",backupFile.getSenderId(), backupFile.getFileId(),i,1,"");
 			}
 
@@ -29,11 +29,11 @@ public class Restore {
 			System.out.println("\n**************************************************");
 			restoreLoop(restoreFile);
 			System.out.println("\n**************************************************");
-			System.out.println(" File restore finished. " + ((restoreFile.isComplete()) ? "Successful" : "Incomplete") + ".\n");
+			System.out.println(" File restore finished. " + ((restoreFile.completedChunks()) ? "Successful" : "Incomplete") + ".\n");
 
-			restoreFile.displayBackedChunks();
+			restoreFile.displayBackupChunks();
 
-			if(restoreFile.isComplete()){
+			if(restoreFile.completedChunks()){
 				try {
 					restoreFile.merge();
 				} catch (IOException e) {e.printStackTrace();}
@@ -51,10 +51,10 @@ public class Restore {
 			try{
 				System.out.printf(" Try #%d. Sleeping for %4d ms.", count + 1, alea);
 				Thread.sleep(alea);
-				System.out.printf(" %s.\n", ((restoreFile.isComplete())?" Complete":"Incomplete") );
+				System.out.printf(" %s.\n", ((restoreFile.completedChunks())?" Complete":"Incomplete") );
 			}
 			catch(InterruptedException e){e.getMessage(); System.err.println("Thread error in restoreLoop");}
 			count++;
-		}while(count < Utils.WAITING_TIMES && !restoreFile.isComplete());
+		}while(count < Utils.WAITING_TIMES && !restoreFile.completedChunks());
 	}
 }

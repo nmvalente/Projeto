@@ -50,9 +50,9 @@ public class SendDataChannel extends Thread{
 		try{
 			DatagramPacket dg;
 			Message unseenMessage;
-			//InfoFile u;
+
 			String reply,request;
-			int group = Utils.MC, r = 0;
+			int group = Utils.MC;
 			Random random = new Random();
 			do{
 				try{Thread.sleep(10);}catch(InterruptedException e){e.getMessage();System.err.println("Error in sleep of thread");}
@@ -62,27 +62,19 @@ public class SendDataChannel extends Thread{
 					peer.getInbox().setSeen();
 					request = null;
 					reply = null;
-					if(unseenMessage.isRequest()){
+					if(unseenMessage.hasRequest()){
 						switch(Utils.convertBytetoString(unseenMessage.getHeader().getMessageType())){
 						case "PUTCHUNK":
-							request = unseenMessage.sendMessage();
 							group = Utils.MDB;
 							break;
 						case "GETCHUNK":
-							request = unseenMessage.sendMessage();
-							group = Utils.MC;
-							break;
 						case "DELETE":
-							request = unseenMessage.sendMessage();
-							group = Utils.MC;
-							break;
 						case "REMOVED":
-							request = unseenMessage.sendMessage();
 							group = Utils.MC;
 							break;
 						}
+						request = unseenMessage.sendMessage();
 						if (request != null){
-							//System.out.println(request);
 							dg = new DatagramPacket( request.getBytes() , request.length() , address[group] , socket[group].getLocalPort() );
 							socket[group].send(dg);
 							try{
@@ -101,7 +93,7 @@ public class SendDataChannel extends Thread{
 							group = Utils.MC;
 							break;
 						case "GETCHUNK": // responde com CHUNK
-							ChunkFile c  = peer.getChunks().find( unseenMessage.getAddress() , Utils.convertBytetoString(unseenMessage.getHeader().getFileId()) , Utils.convertBytetoInt(unseenMessage.getHeader().getChunkNo()));
+							ChunkFile c  = peer.getChunks().findOne( unseenMessage.getAddress() , Utils.convertBytetoString(unseenMessage.getHeader().getFileId()) , Utils.convertBytetoInt(unseenMessage.getHeader().getChunkNo()));
 							if(c != null){
 								try{
 									String content;
@@ -109,29 +101,28 @@ public class SendDataChannel extends Thread{
 									reply = unseenMessage.sendAnswer() + content;
 								}catch(IOException e){
 									// remove referencia do chunk
-									peer.getChunks().remove(unseenMessage.getAddress(), Utils.convertBytetoString(unseenMessage.getHeader().getFileId()), Utils.convertBytetoInt(unseenMessage.getHeader().getChunkNo()));
+									peer.getChunks().removeOne(unseenMessage.getAddress(), Utils.convertBytetoString(unseenMessage.getHeader().getFileId()), Utils.convertBytetoInt(unseenMessage.getHeader().getChunkNo()));
 								}
 								group = Utils.MDR;
 							}
 							break;
 						case "DELETE": // apaga o ficheiro
-							peer.getChunks().remove(unseenMessage.getAddress(), Utils.convertBytetoString(unseenMessage.getHeader().getFileId()));
+							peer.getChunks().removeAll(unseenMessage.getAddress(), Utils.convertBytetoString(unseenMessage.getHeader().getFileId()));
 							break;
 						case "REMOVED": // actualiza dados do Backup e replicationDeg
-							peer.getFiles().removeSTORED(unseenMessage.getAddress(), Utils.convertBytetoString(unseenMessage.getHeader().getFileId()), Utils.convertBytetoInt(unseenMessage.getHeader().getChunkNo()));
+							peer.getFiles().stored(unseenMessage.getAddress(), Utils.convertBytetoString(unseenMessage.getHeader().getFileId()), Utils.convertBytetoInt(unseenMessage.getHeader().getChunkNo()), "remove");
 							break;
 						case "CHUNK": // guarda o chunk para o Restauro
-							peer.restoreFile.add(unseenMessage);
+							peer.restoreFile.deliveryChunk(unseenMessage);
 							break;
 						case "STORED": // actualiza dados do Backup
-							peer.getFiles().addSTORED(unseenMessage.getAddress(), Utils.convertBytetoString(unseenMessage.getHeader().getFileId()), Utils.convertBytetoInt(unseenMessage.getHeader().getChunkNo()));
+							peer.getFiles().stored(unseenMessage.getAddress(), Utils.convertBytetoString(unseenMessage.getHeader().getFileId()), Utils.convertBytetoInt(unseenMessage.getHeader().getChunkNo()), "add");
 							break;
 						}
 						if(reply != null){
 							dg = new DatagramPacket( reply.getBytes() , reply.length() , address[group] , socket[group].getLocalPort() );
 							try{
-								r = random.nextInt(401);
-								sleep(r);
+								sleep(random.nextInt(Utils.BOUND_RANDOM));
 							}
 							catch(InterruptedException e){e.getMessage();System.err.println("Error doing random integer");}
 							socket[group].send(dg);

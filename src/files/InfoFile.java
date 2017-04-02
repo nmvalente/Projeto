@@ -23,16 +23,16 @@ public class InfoFile{
 	public InfoFile(InfoFile file){
 		this.fileName = file.getFileName();
 		this.fileSize = file.getFileSize();
-		this.numberOfChunks  = file.getNChunks();
+		this.numberOfChunks  = file.getNumberChunks();
 		this.file = file.getFile();
 	}
 
 	// Get methods
-	
+
 	public String getFileName(){return fileName;}
 	public int getPartSize(){return Utils.CHUNK_MAX_SIZE;}
 	public int getFileSize(){return fileSize;}
-	public int getNChunks(){return numberOfChunks;}
+	public int getNumberChunks(){return numberOfChunks;}
 	public File getFile() {return file;}
 
 	public void splitFile(){
@@ -47,7 +47,7 @@ public class InfoFile{
 
 			System.out.println("\n File partitioned");
 			System.out.println(" file   : " + getFileName() );
-			System.out.println(" fileId : " + fileId.substring(0, 22) );
+			System.out.println(" fileId : " + fileId.substring(0, Utils.WIDTH_SIZE) );
 			System.out.println("******************************");
 
 			for (i = 0; currentFileSize > 0; i++, chunkNo++){
@@ -108,9 +108,9 @@ public class InfoFile{
 		fOutStream = null;
 	}
 
-	
 
-	protected void addChunk(String name, String content) throws IOException{
+
+	protected void writeChunk(String name, String content) throws IOException{
 		FileOutputStream fos;
 		fos = new FileOutputStream(new File(name));
 		fos.write(content.getBytes());
@@ -144,10 +144,12 @@ public class InfoFile{
 		}
 	}
 
+	public void displayBackupChunks(){}
+
 	public void printHeadList(String id){
 		System.out.println("\n List of chunks");
 		System.out.println(" file   : " + getFileName());
-		System.out.println(" fileId : " + id.substring(0, 22));
+		System.out.println(" fileId : " + id.substring(0, Utils.WIDTH_SIZE));
 		System.out.println("\n**************************************************");
 	}
 

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Random;
 
 import files.BackupFile;
+import files.InfoFile;
 import protocols.Peer;
 import utils.Utils;
 public class Backup {
@@ -15,20 +16,20 @@ public class Backup {
 
 		String message = null;
 		if (!(peer.getFiles().getFileList().get(indexChosed).getClass().getName().equals(BackupFile.class.getName()))){
-			backupFile = peer.getFiles().backup(indexChosed, peer.getPeerId(), desiredReplicationDeg);
+			backupFile = backup(indexChosed, peer.getPeerId(), desiredReplicationDeg, peer);
 			try {
 				System.out.println(" Receiving chunk backup confirmation");
 
-				for (int i = 0; i < backupFile.getNChunks(); i++){
+				for (int i = 0; i < backupFile.getNumberChunks(); i++){
 					System.out.println("\n**************************************************");
 					System.out.println("> Waiting for next STORED reply" );
 
-					message = new String(backupFile.file(i), Utils.CHARSET_NAME);
+					message = new String(backupFile.getContent(i), Utils.CHARSET_NAME);
 
 					backupLoop(desiredReplicationDeg, i, message, backupFile, peer);
 				}
 				System.out.println("\n**************************************************");
-				System.out.println(" File backup finished. " + ((backupFile.isBackupReplicatedEnough()) ? "Successful" : "Incomplete") + ".\n");
+				System.out.println(" File backup finished. " + ((backupFile.enoughReplication()) ? "Successful" : "Incomplete") + ".\n");
 
 				backupFile.displayBackupChunks();
 			}
@@ -58,4 +59,13 @@ public class Backup {
 		} while( count < Utils.WAITING_TIMES && nStored < desiredReplicationDeg );
 		return count;
 	}
+	
+	public BackupFile backup(int fileIndex, int senderID, int desiredReplicationDeg, Peer peer){
+		InfoFile info  = peer.files.getFileList().get(fileIndex);
+		BackupFile backupFile = new BackupFile(info.getFileName(), senderID ,desiredReplicationDeg);
+
+		peer.files.getFileList().set(fileIndex, backupFile);
+		backupFile.splitFile();
+		return backupFile;
+	} 
 }

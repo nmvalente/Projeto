@@ -18,6 +18,8 @@ public class Utils{
 	public static final int MDB = 1;
 	public static final int MDR = 2;
 	public static final int BUFFER_SIZE = 1024;
+	public static final int WIDTH_SIZE = 22;
+	public static final int BOUND_RANDOM = 400;
 
 	public static String convertBytetoString(byte[] array){
 

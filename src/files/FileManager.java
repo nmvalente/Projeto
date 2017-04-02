@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.io.File;
 
 public class FileManager{
-	
+
 	private ArrayList<InfoFile> fileList;
 
 	public FileManager(){
@@ -114,7 +114,7 @@ public class FileManager{
 		return 0;
 	}
 
-	public void addSTORED(String address, String fileId, int chunkNo){
+	public void stored(String address, String fileId, int chunkNo, String addOrRemove){
 		InfoFile temp;
 		BackupFile backupFile;
 
@@ -124,14 +124,18 @@ public class FileManager{
 			if(temp instanceof BackupFile){
 				if(((BackupFile) temp).getFileId().equals(fileId)){
 					backupFile = (BackupFile) temp;
-					backupFile.addAddressOfChunk(chunkNo,address);
+					if(addOrRemove.equals("add"))
+						backupFile.addAddressOfChunk(chunkNo,address);
+					else if(addOrRemove.equals("remove"))
+						backupFile.removeAddressOfChunk(chunkNo,address);
 					return;
 				}
 			}
 		}
 	}
 
-	public void removeSTORED(String address, String fileId, int chunkNo){
+	/*
+	public void removeSTORED(String address, String fileId, int chunkNo, String addOrRemove){
 		InfoFile temp;
 		BackupFile backupFile;
 
@@ -146,14 +150,5 @@ public class FileManager{
 				}
 			}
 		}
-	}
-
-	public BackupFile backup(int fileIndex, int senderID, int desiredReplicationDeg){
-		InfoFile info  = fileList.get(fileIndex);
-		BackupFile backupFile = new BackupFile(info.getFileName(), senderID ,desiredReplicationDeg);
-
-		fileList.set(fileIndex, backupFile);
-		backupFile.splitFile();
-		return backupFile;
-	} 	
+	}*/	
 }

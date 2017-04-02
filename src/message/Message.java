@@ -84,7 +84,7 @@ public class Message{
 	public Header getHeader(){return this.header;}
 	public Body getBody(){return this.body;}
 
-	public boolean isRequest() {return request;}
+	public boolean hasRequest() {return request;}
 
 	public boolean validateIP(String ip){
 

@@ -5,12 +5,11 @@ import java.util.*;
 import utils.Utils;
 
 public class BackupFile extends InfoFile{
-	
+
 	private String fileId;
 	private int senderId;
 	private ArrayList<Set<String>> listChunks;
 	private int desiredReplicationDeg;
-
 
 	public BackupFile(String fileName, int senderId, int desiredReplicationDeg){
 		super(fileName);
@@ -19,30 +18,27 @@ public class BackupFile extends InfoFile{
 		listChunks = new ArrayList<Set<String>>();
 		this.desiredReplicationDeg = desiredReplicationDeg;
 
-		for (int i = 0; i < super.getNChunks(); i++)
+		for (int i = 0; i < super.getNumberChunks(); i++)
 			listChunks.add( new LinkedHashSet<String>() );
 	}
 
 	public String getFileId() {return fileId;}
-
 	public String getAllAddress(){
 		int i = 0;
 		String build = "{ ";
-		for (; i<getNChunks()-1; i++)
+		for (; i<getNumberChunks()-1; i++)
 			build += listChunks.get(i) + " , " ;
 
 		build += listChunks.get(i) + " }";
 
 		return build;
 	}
-
 	public int getDesiredReplicationDeg() { return this.desiredReplicationDeg; }
-
 	public int getNSTORED(int index){
 		return listChunks.get(index).size();
 	}
 
-	public boolean isBackupReplicatedEnough(){
+	public boolean enoughReplication(){
 		for (int i = 0; i < listChunks.size(); i++)
 			if (listChunks.get(i).size() < desiredReplicationDeg)
 				return false;
@@ -67,44 +63,25 @@ public class BackupFile extends InfoFile{
 	}
 
 	@Override
-	public String toString(){
-
-		return "BackupFile{" +
-				super.toString() +
-				"fileId='" + fileId + '\'' +
-				", replicationDeg=" + getAllAddress() +
-				", desiredReplicationDeg=" + desiredReplicationDeg +
-				'}';
-	}
-
-	@Override
-	public String getFileName(){
-		
-		return  super.getFileName() + " , " +
-				fileId + " , " +
-				desiredReplicationDeg + " , " +
-				getAllAddress();
-	}
-
 	public void displayBackupChunks(){
 		int i=0;
 		printHeadList(getFileId());
-		
-		for (; i<getNChunks()-1; i++){
+
+		for (; i<getNumberChunks()-1; i++){
 			System.out.printf("%2d ~ %d/%d , %s bytes\n", i, listChunks.get(i).size(), desiredReplicationDeg, getPartSize());
 		}
-		int lastpart = getFileSize() - ((getNChunks()-1) * getPartSize());
+		int lastpart = getFileSize() - ((getNumberChunks()-1) * getPartSize());
 		System.out.printf("%2d ~ %d/%d , %s bytes\n", i, listChunks.get(i).size(), desiredReplicationDeg, lastpart);
 
 		printTailList(i);
 	}
 
-	public byte[] file(int chunkNo) throws IOException{
-		if (!(chunkNo>=0 && chunkNo<super.getNChunks()))
+	public byte[] getContent(int chunkNo) throws IOException{
+		if (!(chunkNo >= 0 && chunkNo < super.getNumberChunks()))
 			return null;
 
 		File f = new File( getFileId() + ".part" + chunkNo );
-		
+
 		if (f.exists()){
 			int fsize = (int) f.length();
 			FileInputStream fis = new FileInputStream( getFileId() + ".part" + chunkNo );
@@ -116,7 +93,5 @@ public class BackupFile extends InfoFile{
 		return null;
 	}
 
-	public int getSenderId() {
-		return senderId;
-	}
+	public int getSenderId(){return senderId;}
 }

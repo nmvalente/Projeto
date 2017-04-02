@@ -11,7 +11,7 @@ public class Peer{
 	private String localhost;
 	private int peerId;
 	protected MessageManager  inbox;
-	protected FileManager  files;
+	public FileManager  files;
 	protected int indexToChose;
 	protected int indexChosed;
 	protected Chunks chunks;

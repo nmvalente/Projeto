@@ -2,22 +2,21 @@ package files;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-
-import message.Message;
-import utils.Utils;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.io.*;
 
+import message.Message;
+import utils.Utils;
+
 public class Chunks{
-	
+
 	private Map<String, List<ChunkFile>> hashmap;
 
 	public Chunks(){
 		hashmap = new HashMap<String, List<ChunkFile>>();
 	}
-	
+
 	public Map<String, List<ChunkFile>> getChunksList(){
 		return hashmap;
 	}
@@ -27,11 +26,11 @@ public class Chunks{
 		String name = ip + File.separator + Utils.convertBytetoString(m.getHeader().getFileId()) + ".part" + Utils.convertBytetoInt(m.getHeader().getChunkNo()) ;
 
 		try{
-			
+
 			File dir = new File(ip);
 			if (!dir.exists())
 				dir.mkdir();
-			
+
 			addChunk( name, Utils.convertBytetoString(m.getBody().getBody()));
 
 			ChunkFile c = new ChunkFile(m);
@@ -41,13 +40,26 @@ public class Chunks{
 				list.add(c);
 				hashmap.put(ip,list);
 			}
-			else hashmap.get(ip).add(c);
+			else{ //////
+				boolean v = false;
+				for(ChunkFile elem : hashmap.get(ip)){
+					if(elem.equals(c)){
+						v = true;
+					}
+				}
+				if(!v){
+					hashmap.get(ip).add(c);
+					System.out.print("\n\n Adiciona" + c);
+					System.out.print("\n\n Lista" + hashmap.get(ip));
+				}
+			}
+
 		}
 		catch(FileNotFoundException e){e.getMessage();}
 		catch(IOException e){e.getMessage();}
 	}
 
-	public boolean remove(String address, String fileId, int chunkNo){
+	public boolean removeOne(String address, String fileId, int chunkNo){
 		if(hashmap.containsKey(address)){
 			ChunkFile temp;
 			for (Iterator<ChunkFile> it = hashmap.get(address).iterator(); it.hasNext();){
@@ -62,17 +74,12 @@ public class Chunks{
 		return false;
 	}
 
-	public boolean remove(String address, String fileId){
-		System.out.println("Nuno1");
+	public boolean removeAll(String address, String fileId){
 		if(hashmap.containsKey(address)){
 			ChunkFile temp;
 			for(Iterator<ChunkFile> it = hashmap.get(address).iterator(); it.hasNext();){
-				System.out.println("Nuno2");
-
 				temp = it.next();
 				if(Utils.convertBytetoString(temp.getFileId()).equals(fileId)){
-					System.out.println("Nuno3");
-
 					removeChunk(address + File.separator + fileId + ".part" + Utils.convertBytetoInt(temp.getChunkNo()));
 					it.remove();
 				}
@@ -82,15 +89,16 @@ public class Chunks{
 		return false;
 	}
 
-	public boolean remove(String address){
+	/*public boolean remove(String address){
 		removeFolder(address);
 		if(hashmap.containsKey(address)){
 			hashmap.remove(address);
 		}
 		return false;
 	}
+	 */
 
-	public ChunkFile find(String address, String fileId, int chunkNo){
+	public ChunkFile findOne(String address, String fileId, int chunkNo){
 		if(hashmap.containsKey(address)){
 			ChunkFile temp;
 			for(Iterator<ChunkFile> it = hashmap.get(address).iterator(); it.hasNext();){
@@ -103,7 +111,7 @@ public class Chunks{
 		return null;
 	}
 
-	public ArrayList<ChunkFile> find(String address, String fileId){
+	public ArrayList<ChunkFile> findAll(String address, String fileId){
 		if(hashmap.containsKey(address)){
 			ArrayList<ChunkFile> chunkList = new ArrayList<ChunkFile>();
 			ChunkFile temp;
@@ -118,7 +126,7 @@ public class Chunks{
 		return null;
 	}
 
-	public ArrayList<ChunkFile> find(String address){
+	/*public ArrayList<ChunkFile> find(String address){
 		if(hashmap.containsKey(address)){
 			ArrayList<ChunkFile> chunkList = new ArrayList<ChunkFile>();
 			ChunkFile temp;
@@ -130,7 +138,7 @@ public class Chunks{
 		}
 		return null;
 	}
-
+	 */
 	public byte[] file(String address, ChunkFile c) throws IOException{
 		File f = new File(address + File.separator + c.getFileId() + ".part" + c.getChunkNo());
 		if (f.exists()){
@@ -164,7 +172,7 @@ public class Chunks{
 		System.out.println("==========================================" );
 		System.out.println( " Listed " + counter + " chunks.");
 	}
-	
+
 	public ChunkFile selectChunk(int selection){
 		ChunkFile temp = null;
 		int counter = 0;
@@ -177,10 +185,10 @@ public class Chunks{
 				counter++;
 			}
 		}
-		
+
 		return temp;
 	}
-	
+
 	public int getNChunk(){
 		ChunkFile temp = null;
 		int counter = 0;
@@ -191,10 +199,9 @@ public class Chunks{
 				counter++;
 			}
 		}
-		
 		return counter;
 	}
-	
+
 	public String getAdrresforSelection(int selection){
 		ChunkFile temp;
 		int counter = 0;
@@ -203,7 +210,7 @@ public class Chunks{
 			for(Iterator<ChunkFile> it = entry.getValue().iterator(); it.hasNext();){
 				temp = it.next();
 				if(counter == selection)
-				return entry.getKey();
+					return entry.getKey();
 				counter++;
 				//System.out.println(i + " " + temp.simple() );
 			}
@@ -218,12 +225,11 @@ public class Chunks{
 		fos.close();
 	}
 
-	private void removeFolder(String name){
+	/*private void removeFolder(String name){
 		File dir = new File(name);
 		removeDirectory(dir);
 	}
 
-	// source from http://www.java2s.com/Tutorial/Java/0180__File/Removeadirectoryandallofitscontents.htm
 	private static boolean removeDirectory(File directory){
 		if(directory == null | !directory.exists() | !directory.isDirectory())
 			return false;
@@ -245,13 +251,11 @@ public class Chunks{
 		}
 		return directory.delete();
 	}
-
+	 */
 	private void removeChunk(String filepath){
 		System.out.println(filepath);
 		File f = new File(filepath);
-		if (f.exists()){
+		if (f.exists())
 			f.delete();
-		System.out.println("yes");
-		}
 	}
 }
