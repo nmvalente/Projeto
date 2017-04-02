@@ -11,8 +11,6 @@ import java.io.File;
 
 public class Peer{
 
-	
-	
 	private static final int WAITING_TIMES = 5;
 	private static final String CHARSET_NAME = "utf-8";
 	private static int Id = 1;

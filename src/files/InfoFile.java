@@ -8,8 +8,6 @@ import java.util.List;
 
 public class InfoFile{
 	
-	
-	
 	private static final String HASH_TYPE = "SHA-256";
 	private static final int CHUNK_MAX_SIZE = 64000;
 	private String fileName;
@@ -187,5 +185,4 @@ public class InfoFile{
 		System.out.println("\n**************************************************");
 		System.out.println( " List" + i + " chunks.\n");
 	}
-	
 }

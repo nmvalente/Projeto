@@ -8,7 +8,7 @@ public class BackupFile extends InfoFile{
 	private int senderId;
 	private ArrayList<Set<String>> listChunks;
 	private int desiredReplicationDeg;
-	
+
 
 	public BackupFile(String fileName, int senderId, int desiredReplicationDeg){
 		super(fileName);
@@ -102,10 +102,10 @@ public class BackupFile extends InfoFile{
 			return null;
 
 		File f = new File( getFileId() + ".part" + chunkNo );
-		FileInputStream fis;
+		
 		if (f.exists()){
 			int fsize = (int) f.length();
-			fis = new FileInputStream( getFileId() + ".part" + chunkNo );
+			FileInputStream fis = new FileInputStream( getFileId() + ".part" + chunkNo );
 			byte[] data = new byte[fsize];
 			fis.read(data, 0, fsize);
 			f.delete();

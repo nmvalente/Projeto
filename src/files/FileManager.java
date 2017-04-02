@@ -188,7 +188,6 @@ public class FileManager{
 
 		fileList.set(fileIndex, backupFile);
 		backupFile.splitFile();
-		
 		return backupFile;
 	} 	
 }

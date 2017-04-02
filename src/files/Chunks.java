@@ -13,8 +13,7 @@ import java.io.*;
 public class Chunks{
 	
 	private Map<String, List<ChunkFile>> hashmap;
-	
-	
+
 	public Chunks(){
 		hashmap = new HashMap<String, List<ChunkFile>>();
 	}
@@ -134,10 +133,9 @@ public class Chunks{
 
 	public byte[] file(String address, ChunkFile c) throws IOException{
 		File f = new File(address + File.separator + c.getFileId() + ".part" + c.getChunkNo());
-		FileInputStream fis;
 		if (f.exists()){
 			int fsize = (int) f.length();
-			fis = new FileInputStream(address + File.separator + c.getFileId() + ".part" + c.getChunkNo());
+			FileInputStream fis = new FileInputStream(address + File.separator + c.getFileId() + ".part" + c.getChunkNo());
 			byte[] data = new byte[fsize];
 			fis.read(data, 0, fsize);
 			return data;
@@ -184,10 +182,12 @@ public class Chunks{
 	}
 	
 	public int getNChunk(){
+		ChunkFile temp = null;
 		int counter = 0;
 
 		for(Map.Entry<String, List<ChunkFile>> entry : hashmap.entrySet()){
 			for(Iterator<ChunkFile> it = entry.getValue().iterator(); it.hasNext();){
+				temp = it.next();
 				counter++;
 			}
 		}
@@ -196,10 +196,12 @@ public class Chunks{
 	}
 	
 	public String getAdrresforSelection(int selection){
+		ChunkFile temp;
 		int counter = 0;
 
 		for(Map.Entry<String, List<ChunkFile>> entry : hashmap.entrySet()){
 			for(Iterator<ChunkFile> it = entry.getValue().iterator(); it.hasNext();){
+				temp = it.next();
 				if(counter == selection)
 				return entry.getKey();
 				counter++;
@@ -212,7 +214,7 @@ public class Chunks{
 	private void addChunk(String name, String content) throws IOException{
 		FileOutputStream fos;
 		fos = new FileOutputStream(new File( name ));
-		fos.write( content.getBytes());
+		fos.write( content.getBytes() );
 	}
 
 	private void removeFolder(String name){
@@ -247,9 +249,8 @@ public class Chunks{
 		System.out.println(filepath);
 		File f = new File(filepath);
 		if (f.exists()){
-			f.deleteOnExit();
-			f.setWritable(true);
+			f.delete();
+		System.out.println("yes");
 		}
 	}
-	
 }
