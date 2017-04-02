@@ -12,7 +12,7 @@ public class Delete {
 
 		backupFile = (BackupFile) peer.getFiles().getFileList().get(indexChosed);
 
-		peer.inbox.query("DELETE", "1.0", backupFile.getSenderId(),  backupFile.getFileId(), 0, 0, "");
+		peer.inbox.buildMessage("DELETE", "1.0", backupFile.getSenderId(),  backupFile.getFileId(), 0, 0, "");
 
 		backupFile.deleteFile(backupFile.getFileName());
 		peer.getFiles().getFileList().remove(indexChosed);

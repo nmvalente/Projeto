@@ -6,10 +6,11 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
+import utils.Utils;
+
 public class InfoFile{
 	
-	private static final String HASH_TYPE = "SHA-256";
-	private static final int CHUNK_MAX_SIZE = 64000;
+
 	private String fileName;
 	private int fileSize;
 	private int numberOfChunks;
@@ -19,7 +20,7 @@ public class InfoFile{
 		this.fileName = fileName;
 		file = new File(fileName);
 		fileSize = (int) file.length();
-		numberOfChunks  = (int) Math.ceil(fileSize / Math.max(1.0, CHUNK_MAX_SIZE));
+		numberOfChunks  = (int) Math.ceil(fileSize / Math.max(1.0, Utils.CHUNK_MAX_SIZE));
 		//nChunks  = (int) Math.ceil(fileSize/CHUNK_MAX_SIZE);
 	}
 
@@ -31,7 +32,7 @@ public class InfoFile{
 
 	public String getFileName(){return fileName;}
 
-	public int getPartSize(){return CHUNK_MAX_SIZE;}
+	public int getPartSize(){return Utils.CHUNK_MAX_SIZE;}
 
 	public int getFileSize(){return fileSize;}
 
@@ -43,7 +44,7 @@ public class InfoFile{
 		FileInputStream inStream;
 		String newFileName, fileId=hashFileId();
 		FileOutputStream outStream;
-		int i, chunkNo = 0, read = 0, readLength = CHUNK_MAX_SIZE, currentFileSize = fileSize;
+		int i, chunkNo = 0, read = 0, readLength = Utils.CHUNK_MAX_SIZE, currentFileSize = fileSize;
 		byte[] chunkPart;
 
 		try{
@@ -55,7 +56,7 @@ public class InfoFile{
 			System.out.println("******************************");
 
 			for (i = 0; currentFileSize > 0; i++, chunkNo++){
-				readLength = Math.min(currentFileSize, CHUNK_MAX_SIZE);
+				readLength = Math.min(currentFileSize, Utils.CHUNK_MAX_SIZE);
 
 				chunkPart = new byte[readLength];
 
@@ -124,7 +125,7 @@ public class InfoFile{
 
 	private byte[] convertStringToHash(String msg) throws NoSuchAlgorithmException{
 		
-		MessageDigest digest = MessageDigest.getInstance(HASH_TYPE);
+		MessageDigest digest = MessageDigest.getInstance(Utils.HASH_TYPE);
 		byte[] hash = digest.digest(msg.getBytes(StandardCharsets.UTF_8));
 		return hash;
 		

@@ -5,11 +5,12 @@ import java.net.DatagramPacket;
 import java.net.MulticastSocket;
 import interfaces.Main;
 import protocols.Peer;
+import utils.Utils;
+
 import java.util.Date;
 
 public class ReceiveDataChannel extends Thread{
 
-	protected static final int BUFFER_SIZE = 1024;
 	private String name;
 	private MulticastSocket socket;
 	private Peer peer;
@@ -49,7 +50,7 @@ public class ReceiveDataChannel extends Thread{
 			String message;
 			do{
 				try{Thread.sleep(10);}catch(InterruptedException e){e.getMessage(); System.err.println("Error in sleep");}
-				buf = new byte[BUFFER_SIZE];
+				buf = new byte[Utils.BUFFER_SIZE];
 
 				dg = new DatagramPacket( buf , buf.length );
 				socket.receive(dg);

@@ -103,7 +103,6 @@ public class Main{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 
 	public static void displayMenu(){
@@ -184,37 +183,30 @@ public class Main{
 		int option;
 		Scanner in = new Scanner(System.in);
 
-		do {
-
+		do{
 			displayMenu();
 			option = in.nextInt();
 
-			switch (option)
-			{
+			switch (option){
 			case 1 :
 				if(peer.genericSubProtocol(1) == -1)
 					Main.exitNow = true;
 				break;
-
 			case 2 :
 				if(peer.genericSubProtocol(2) == -1)
 					Main.exitNow = true;
 				break;
-
 			case 3 :
 				if(peer.genericSubProtocol(3) == -1)
 					Main.exitNow = true;
 				break;
-
 			case 4 :
 				if(peer.genericSubProtocol(4) == -1)
 					Main.exitNow = true;
 				break;
-
 			case 0 :
 				Main.exitNow = true;
 				break;
-
 			default:
 				System.out.println("Invalid input!");
 				break;

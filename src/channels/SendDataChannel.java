@@ -16,10 +16,6 @@ import files.*;
 
 public class SendDataChannel extends Thread{
 
-	protected static final int MC  = 0;
-	protected static final int MDB = 1;
-	protected static final int MDR = 2;
-
 	private InetAddress[] address;
 	private MulticastSocket[] socket;
 	private Peer peer;
@@ -29,12 +25,12 @@ public class SendDataChannel extends Thread{
 		this.address   = new InetAddress[3];
 		this.socket    = new MulticastSocket[3];
 
-		this.address[MC]  = address[MC];
-		this.address[MDB] = address[MDB];
-		this.address[MDR] = address[MDR];
-		this.socket[MC]   = socket[MC];
-		this.socket[MDB]  = socket[MDB];
-		this.socket[MDR]  = socket[MDR];
+		this.address[Utils.MC]  = address[Utils.MC];
+		this.address[Utils.MDB] = address[Utils.MDB];
+		this.address[Utils.MDR] = address[Utils.MDR];
+		this.socket[Utils.MC]   = socket[Utils.MC];
+		this.socket[Utils.MDB]  = socket[Utils.MDB];
+		this.socket[Utils.MDR]  = socket[Utils.MDR];
 		this.peer         = peer;
 	}
 
@@ -56,7 +52,7 @@ public class SendDataChannel extends Thread{
 			Message unseenMessage;
 			//InfoFile u;
 			String reply,request;
-			int group = MC, r = 0;
+			int group = Utils.MC, r = 0;
 			Random random = new Random();
 			do{
 				try{Thread.sleep(10);}catch(InterruptedException e){e.getMessage();System.err.println("Error in sleep of thread");}
@@ -69,20 +65,20 @@ public class SendDataChannel extends Thread{
 					if(unseenMessage.isRequest()){
 						switch(Utils.convertBytetoString(unseenMessage.getHeader().getMessageType())){
 						case "PUTCHUNK":
-							request = unseenMessage.makeMessage();
-							group = MDB;
+							request = unseenMessage.sendMessage();
+							group = Utils.MDB;
 							break;
 						case "GETCHUNK":
-							request = unseenMessage.makeMessage();
-							group = MC;
+							request = unseenMessage.sendMessage();
+							group = Utils.MC;
 							break;
 						case "DELETE":
-							request = unseenMessage.makeMessage();
-							group = MC;
+							request = unseenMessage.sendMessage();
+							group = Utils.MC;
 							break;
 						case "REMOVED":
-							request = unseenMessage.makeMessage();
-							group = MC;
+							request = unseenMessage.sendMessage();
+							group = Utils.MC;
 							break;
 						}
 						if (request != null){
@@ -101,8 +97,8 @@ public class SendDataChannel extends Thread{
 						switch(Utils.convertBytetoString(unseenMessage.getHeader().getMessageType())){
 						case "PUTCHUNK": // responde com STORED
 							peer.getChunks().add(unseenMessage);
-							reply = unseenMessage.makeAnswer();
-							group = MC;
+							reply = unseenMessage.sendAnswer();
+							group = Utils.MC;
 							break;
 						case "GETCHUNK": // responde com CHUNK
 							ChunkFile c  = peer.getChunks().find( unseenMessage.getAddress() , Utils.convertBytetoString(unseenMessage.getHeader().getFileId()) , Utils.convertBytetoInt(unseenMessage.getHeader().getChunkNo()));
@@ -110,12 +106,12 @@ public class SendDataChannel extends Thread{
 								try{
 									String content;
 									content = new String(peer.getChunks().file(unseenMessage.getAddress(), c), "UTF-8");
-									reply = unseenMessage.makeAnswer() + content;
+									reply = unseenMessage.sendAnswer() + content;
 								}catch(IOException e){
 									// remove referencia do chunk
 									peer.getChunks().remove(unseenMessage.getAddress(), Utils.convertBytetoString(unseenMessage.getHeader().getFileId()), Utils.convertBytetoInt(unseenMessage.getHeader().getChunkNo()));
 								}
-								group = MDR;
+								group = Utils.MDR;
 							}
 							break;
 						case "DELETE": // apaga o ficheiro
@@ -140,7 +136,7 @@ public class SendDataChannel extends Thread{
 							catch(InterruptedException e){e.getMessage();System.err.println("Error doing random integer");}
 							socket[group].send(dg);
 							try{
-								Main.windows.printlnSendChannel( getCurrentTime() + " -   REPLY SENT - " + unseenMessage.makeAnswer() );
+								Main.windows.printlnSendChannel( getCurrentTime() + " -   REPLY SENT - " + unseenMessage.sendAnswer() );
 							}
 							catch (ArithmeticException ex){
 								Main.windows.printlnSendChannel("Error in reply sender thread");

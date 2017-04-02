@@ -22,14 +22,6 @@ public class RestoreFile extends InfoFile{
 
 	public String getFileId() {return fileId;}
 
-	/*@Override
-	public String toString() {
-		return "RestoreFile{" +
-				"chunkList=" + Arrays.toString(chunkList) +
-				", fileId='" + fileId + '\'' +
-				'}';
-	}
-*/
 	@Override
 	public String getFileName() {
 		return Arrays.toString(chunkList) + " , " +

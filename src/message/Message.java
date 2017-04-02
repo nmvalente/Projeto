@@ -3,10 +3,8 @@ package message;
 import utils.Utils;
 
 public class Message{
-	
-	private static final String CRLFCRLF = "\r\n\r\n";
-	//public static final int SHA256LENGTH = 64;
-	private String address = "";
+
+	private String address;// = "";
 	private int port = 0;
 	private boolean request = false;
 	protected Header header;
@@ -14,61 +12,61 @@ public class Message{
 
 	public Message(String address, int port, String s){
 
-		if (!(isValidIP(address) && isPort(port)))
+		if (!(validateIP(address) && validatePort(port)))
 			throw new IllegalArgumentException("Invalid Address and/or Port");
 
 		this.address = address;
 		this.port = port;
 
-		String[] tokens = s.split("\\s");
+		String[] parts = s.split("\\s");
 
-		if (tokens.length < 4)
+		if (parts.length < 4)
 			throw new IllegalArgumentException("Invalid Message Size");
 
-		switch (tokens[0]){
+		switch (parts[0]){
 		case "PUTCHUNK":
 			header = new Header(
-					tokens[0],
-					tokens[1],
-					Integer.parseInt(tokens[2]),
-					tokens[3],
-					Integer.parseInt(tokens[4]),
-					Integer.parseInt(tokens[5])
+					parts[0],
+					parts[1],
+					Integer.parseInt(parts[2]),
+					parts[3],
+					Integer.parseInt(parts[4]),
+					Integer.parseInt(parts[5])
 					);
-
-			body = new Body(tokens,6,tokens.length);
+			body = new Body(parts,6,parts.length);
+			break;
+		case "DELETE":
+			header = new Header(
+					parts[0],
+					parts[1],
+					Integer.parseInt(parts[2]),				
+					parts[3],-1,-1
+					);
+			body = new Body();
 			break;
 		case "STORED":
 		case "GETCHUNK":
 		case "REMOVED":
 			header = new Header(
-					tokens[0],
-					tokens[1],
-					Integer.parseInt(tokens[2]),
-					tokens[3],
-					Integer.parseInt(tokens[4])
+					parts[0],
+					parts[1],
+					Integer.parseInt(parts[2]),
+					parts[3],
+					Integer.parseInt(parts[4]),-1
 					);
 			body = new Body();
 			break;
 		case "CHUNK":
 			header = new Header(
-					tokens[0],
-					tokens[1],
-					Integer.parseInt(tokens[2]),
-					tokens[3],
-					Integer.parseInt(tokens[4])
+					parts[0],
+					parts[1],
+					Integer.parseInt(parts[2]),
+					parts[3],
+					Integer.parseInt(parts[4]),-1
 					);
-			body = new Body(tokens,5,tokens.length);
+			body = new Body(parts,5,parts.length);
 			break;
-		case "DELETE":
-			header = new Header(
-					tokens[0],
-					tokens[1],
-					Integer.parseInt(tokens[2]),				
-					tokens[3]
-					);
-			body = new Body();
-			break;
+		
 		}
 	}
 
@@ -82,83 +80,48 @@ public class Message{
 	}
 
 	public String getAddress() {return this.address;}
-
 	public int getPort() {return this.port;}
-
 	public Header getHeader(){return this.header;}
 	public Body getBody(){return this.body;}
 
 	public boolean isRequest() {return request;}
 
-	/*@Override
-	public String toString(){
-		return "Message{\n" +
-				header.toString() + '\n' +
-				body.toString() + '\n' +
-				'}';
-	}
-*/
-	public boolean isValidIP(String ip) {
-		try {
-			if ( ip == null || ip.isEmpty() ) {
-				return false;
-			}
-			String[] parts = ip.split( "\\." );
-			if ( parts.length != 4 ) {
-				return false;
-			}
-			for ( String s : parts ) {
-				int i = Integer.parseInt( s );
-				if ( (i < 0) || (i > 255) ) {
-					return false;
-				}
-			}
-			if ( ip.endsWith(".") ) {
-				return false;
-			}
-			return true;
-		} catch (NumberFormatException nfe) {
+	public boolean validateIP(String ip){
+
+		if (ip == null || ip.isEmpty()){
 			return false;
 		}
+		return true;
 	}
 
-	private boolean isPort(int p){return (p >= 1 && p <= 49151);}
+	private boolean validatePort(int p){return (p >= 1 && p <= 49151);}
 
-	/*public boolean isNumber(String s){
-		try { 
-			Integer.parseInt(s); 
-		}catch(NumberFormatException e) { 
-			return false; 
-		}
-		return true;
-	}*/
-
-	public String makeMessage(){
+	public String sendMessage(){
 		String build = null;
 		String ss = Utils.convertBytetoString(header.getMessageType()) + " " + Utils.convertBytetoString(header.getVersion())+ " " + Utils.convertBytetoString(header.getSenderId()) + " " + Utils.convertBytetoString(header.getFileId());
 
 		switch (Utils.convertBytetoString(header.getMessageType())){
 		case "PUTCHUNK": 
-			build = ss + " " + Utils.convertBytetoInt(header.getChunkNo()) + " " + Utils.convertBytetoInt(header.getReplicationDeg()) + " " + CRLFCRLF + Utils.convertBytetoString(body.getBody());
+			build = ss + " " + Utils.convertBytetoInt(header.getChunkNo()) + " " + Utils.convertBytetoInt(header.getReplicationDeg()) + " " + Utils.CRLFCRLF + Utils.convertBytetoString(body.getBody());
 			break;
 		case "STORED":
 		case "GETCHUNK":
 		case "REMOVED":
-			build = ss + " " + Utils.convertBytetoInt(header.getChunkNo()) + " " + CRLFCRLF;
+			build = ss + " " + Utils.convertBytetoInt(header.getChunkNo()) + " " + Utils.CRLFCRLF;
 			break;
 		case "CHUNK":
-			build = ss + Utils.convertBytetoInt(header.getChunkNo()) + " " + CRLFCRLF + Utils.convertBytetoString(body.getBody());
+			build = ss + Utils.convertBytetoInt(header.getChunkNo()) + " " + Utils.CRLFCRLF + Utils.convertBytetoString(body.getBody());
 			break; 
 		case "DELETE":
-			build = ss+ " " + CRLFCRLF;
+			build = ss+ " " + Utils.CRLFCRLF;
 			break;
 		}
 		return build;
 	}
 
-	public String makeAnswer(){
+	public String sendAnswer(){
 		String build = null;
-		String ss = " " + Utils.convertBytetoString(header.getVersion()) + " " + Utils.convertBytetoString(header.getSenderId()) + " " + Utils.convertBytetoString(header.getFileId()) + " " + Utils.convertBytetoInt(header.getChunkNo()) + " " + CRLFCRLF;
+		String ss = " " + Utils.convertBytetoString(header.getVersion()) + " " + Utils.convertBytetoString(header.getSenderId()) + " " + Utils.convertBytetoString(header.getFileId()) + " " + Utils.convertBytetoInt(header.getChunkNo()) + " " + Utils.CRLFCRLF;
 		switch (Utils.convertBytetoString(header.getMessageType())){
 		case "PUTCHUNK":
 			build = "STORED" + ss; 

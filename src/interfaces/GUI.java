@@ -7,7 +7,7 @@ import java.awt.Toolkit;
 
 public class GUI implements Runnable{
 
-    private JFrame Windows;
+    private JFrame windows;
     private JTextArea outputAreaSender;
     private JTextArea outputAreaReceiverMC;
     private JTextArea outputAreaReceiverMDB;
@@ -34,15 +34,15 @@ public class GUI implements Runnable{
 
     @Override
     public void run() {
-        Windows = new JFrame();
-        Windows.setAlwaysOnTop(false);
-		Windows.setIconImage(Toolkit.getDefaultToolkit().getImage("..\\Upload-to_Cloud-512.png"));
-		Windows.setResizable(false);
-		Windows.setTitle("SDIS - Distributed Backup Service"); 
-		Windows.setBackground(Color.WHITE);
-		Windows.setBounds(0, 0, 1125, 900);
-		Windows.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		Windows.setLayout(null);
+        windows = new JFrame();
+        windows.setAlwaysOnTop(false);
+		windows.setIconImage(Toolkit.getDefaultToolkit().getImage("..\\Upload-to_Cloud-512.png"));
+		windows.setResizable(false);
+		windows.setTitle("SDIS - Distributed Backup Service"); 
+		windows.setBackground(Color.WHITE);
+		windows.setBounds(0, 0, 1125, 900);
+		windows.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		windows.setLayout(null);
 		
         scrollPaneSender = new JScrollPane(outputAreaSender);
         JPanel outputPanelSender = new JPanel(new FlowLayout());
@@ -68,11 +68,11 @@ public class GUI implements Runnable{
         scrollPaneReceiverMDR.setBorder(BorderFactory.createTitledBorder("MDR"));
         outputPanelReceiverMDR.add(scrollPaneReceiverMDR);
 
-        Windows.add(outputPanelSender);
-        Windows.add(outputPanelReceiverMC);
-        Windows.add(outputPanelReceiverMDB);
-        Windows.add(outputPanelReceiverMDR);
-        Windows.setVisible(true);
+        windows.add(outputPanelSender);
+        windows.add(outputPanelReceiverMC);
+        windows.add(outputPanelReceiverMDB);
+        windows.add(outputPanelReceiverMDR);
+        windows.setVisible(true);
     }
 
     private void updateTextSender(final String text) {

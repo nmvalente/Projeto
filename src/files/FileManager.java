@@ -39,14 +39,6 @@ public class FileManager{
 				return true;
 			}
 		}
-		/*for (Iterator<InfoFile> it = fileList.iterator(); it.hasNext();){
-			temp = it.next();
-
-			if (temp.getFileName().equals(fileName)){
-				it.remove();
-				return true;
-			}
-		}*/
 		return false;
 	}
 
@@ -137,19 +129,6 @@ public class FileManager{
 				}
 			}
 		}
-
-
-
-		/*for (Iterator<InfoFile> it = fileList.iterator(); it.hasNext();){
-			temp = it.next();
-			if(temp instanceof BackupFile){
-				if(((BackupFile) temp).getFileId().equals(fileId)){
-					backupFile = (BackupFile) temp;
-					backupFile.addAddressOfChunk(chunkNo,address);
-					return;
-				}
-			}
-		}*/
 	}
 
 	public void removeSTORED(String address, String fileId, int chunkNo){
@@ -167,19 +146,6 @@ public class FileManager{
 				}
 			}
 		}
-
-
-		/*
-		for(Iterator<InfoFile> it = fileList.iterator(); it.hasNext();){
-			temp = it.next();
-			if(temp instanceof BackupFile){
-				if(((BackupFile) temp).getFileId().equals(fileId)){
-					backupFile = (BackupFile) temp;
-					backupFile.removeAddressOfChunk(chunkNo,address);
-					return;
-				}
-			}
-		}*/
 	}
 
 	public BackupFile backup(int fileIndex, int senderID, int desiredReplicationDeg){

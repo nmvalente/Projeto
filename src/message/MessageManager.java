@@ -36,7 +36,7 @@ public class MessageManager{
 		Message message = null;
 
 		try	{
-			message = new Message(address.substring(1),port,s);
+			message = new Message(address.substring(1),port,s); // to remove the / before ipNumber
 			unseenMessages.add(message);
 			return message.getHeader().printHeader();
 		}
@@ -47,7 +47,7 @@ public class MessageManager{
 		return "Error in newMessage";
 	}
 
-	public String query(String msgtype, String version, int senderId, String fileId, int chunkNo, int replicationDeg, String msg){
+	public Message buildMessage(String msgtype, String version, int senderId, String fileId, int chunkNo, int replicationDeg, String msg){
 		
 		Message message = null;
 
@@ -56,11 +56,11 @@ public class MessageManager{
 
 			unseenMessages.add(message);
 
-			return message.getHeader().printHeader();
+			return message;//message.getHeader().printHeader();
 		}catch (IllegalArgumentException e){
-			e.getMessage();
+			e.getMessage(); System.err.println("error in build message");
 		}
 
-		return "Error in message query";
+		return message;//"Error in message query";
 	}
 }
