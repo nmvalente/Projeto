@@ -3,7 +3,6 @@ package files;
 import java.io.File;
 
 import message.Message;
-import utils.Utils;
 
 public class ChunkFile{
 	
@@ -43,6 +42,6 @@ public class ChunkFile{
     }
 
 	public byte[] getSenderId() {
-		return getSenderId();
+		return senderID;
 	}
 }

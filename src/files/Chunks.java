@@ -13,7 +13,8 @@ import java.io.*;
 public class Chunks{
 	
 	private Map<String, List<ChunkFile>> hashmap;
-
+	
+	
 	public Chunks(){
 		hashmap = new HashMap<String, List<ChunkFile>>();
 	}
@@ -63,12 +64,17 @@ public class Chunks{
 	}
 
 	public boolean remove(String address, String fileId){
+		System.out.println("Nuno1");
 		if(hashmap.containsKey(address)){
 			ChunkFile temp;
 			for(Iterator<ChunkFile> it = hashmap.get(address).iterator(); it.hasNext();){
+				System.out.println("Nuno2");
+
 				temp = it.next();
-				if(Utils.convertBytetoString(temp.getFileId()) == fileId){
-					removeChunk(address + File.separator + fileId + ".part" + temp.getChunkNo());
+				if(Utils.convertBytetoString(temp.getFileId()).equals(fileId)){
+					System.out.println("Nuno3");
+
+					removeChunk(address + File.separator + fileId + ".part" + Utils.convertBytetoInt(temp.getChunkNo()));
 					it.remove();
 				}
 			}
@@ -128,9 +134,10 @@ public class Chunks{
 
 	public byte[] file(String address, ChunkFile c) throws IOException{
 		File f = new File(address + File.separator + c.getFileId() + ".part" + c.getChunkNo());
+		FileInputStream fis;
 		if (f.exists()){
 			int fsize = (int) f.length();
-			FileInputStream fis = new FileInputStream(address + File.separator + c.getFileId() + ".part" + c.getChunkNo());
+			fis = new FileInputStream(address + File.separator + c.getFileId() + ".part" + c.getChunkNo());
 			byte[] data = new byte[fsize];
 			fis.read(data, 0, fsize);
 			return data;
@@ -150,8 +157,8 @@ public class Chunks{
 
 			for(Iterator<ChunkFile> it = entry.getValue().iterator(); it.hasNext();){
 				temp = it.next();
-				counter++;
 				System.out.printf("     %2d ~ %s\n", counter, temp.toString());
+				counter++;
 				//System.out.println(i + " " + temp.simple() );
 			}
 		}
@@ -165,23 +172,47 @@ public class Chunks{
 		int counter = 0;
 
 		for(Map.Entry<String, List<ChunkFile>> entry : hashmap.entrySet()){
-			System.out.println(" $ " + entry.getKey());
-
 			for(Iterator<ChunkFile> it = entry.getValue().iterator(); it.hasNext();){
 				temp = it.next();
-				counter++;
 				if(counter == selection)
 					return temp;
+				counter++;
 			}
 		}
 		
 		return temp;
 	}
+	
+	public int getNChunk(){
+		int counter = 0;
+
+		for(Map.Entry<String, List<ChunkFile>> entry : hashmap.entrySet()){
+			for(Iterator<ChunkFile> it = entry.getValue().iterator(); it.hasNext();){
+				counter++;
+			}
+		}
+		
+		return counter;
+	}
+	
+	public String getAdrresforSelection(int selection){
+		int counter = 0;
+
+		for(Map.Entry<String, List<ChunkFile>> entry : hashmap.entrySet()){
+			for(Iterator<ChunkFile> it = entry.getValue().iterator(); it.hasNext();){
+				if(counter == selection)
+				return entry.getKey();
+				counter++;
+				//System.out.println(i + " " + temp.simple() );
+			}
+		}
+		return null;
+	}
 
 	private void addChunk(String name, String content) throws IOException{
 		FileOutputStream fos;
 		fos = new FileOutputStream(new File( name ));
-		fos.write( content.getBytes() );
+		fos.write( content.getBytes());
 	}
 
 	private void removeFolder(String name){
@@ -213,8 +244,12 @@ public class Chunks{
 	}
 
 	private void removeChunk(String filepath){
+		System.out.println(filepath);
 		File f = new File(filepath);
-		if (f.exists())
-			f.delete();
+		if (f.exists()){
+			f.deleteOnExit();
+			f.setWritable(true);
+		}
 	}
+	
 }

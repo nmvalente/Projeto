@@ -5,10 +5,14 @@ import java.util.Scanner;
 
 import files.*;
 import message.MessageManager;
+import utils.Utils;
+
 import java.io.File;
 
 public class Peer{
 
+	
+	
 	private static final int WAITING_TIMES = 5;
 	private static final String CHARSET_NAME = "utf-8";
 	private static int Id = 1;
@@ -53,7 +57,7 @@ public class Peer{
 		else{
 			// RECLAIM
 			chunks.list();
-			this.indexToChose = this.chunks.getChunksList().size();
+			this.indexToChose = this.chunks.getNChunk();
 		}
 		System.out.printf("\nOption [0-" + (this.indexToChose-1) +"] > ");  
 		indexChosed = scanner.nextInt();
@@ -113,16 +117,18 @@ public class Peer{
 					}
 				}
 				break;
-			case 3:
-				/*
-					inbox.query("REMOVED", "1.0", this.chunks.getChunksList().get(key) pFile.getSenderId(),  backupFile.getFileId(), i, 0, "");
-
-
-
-					files.getFileList().get(indexChosed).
-					files.getFileList().get(indexChosed).deleteFile(files.getFileList().get(indexChosed).getFileName());
-
-					files.getFileList().remove(indexChosed);*/
+			case 3:				
+				
+					inbox.query("REMOVED", "1.0", Utils.convertBytetoInt(this.chunks.selectChunk(indexChosed).getSenderId()),
+							Utils.convertBytetoString(this.chunks.selectChunk(indexChosed).getFileId()),
+							Utils.convertBytetoInt(this.chunks.selectChunk(indexChosed).getChunkNo()), 0, "");
+					
+					this.chunks.remove(this.chunks.getAdrresforSelection(indexChosed), Utils.convertBytetoString(this.chunks.selectChunk(indexChosed).getFileId()));
+					/*System.out.println("Adrress to remove: -");
+					System.out.println(this.chunks.getAdrresforSelection(indexChosed));
+					System.out.println("File ID: -");
+					System.out.println(Utils.convertBytetoString(this.chunks.selectChunk(indexChosed).getFileId()));
+*/
 
 				System.out.println("> Reclaimed space!");
 				break;
