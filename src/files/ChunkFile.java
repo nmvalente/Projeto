@@ -3,6 +3,7 @@ package files;
 import java.io.File;
 
 import message.Message;
+import utils.Utils;
 
 public class ChunkFile{
 	
@@ -34,10 +35,10 @@ public class ChunkFile{
     @Override
     public String toString() {
         return "Chunk{" +
-                ", fileId='" + fileId + '\'' +
-                ", senderId='" + senderID + '\'' +
-                ", chunkNo=" + chunkNo + '\'' +
-                ", replicationDeg=" + replicationDeg +
+        		" fileId='" + Utils.convertBytetoString(fileId) + '\'' +
+                ", senderId='" + Utils.convertBytetoInt(senderID) + '\'' +
+                ", chunkNo=" + Utils.convertBytetoInt(chunkNo) + '\'' +
+                ", replicationDeg=" + Utils.convertBytetoInt(replicationDeg) +
                 '}';
     }
 

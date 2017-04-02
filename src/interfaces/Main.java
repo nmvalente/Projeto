@@ -11,7 +11,6 @@ import javax.swing.SwingUtilities;
 import channels.ReceiveDataChannel;
 import channels.SendDataChannel;
 import protocols.Peer;
-import utils.Utils;
 
 public class Main{
 
@@ -22,19 +21,19 @@ public class Main{
 
 		if(analyseArgs(args) == -1)
 			return;
+
+		MulticastSocket[] multicastSockets = new MulticastSocket[3];
+		InetAddress[] group = new InetAddress[3];
 		
-		MulticastSocket[] multicastSockets = null;
-		InetAddress[] group = null;
-
-		init_program(args);
-
+		init(args, multicastSockets, group);
+		
 		finish_program(multicastSockets, group);
-
 
 	}
 
 	private static void finish_program(MulticastSocket[] multicastSockets, InetAddress[] group) {
 		System.out.println("Turning off...");
+
 
 		// Fecha os sockets
 		try {
@@ -43,14 +42,22 @@ public class Main{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+
 		// Sai do programa
 		System.exit(0);
+		
 	}
 
-	private static void init_program(String[] args) throws IOException {
-		Peer peer = new Peer( InetAddress.getLocalHost().getHostAddress() );
-		MulticastSocket[] multicastSockets = new MulticastSocket[3];
-		InetAddress[] group = new InetAddress[3];
+	private static void init(String[] args, MulticastSocket[] multicastSockets, InetAddress[] group) {
+		Peer peer = null;
+		try {
+			peer = new Peer( InetAddress.getLocalHost().getHostAddress() );
+		} catch (UnknownHostException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
 
 
 		// Inicia os Sockets
@@ -84,11 +91,19 @@ public class Main{
 			e.printStackTrace();
 		}
 
+
 		// Obtem lista de todos os ficheiros da pasta storage
 		peer.getFiles().getAllFilesFromStorage();
 
+
 		// Ciclo principal menu
-		mainLoop(peer);
+		try {
+			mainLoop(peer);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 	public static void displayMenu(){

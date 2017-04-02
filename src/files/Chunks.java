@@ -215,6 +215,7 @@ public class Chunks{
 		FileOutputStream fos;
 		fos = new FileOutputStream(new File( name ));
 		fos.write( content.getBytes() );
+		fos.close();
 	}
 
 	private void removeFolder(String name){

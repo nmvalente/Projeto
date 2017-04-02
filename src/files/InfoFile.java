@@ -145,6 +145,7 @@ public class InfoFile{
 		FileOutputStream fos;
 		fos = new FileOutputStream(new File(name));
 		fos.write(content.getBytes());
+		fos.close();
 	}
 
 	// removi static

@@ -5,14 +5,11 @@ import java.util.Scanner;
 
 import files.*;
 import message.MessageManager;
-import utils.Utils;
-
-import java.io.File;
 
 public class Peer{
 
 	private static final int WAITING_TIMES = 5;
-	private static final String CHARSET_NAME = "utf-8";
+	protected static final String CHARSET_NAME = "utf-8";
 	private static int Id = 1;
 	private String localhost;
 	private int peerId;
@@ -22,7 +19,6 @@ public class Peer{
 	protected int indexChosed;
 	protected Chunks chunks;
 	protected Scanner scanner = new Scanner(System.in);
-	private BackupFile backupFile;
 	private Random random;
 
 	public RestoreFile restoreFile = null;
@@ -45,18 +41,9 @@ public class Peer{
 	public int getPeerId(){return this.peerId;}
 
 	public int genericSubProtocol(int subProtocol) throws IOException{
-		int i=0;
-		if(subProtocol != 3){
-			// Lista de ficheiros
-			if(files.printAllFilesStored() == -1)
-				return -1;
-			this.indexToChose = this.files.getNumberOfFiles();
-		}
-		else{
-			// RECLAIM
-			chunks.list();
-			this.indexToChose = this.chunks.getNChunk();
-		}
+
+		calc_bound_index(subProtocol);
+
 		System.out.printf("\nOption [0-" + (this.indexToChose-1) +"] > ");  
 		indexChosed = scanner.nextInt();
 
@@ -64,86 +51,19 @@ public class Peer{
 		if ( indexChosed >= 0 && indexChosed < indexToChose ){
 
 			switch(subProtocol){
-			case 1: // BACKUP
-				// receber desiredReplicationDeg
+			case 1:	
 				System.out.printf("\nReplication Degree [1-9] > ");
 				int desiredReplicationDeg = scanner.nextInt();
-				String message = null;
-				if (!(files.getFileList().get(indexChosed).getClass().getName().equals(BackupFile.class.getName()))){
-					backupFile = files.backup(indexChosed, this.peerId, desiredReplicationDeg);
-					try {
-						System.out.println(" Receiving chunk backup confirmation");
-
-						for (i=0; i < backupFile.getNChunks(); i++){
-							System.out.println("\n**************************************************");
-							System.out.println("> Waiting for next STORED reply" );
-
-							message = new String(backupFile.file(i), CHARSET_NAME);
-
-							backupLoop(subProtocol, desiredReplicationDeg, i, message);
-						}
-						System.out.println("\n**************************************************");
-						System.out.println(" File backup finished. " + ((backupFile.isBackupReplicatedEnough()) ? "Successful" : "Incomplete") + ".\n");
-
-						backupFile.displayBackupChunks();
-					}
-					catch(IOException e){e.getMessage(); System.err.println("Generic subProtocol case 1");}
-				}
-				else{System.out.println(" File is already in backup.");}
+				new Backup(this.indexChosed, desiredReplicationDeg, this);
 				break;			
-			case 2:  // RESTORE
-				if (files.getFileList().get(indexChosed).getClass().getName().equals(BackupFile.class.getName())){
-					backupFile = (BackupFile) files.getFileList().get(indexChosed);
-					restoreFile = new RestoreFile( (InfoFile) backupFile );
-
-					for (i=0; i < backupFile.getNChunks(); i++){
-						inbox.query("GETCHUNK","1.0",backupFile.getSenderId(), backupFile.getFileId(),i,1,"");
-					}
-
-					System.out.println(" Receiving chunk restore information");
-					System.out.println("\n**************************************************");
-					restoreLoop(subProtocol);
-					System.out.println("\n**************************************************");
-					System.out.println(" File restore finished. " + ((restoreFile.isComplete()) ? "Successful" : "Incomplete") + ".\n");
-
-					restoreFile.displayBackedChunks();
-
-					if(restoreFile.isComplete()){
-						restoreFile.merge();
-						restoreFile.deleteDirectory( new File(backupFile.getFileId()));
-						restoreFile = null;
-					}
-				}
+			case 2: 
+				new Restore(this.indexChosed, this, this.restoreFile);
 				break;
-			case 3:				
-				
-					inbox.query("REMOVED", "1.0", Utils.convertBytetoInt(this.chunks.selectChunk(indexChosed).getSenderId()),
-							Utils.convertBytetoString(this.chunks.selectChunk(indexChosed).getFileId()),
-							Utils.convertBytetoInt(this.chunks.selectChunk(indexChosed).getChunkNo()), 0, "");
-					
-					this.chunks.remove(this.chunks.getAdrresforSelection(indexChosed), Utils.convertBytetoString(this.chunks.selectChunk(indexChosed).getFileId()));
-					/*System.out.println("Adrress to remove: -");
-					System.out.println(this.chunks.getAdrresforSelection(indexChosed));
-					System.out.println("File ID: -");
-					System.out.println(Utils.convertBytetoString(this.chunks.selectChunk(indexChosed).getFileId()));
-*/
-
-				System.out.println("> Reclaimed space!");
+			case 3:	
+				new Reclaim(this.indexChosed, this);
 				break;
-			case 4: // DELETE
-
-				if (files.getFileList().get(indexChosed).getClass().getName().equals(BackupFile.class.getName())){
-
-					backupFile = (BackupFile) files.getFileList().get(indexChosed);
-
-					inbox.query("DELETE", "1.0", backupFile.getSenderId(),  backupFile.getFileId(), i, 0, "");
-
-					backupFile.deleteFile(backupFile.getFileName());
-					files.getFileList().remove(indexChosed);
-
-					System.out.println("> File deleted!");
-				}
-				else{System.out.println("> Not in backup!");}
+			case 4:
+				new Delete(this.indexChosed, this);			
 				break;
 			default:
 				break;
@@ -153,7 +73,20 @@ public class Peer{
 		return 0;
 	}
 
-	public void restoreLoop(int subProtocol){
+	private int calc_bound_index(int subProtocol) {
+		if(subProtocol != 3){
+			if(files.printAllFilesStored() == -1)
+				return -1;
+			this.indexToChose = this.files.getNumberOfFiles();
+		}
+		else{// RECLAIM
+			chunks.list();
+			this.indexToChose = this.chunks.getNChunk();
+		}
+		return this.indexToChose;
+	}
+
+	public void restoreLoop(int subProtocol, RestoreFile restoreFile){
 		int count = 0, alea;
 		alea = random.nextInt(400);
 		do{
@@ -167,7 +100,7 @@ public class Peer{
 		}while(count < WAITING_TIMES && !restoreFile.isComplete());
 	}
 
-	public int backupLoop(int subProtocol, int desiredReplicationDeg, int i, String msg){
+	public int backupLoop(int subProtocol, int desiredReplicationDeg, int i, String msg, BackupFile backupFile){
 		int nStored, count=0, alea;
 		alea = random.nextInt(400);
 		do{ 
