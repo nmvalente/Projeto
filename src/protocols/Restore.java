@@ -27,7 +27,7 @@ public class Restore {
 
 			System.out.println(" Receiving chunk restore information");
 			System.out.println("\n**************************************************");
-			restoreLoop(2, restoreFile);
+			restoreLoop(restoreFile);
 			System.out.println("\n**************************************************");
 			System.out.println(" File restore finished. " + ((restoreFile.isComplete()) ? "Successful" : "Incomplete") + ".\n");
 
@@ -44,7 +44,7 @@ public class Restore {
 	}
 	
 	
-	public void restoreLoop(int subProtocol, RestoreFile restoreFile){
+	public void restoreLoop(RestoreFile restoreFile){
 		int count = 0, alea;
 		alea = random.nextInt(400);
 		do{

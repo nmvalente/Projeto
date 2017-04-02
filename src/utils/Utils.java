@@ -1,6 +1,8 @@
 package utils;
 
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 
 public class Utils{
@@ -45,4 +47,29 @@ public class Utils{
 		return false;
 	}
 
+	
+	public static String hashFileId(String fileName){
+		String hashname = null;
+		try{
+			hashname = convertHashToString(convertStringToHash(fileName));
+		}catch(NoSuchAlgorithmException e){
+			e.printStackTrace();
+		}
+		return hashname;
+	}
+
+	private static byte[] convertStringToHash(String msg) throws NoSuchAlgorithmException{
+
+		MessageDigest digest = MessageDigest.getInstance(Utils.HASH_TYPE);
+		byte[] hash = digest.digest(msg.getBytes(StandardCharsets.UTF_8));
+		return hash;
+	}
+
+	private static String convertHashToString(byte[] bytes) throws NoSuchAlgorithmException{
+		StringBuffer result = new StringBuffer();
+		for (byte byt : bytes) result.append(Integer.toString((byt & 0xff) + 0x100, 16).substring(1));
+		return result.toString();
+	}
+	
+	
 }

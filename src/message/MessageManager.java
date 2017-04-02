@@ -38,7 +38,7 @@ public class MessageManager{
 		try	{
 			message = new Message(address.substring(1),port,s); // to remove the / before ipNumber
 			unseenMessages.add(message);
-			return message.getHeader().printHeader();
+			return message.getHeader().getHeaderBuild();
 		}
 		catch (IllegalArgumentException e){
 			e.getMessage();

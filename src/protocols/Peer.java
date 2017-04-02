@@ -32,7 +32,6 @@ public class Peer{
 	public MessageManager getInbox(){return inbox;}
 	public FileManager getFiles(){return files;}
 	public Chunks getChunks(){return chunks;}
-
 	public int getPeerId(){return this.peerId;}
 
 	public int genericSubProtocol(int subProtocol) throws IOException{

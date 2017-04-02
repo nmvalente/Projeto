@@ -2,6 +2,8 @@ package files;
 import java.io.*;
 import java.util.*;
 
+import utils.Utils;
+
 public class BackupFile extends InfoFile{
 	
 	private String fileId;
@@ -13,7 +15,7 @@ public class BackupFile extends InfoFile{
 	public BackupFile(String fileName, int senderId, int desiredReplicationDeg){
 		super(fileName);
 		this.senderId = senderId;
-		fileId = hashFileId();
+		fileId = Utils.hashFileId(fileName);
 		listChunks = new ArrayList<Set<String>>();
 		this.desiredReplicationDeg = desiredReplicationDeg;
 

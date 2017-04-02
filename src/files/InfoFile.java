@@ -1,15 +1,12 @@
 package files;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
 import utils.Utils;
 
 public class InfoFile{
-	
+
 
 	private String fileName;
 	private int fileSize;
@@ -21,28 +18,26 @@ public class InfoFile{
 		file = new File(fileName);
 		fileSize = (int) file.length();
 		numberOfChunks  = (int) Math.ceil(fileSize / Math.max(1.0, Utils.CHUNK_MAX_SIZE));
-		//nChunks  = (int) Math.ceil(fileSize/CHUNK_MAX_SIZE);
 	}
 
 	public InfoFile(InfoFile file){
 		this.fileName = file.getFileName();
 		this.fileSize = file.getFileSize();
 		this.numberOfChunks  = file.getNChunks();
+		this.file = file.getFile();
 	}
 
+	// Get methods
+	
 	public String getFileName(){return fileName;}
-
 	public int getPartSize(){return Utils.CHUNK_MAX_SIZE;}
-
 	public int getFileSize(){return fileSize;}
-
 	public int getNChunks(){return numberOfChunks;}
-
 	public File getFile() {return file;}
 
 	public void splitFile(){
 		FileInputStream inStream;
-		String newFileName, fileId=hashFileId();
+		String newFileName, fileId=Utils.hashFileId(this.fileName);
 		FileOutputStream outStream;
 		int i, chunkNo = 0, read = 0, readLength = Utils.CHUNK_MAX_SIZE, currentFileSize = fileSize;
 		byte[] chunkPart;
@@ -93,9 +88,9 @@ public class InfoFile{
 		FileOutputStream fOutStream = new FileOutputStream(aux_file,true);
 		FileInputStream fInStream;
 		byte[] fileBytes;
-		
+
 		List<File> list = new ArrayList<File>();
-		String fileId = hashFileId();
+		String fileId = Utils.hashFileId(this.fileName);
 		for (int i = 0 ; i < numberOfChunks ; i++){
 			list.add(new File( fileId + File.separator + fileId + ".part" + i));
 		}
@@ -113,35 +108,8 @@ public class InfoFile{
 		fOutStream = null;
 	}
 
-	public String hashFileId(){
-		String hashname = null;
-		try{
-			hashname = convertHashToString(convertStringToHash(fileName));
-		}catch(NoSuchAlgorithmException e){
-			e.printStackTrace();
-		}
-		return hashname;
-	}
-
-	private byte[] convertStringToHash(String msg) throws NoSuchAlgorithmException{
-		
-		MessageDigest digest = MessageDigest.getInstance(Utils.HASH_TYPE);
-		byte[] hash = digest.digest(msg.getBytes(StandardCharsets.UTF_8));
-		return hash;
-		
-		/*MessageDigest digest = MessageDigest.getInstance(HASH_TYPE);
-		byte[] inputBytes = msg.getBytes();
-		byte[] hashBytes = digest.digest(inputBytes);
-		return hashBytes;
-		*/
-	}
-
-	private String convertHashToString(byte[] bytes) throws NoSuchAlgorithmException{
-		StringBuffer result = new StringBuffer();
-		for (byte byt : bytes) result.append(Integer.toString((byt & 0xff) + 0x100, 16).substring(1));
-		return result.toString();
-	}
 	
+
 	protected void addChunk(String name, String content) throws IOException{
 		FileOutputStream fos;
 		fos = new FileOutputStream(new File(name));
@@ -161,10 +129,10 @@ public class InfoFile{
 			if (entry.isDirectory())
 				if (!deleteDirectory(entry))
 					return false;
-			else{
-				if(!entry.delete())
-					return false;
-			}
+				else{
+					if(!entry.delete())
+						return false;
+				}
 		}
 		return directory.delete();
 	}

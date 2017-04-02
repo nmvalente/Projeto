@@ -25,7 +25,7 @@ public class Backup {
 
 					message = new String(backupFile.file(i), Utils.CHARSET_NAME);
 
-					backupLoop(1, desiredReplicationDeg, i, message, backupFile, peer);
+					backupLoop(desiredReplicationDeg, i, message, backupFile, peer);
 				}
 				System.out.println("\n**************************************************");
 				System.out.println(" File backup finished. " + ((backupFile.isBackupReplicatedEnough()) ? "Successful" : "Incomplete") + ".\n");
@@ -38,7 +38,7 @@ public class Backup {
 	}
 
 
-	public int backupLoop(int subProtocol, int desiredReplicationDeg, int i, String msg, BackupFile backupFile, Peer peer){
+	public int backupLoop(int desiredReplicationDeg, int i, String msg, BackupFile backupFile, Peer peer){
 		int nStored, count=0, alea;
 		alea = random.nextInt(400);
 		do{ 

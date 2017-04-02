@@ -12,10 +12,10 @@ public class RestoreFile extends InfoFile{
 	private boolean[] chunkList;
 	private String fileId;
 
-	public RestoreFile(InfoFile u){
-		super(u);
+	public RestoreFile(InfoFile info){
+		super(info);
 		chunkList = new boolean[super.getNChunks()];
-		fileId = hashFileId();
+		fileId = Utils.hashFileId(info.getFileName());
 	}
 
 	public boolean[] getChunkList() {return chunkList;}

@@ -86,7 +86,7 @@ public class SendDataChannel extends Thread{
 							dg = new DatagramPacket( request.getBytes() , request.length() , address[group] , socket[group].getLocalPort() );
 							socket[group].send(dg);
 							try{
-								Main.windows.printlnSendChannel( getCurrentTime() + " - REQUEST SENT - " + unseenMessage.getHeader().printHeader());
+								Main.windows.printlnSendChannel( getCurrentTime() + " - REQUEST SENT - " + unseenMessage.getHeader().getHeaderBuild());
 							}
 							catch (ArithmeticException ex){
 								Main.windows.printlnSendChannel("Error in request sender thread");
