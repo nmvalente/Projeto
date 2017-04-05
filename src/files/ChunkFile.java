@@ -32,24 +32,4 @@ public class ChunkFile{
 		else
 			return false;
 	}
-	
-	/*
-	public void deleteFile(String pathName){
-		File f = new File(pathName);
-		if (f.exists()){
-			f.delete();
-		}
-	}
-	 */
-	/*@Override
-    public String toString() {
-        return "Chunk{" +
-        		" fileId='" + Utils.convertBytetoString(fileId) + '\'' +
-                ", senderId='" + Utils.convertBytetoInt(senderID) + '\'' +
-                ", chunkNo=" + Utils.convertBytetoInt(chunkNo) + '\'' +
-                ", replicationDeg=" + Utils.convertBytetoInt(replicationDeg) +
-                '}';
-    }
-	 */
-
 }

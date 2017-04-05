@@ -56,17 +56,21 @@ public class FileManager{
 		return null;
 	}
 
-	public void getAllFilesFromStorage(){
+	public void getAllFilesFromStorage(String allOrRegular){
 		File folder = new File(".");
 		File[] listOfFiles = folder.listFiles();
 
 		for(int i = 0; i < listOfFiles.length; i++){ 
 			if(listOfFiles[i].isFile()){
-				add(listOfFiles[i].getName());
+				if(allOrRegular.equals("all"))
+					add(listOfFiles[i].getName());
+				else if(allOrRegular.equals("regular") && !(listOfFiles[i].getName().contains(".part"))){
+					add(listOfFiles[i].getName());
+				}
 			}
 		}
 	}
-
+	
 	public String rightpad(String text, int length) {
 		return String.format("%-" + length + "." + length + "s", text);
 	}

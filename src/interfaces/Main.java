@@ -12,6 +12,7 @@ import channels.ReceiveDataChannel;
 import channels.SendDataChannel;
 import protocols.Peer;
 
+
 public class Main{
 
 	public static boolean exitNow = false;
@@ -28,7 +29,6 @@ public class Main{
 		init(args, multicastSockets, group);
 		
 		finish_program(multicastSockets, group);
-
 	}
 
 	private static void finish_program(MulticastSocket[] multicastSockets, InetAddress[] group) {
@@ -93,8 +93,7 @@ public class Main{
 
 
 		// Obtem lista de todos os ficheiros da pasta storage
-		peer.getFiles().getAllFilesFromStorage();
-
+		peer.getFiles().getAllFilesFromStorage("regular");
 
 		// Ciclo principal menu
 		try {
@@ -139,6 +138,14 @@ public class Main{
 		group[2] = InetAddress.getByName( address );
 		multicastSockets[2] = new MulticastSocket(Integer.parseInt( port ));
 		multicastSockets[2].joinGroup(group[2]);
+		
+		
+		
+	////////////////////////////// analisar //////////////////////////////////
+		
+		multicastSockets[0].setTimeToLive(1);
+		multicastSockets[1].setTimeToLive(1);
+		multicastSockets[2].setTimeToLive(1);
 	}
 
 	public static void initThreads(Peer peer, MulticastSocket[] multicastSockets, InetAddress[] group) {

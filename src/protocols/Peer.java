@@ -1,5 +1,7 @@
 package protocols;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Scanner;
 
 import files.*;
@@ -7,7 +9,6 @@ import message.MessageManager;
 
 public class Peer{
 
-	private static int Id = 1;
 	private String localhost;
 	private int peerId;
 	protected MessageManager  inbox;
@@ -19,13 +20,14 @@ public class Peer{
 
 	public RestoreFile restoreFile = null;
 
-	public Peer(String localhost){
+	public Peer(String localhost) throws UnknownHostException{
 		this.localhost = localhost;
 		inbox  = new MessageManager();
 		files  = new FileManager();
 		chunks = new Chunks();
-		peerId = Id;
-		Id++;
+		InetAddress ia = InetAddress.getByName("230.1.2.3");
+		PeerID peer_auxID = new PeerID(ia , 500);
+		this.peerId = peer_auxID.getId();
 	}
 
 	public String getLocalhost() {return localhost;}
@@ -77,5 +79,5 @@ public class Peer{
 			this.indexToChose = this.chunks.getNChunk();
 		}
 		return this.indexToChose;
-	}	
+	}
 }

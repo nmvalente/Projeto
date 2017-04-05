@@ -2,7 +2,7 @@ package files;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Iterator;
 import java.io.*;
 
@@ -11,13 +11,13 @@ import utils.Utils;
 
 public class Chunks{
 
-	private Map<String, List<ChunkFile>> hashmap;
+	private ConcurrentHashMap<String, List<ChunkFile>> hashmap;
 
 	public Chunks(){
-		hashmap = new HashMap<String, List<ChunkFile>>();
+		hashmap = new ConcurrentHashMap<String, List<ChunkFile>>();
 	}
 
-	public Map<String, List<ChunkFile>> getChunksList(){
+	public ConcurrentHashMap<String, List<ChunkFile>> getChunksList(){
 		return hashmap;
 	}
 
