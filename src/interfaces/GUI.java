@@ -36,7 +36,7 @@ public class GUI implements Runnable{
     public void run() {
         windows = new JFrame();
         windows.setAlwaysOnTop(false);
-		windows.setIconImage(Toolkit.getDefaultToolkit().getImage("..\\Upload-to_Cloud-512.png"));
+		windows.setIconImage(Toolkit.getDefaultToolkit().getImage("..\\resources\\Upload-to_Cloud-512.png"));
 		windows.setResizable(false);
 		windows.setTitle("SDIS - Distributed Backup Service"); 
 		windows.setBackground(Color.WHITE);

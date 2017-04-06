@@ -1,0 +1,2 @@
+Para arrancar a aplicação de Backup Service basta correr o script com as configurações aí existentes. Se se pretender
+alterar os endereços e as portas, basta abrir esse ficheiro e fazer as respetivas alterações.
