@@ -8,12 +8,12 @@ function pause(){
 echo "***************Starting Script********************"
 echo
 echo " > Generating Vars..."
-MC_ADDRESS="224.0.0.2"
-MC_PORT="3333"
-MCB_ADDRESS="224.0.0.3"
-MCB_PORT="4444"
-MCR_ADDRESS="224.0.0.4"
-MCR_PORT="5555"
+MC_ADDRESS="230.0.0.2"
+MC_PORT="3334"
+MCB_ADDRESS="230.0.0.3"
+MCB_PORT="4445"
+MCR_ADDRESS="230.0.0.4"
+MCR_PORT="5556"
 echo 
 echo MC_ADDRESS $MC_ADDRESS
 echo MC_PORT $MC_PORT
