@@ -62,6 +62,7 @@ public class Main{
 
 		// Inicia os Sockets
 		try {
+			initSockets(args, args[2], args[3], multicastSockets, group);
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
