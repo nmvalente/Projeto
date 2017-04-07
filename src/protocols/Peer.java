@@ -1,6 +1,5 @@
 package protocols;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
@@ -10,7 +9,8 @@ import message.MessageManager;
 public class Peer{
 
 	private String localhost;
-	private int peerId;
+	private int PeerID;
+	private float protocolVersion;
 	protected MessageManager  inbox;
 	public FileManager  files;
 	protected int indexToChose;
@@ -20,21 +20,20 @@ public class Peer{
 
 	public RestoreFile restoreFile = null;
 
-	public Peer(String localhost) throws UnknownHostException{
+	public Peer(String PeerID, String protocolVersion, String localhost) throws UnknownHostException{
 		this.localhost = localhost;
 		inbox  = new MessageManager();
 		files  = new FileManager();
 		chunks = new Chunks();
-		InetAddress ia = InetAddress.getByName("230.1.2.3");
-		PeerID peer_auxID = new PeerID(ia , 500);
-		this.peerId = peer_auxID.getId();
+		this.PeerID = Integer.parseInt(PeerID);
+		this.protocolVersion = Float.parseFloat(protocolVersion);
 	}
 
 	public String getLocalhost() {return localhost;}
 	public MessageManager getInbox(){return inbox;}
 	public FileManager getFiles(){return files;}
 	public Chunks getChunks(){return chunks;}
-	public int getPeerId(){return this.peerId;}
+	public int getPeerId(){return this.PeerID;}
 
 	public int genericSubProtocol(int subProtocol) throws IOException{
 

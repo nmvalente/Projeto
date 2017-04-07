@@ -18,7 +18,7 @@ public class ReceiveDataChannel extends Thread{
 	public ReceiveDataChannel(String name, MulticastSocket ms, Peer peer){
 		this.name = name;
 		this.socket = ms;
-		this.peer   = peer;
+		this.peer = peer;
 	}
 
 	public String getCurrentTime(){
@@ -36,12 +36,7 @@ public class ReceiveDataChannel extends Thread{
 				Main.windows.printlnReceiverMDR(getCurrentTime() + " - Started receiver thread :: "+ name);
 		}
 		catch (ArithmeticException ex){
-			if(name == "MC")
-				Main.windows.printlnReceiverMC(getCurrentTime() + " - Error in starter Receiver MC"); 
-			if(name == "MDB")
-				Main.windows.printlnReceiverMDB(getCurrentTime() + " - Error in starter Receiver MDB"); 
-			if(name == "MDR")
-				Main.windows.printlnReceiverMDR(getCurrentTime() + " - Error in starter Receiver MDR"); 
+			Main.windows.printlnReceiverMC(getCurrentTime() + " - Error in starter Receiver"); 
 		}
 		try{
 			byte[] buf;
@@ -56,7 +51,7 @@ public class ReceiveDataChannel extends Thread{
 				socket.receive(dg);
 				dgString = new String( dg.getData() );
 
-				//if ( !dg.getAddress().toString().substring(1).equals(peer.getLocalhost()) ){
+				if ( !dg.getAddress().toString().substring(1).equals(peer.getLocalhost()) ){
 					message = peer.getInbox().addToUnseenMessages(dg.getAddress().toString(), dg.getPort() , dgString );
 
 					try{
@@ -75,17 +70,12 @@ public class ReceiveDataChannel extends Thread{
 						if(name == "MDR")
 							Main.windows.printlnReceiverMDR(getCurrentTime() + " - Error in  Receiver MDR");
 					}
-				//} 
+				} 
 				try{Thread.sleep(10);}catch(InterruptedException e){e.getMessage();System.err.println("Error in sleep");}
 			} while(true);
 		}
 		catch(IOException n){
-			if(name == "MC")
-				Main.windows.printlnReceiverMC(getCurrentTime() + " - Connection terminated");
-			if(name == "MDB")
-				Main.windows.printlnReceiverMDB(getCurrentTime() + " - Connection terminated");
-			if(name == "MDR")
-				Main.windows.printlnReceiverMDR(getCurrentTime() + " - Connection terminated");
+			Main.windows.printlnReceiverMC(getCurrentTime() + " - Connection terminated");
 		}
 	}
 }

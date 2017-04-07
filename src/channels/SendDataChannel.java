@@ -65,6 +65,7 @@ public class SendDataChannel extends Thread{
 					if(unseenMessage.hasRequest()){
 						switch(Utils.convertBytetoString(unseenMessage.getHeader().getMessageType())){
 						case "PUTCHUNK":
+							if(peer.getPeerId() != Utils.convertBytetoInt(unseenMessage.getHeader().getSenderId()))
 							group = Utils.MDB;
 							break;
 						case "GETCHUNK":
@@ -88,9 +89,11 @@ public class SendDataChannel extends Thread{
 					else{
 						switch(Utils.convertBytetoString(unseenMessage.getHeader().getMessageType())){
 						case "PUTCHUNK": // responde com STORED
+							if(peer.getPeerId() != Utils.convertBytetoInt(unseenMessage.getHeader().getSenderId())){
 							peer.getChunks().add(unseenMessage);
 							reply = unseenMessage.sendAnswer();
 							group = Utils.MC;
+							}
 							break;
 						case "GETCHUNK": // responde com CHUNK
 							ChunkFile c  = peer.getChunks().findOne( unseenMessage.getAddress() , Utils.convertBytetoString(unseenMessage.getHeader().getFileId()) , Utils.convertBytetoInt(unseenMessage.getHeader().getChunkNo()));

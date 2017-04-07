@@ -52,7 +52,7 @@ public class Main{
 	private static void init(String[] args, MulticastSocket[] multicastSockets, InetAddress[] group) {
 		Peer peer = null;
 		try {
-			peer = new Peer( InetAddress.getLocalHost().getHostAddress() );
+			peer = new Peer(args[0], args[1], InetAddress.getLocalHost().getHostAddress() );
 		} catch (UnknownHostException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -62,7 +62,6 @@ public class Main{
 
 		// Inicia os Sockets
 		try {
-			initSockets(args, args[0], args[1], multicastSockets, group);
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -124,16 +123,16 @@ public class Main{
 		multicastSockets[0].joinGroup(group[0]);
 
 		// Configuracao do socket para MDB -------------------
-		address = args[2];
-		port    = args[3];
+		address = args[4];
+		port    = args[5];
 
 		group[1] = InetAddress.getByName( address );
 		multicastSockets[1] = new MulticastSocket(Integer.parseInt( port ));
 		multicastSockets[1].joinGroup(group[1]);
 
 		// Configuracao do socket para MDR -------------------
-		address = args[4];
-		port    = args[5];
+		address = args[6];
+		port    = args[7];
 
 		group[2] = InetAddress.getByName( address );
 		multicastSockets[2] = new MulticastSocket(Integer.parseInt( port ));
@@ -179,8 +178,8 @@ public class Main{
 	}
 
 	public static int analyseArgs(String[] args) {
-		if( args.length != 6 ){
-			System.out.println("Invalid argument number!\n<program> <mcAddress> <mcPort> <mdbAddress> <mdbPort> <mdrAddress> <mdrPort>");
+		if( args.length != 8 ){
+			System.out.println("Invalid argument number!\n <PeerId> <ProtocolVersion> <mcAddress> <mcPort> <mdbAddress> <mdbPort> <mdrAddress> <mdrPort>");
 			return -1;
 		}
 		return 0;
