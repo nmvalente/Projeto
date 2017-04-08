@@ -1,10 +1,11 @@
 package message;
 
+import protocols.Peer;
 import utils.Utils;
 
 public class Message{
 
-	private String address;// = "";
+	private String address = "";
 	private int port = 0;
 	private boolean request = false;
 	protected Header header;
@@ -119,9 +120,9 @@ public class Message{
 		return build;
 	}
 
-	public String sendAnswer(){
+	public String sendAnswer(Peer peer){
 		String build = null;
-		String ss = " " + Utils.convertBytetoString(header.getVersion()) + " " + Utils.convertBytetoString(header.getSenderId()) + " " + Utils.convertBytetoString(header.getFileId()) + " " + Utils.convertBytetoInt(header.getChunkNo()) + " " + Utils.CRLFCRLF;
+		String ss = " " + Utils.convertBytetoString(header.getVersion()) + " " + peer.getPeerId() + " " + Utils.convertBytetoString(header.getFileId()) + " " + Utils.convertBytetoInt(header.getChunkNo()) + " " + Utils.CRLFCRLF;
 		switch (Utils.convertBytetoString(header.getMessageType())){
 		case "PUTCHUNK":
 			build = "STORED" + ss; 
@@ -129,7 +130,7 @@ public class Message{
 		case "GETCHUNK":
 			build = "CHUNK" + ss; 
 			break;
-		}
+		}		
 		return build;
 	}
 }

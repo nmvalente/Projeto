@@ -3,6 +3,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import protocols.Peer;
 import utils.Utils;
 
 public class InfoFile{
@@ -35,7 +36,7 @@ public class InfoFile{
 	public int getNumberChunks(){return numberOfChunks;}
 	public File getFile() {return file;}
 
-	public void splitFile(){
+	public void splitFile(Peer peer){
 		FileInputStream inStream;
 		String newFileName, fileId=Utils.hashFileId(this.fileName);
 		FileOutputStream outStream;
@@ -64,6 +65,8 @@ public class InfoFile{
 
 				System.out.printf("%2d ~ %s , %d bytes\n", i, newFileName, readLength);
 
+				System.out.print(peer.getPeerId());
+				
 				outStream = new FileOutputStream(new File(newFileName));
 				outStream.write(chunkPart);
 				outStream.flush();

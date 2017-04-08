@@ -58,6 +58,7 @@ public class SendDataChannel extends Thread{
 				try{Thread.sleep(10);}catch(InterruptedException e){e.getMessage();System.err.println("Error in sleep of thread");}
 				while(peer.getInbox().hasUnseenMessages()){
 					try{Thread.sleep(10);}catch(InterruptedException e){}
+
 					unseenMessage = peer.getInbox().getOneUnseenMessage();
 					peer.getInbox().setSeen();
 					request = null;
@@ -65,7 +66,6 @@ public class SendDataChannel extends Thread{
 					if(unseenMessage.hasRequest()){
 						switch(Utils.convertBytetoString(unseenMessage.getHeader().getMessageType())){
 						case "PUTCHUNK":
-							if(peer.getPeerId() != Utils.convertBytetoInt(unseenMessage.getHeader().getSenderId()))
 							group = Utils.MDB;
 							break;
 						case "GETCHUNK":
@@ -90,22 +90,17 @@ public class SendDataChannel extends Thread{
 						switch(Utils.convertBytetoString(unseenMessage.getHeader().getMessageType())){
 						case "PUTCHUNK": // responde com STORED
 							if(peer.getPeerId() != Utils.convertBytetoInt(unseenMessage.getHeader().getSenderId())){
-							peer.getChunks().add(unseenMessage);
-							reply = unseenMessage.sendAnswer();
-							group = Utils.MC;
+								peer.getChunks().add(unseenMessage);
+								reply = unseenMessage.sendAnswer(peer);
+								group = Utils.MC;
 							}
 							break;
 						case "GETCHUNK": // responde com CHUNK
 							ChunkFile c  = peer.getChunks().findOne( unseenMessage.getAddress() , Utils.convertBytetoString(unseenMessage.getHeader().getFileId()) , Utils.convertBytetoInt(unseenMessage.getHeader().getChunkNo()));
 							if(c != null){
-								try{
-									String content;
-									content = new String(peer.getChunks().file(unseenMessage.getAddress(), c), "UTF-8");
-									reply = unseenMessage.sendAnswer() + content;
-								}catch(IOException e){
-									// remove referencia do chunk
-									peer.getChunks().removeOne(unseenMessage.getAddress(), Utils.convertBytetoString(unseenMessage.getHeader().getFileId()), Utils.convertBytetoInt(unseenMessage.getHeader().getChunkNo()));
-								}
+								String content;
+								content = new String(peer.getChunks().file(unseenMessage.getAddress(), c), "UTF-8");
+								reply = unseenMessage.sendAnswer(peer) + content;
 								group = Utils.MDR;
 							}
 							break;
@@ -130,7 +125,7 @@ public class SendDataChannel extends Thread{
 							catch(InterruptedException e){e.getMessage();System.err.println("Error doing random integer");}
 							socket[group].send(dg);
 							try{
-								Main.windows.printlnSendChannel( getCurrentTime() + " -   REPLY SENT - " + unseenMessage.sendAnswer() );
+								Main.windows.printlnSendChannel( getCurrentTime() + " -   REPLY SENT - " + unseenMessage.sendAnswer(peer) );
 							}
 							catch (ArithmeticException ex){
 								Main.windows.printlnSendChannel("Error in reply sender thread");

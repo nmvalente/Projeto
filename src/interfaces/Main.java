@@ -58,8 +58,6 @@ public class Main{
 			e1.printStackTrace();
 		}
 
-
-
 		// Inicia os Sockets
 		try {
 			initSockets(args, args[2], args[3], multicastSockets, group);
@@ -73,7 +71,7 @@ public class Main{
 
 
 		// Cria a janela grafica
-		windows = new GUI();
+		windows = new GUI(peer);
 
 
 		// Inicia os threads

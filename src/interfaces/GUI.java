@@ -1,6 +1,9 @@
 package interfaces;
 
 import javax.swing.*;
+
+import protocols.Peer;
+
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
@@ -16,8 +19,15 @@ public class GUI implements Runnable{
     private JScrollPane scrollPaneReceiverMC;
     private JScrollPane scrollPaneReceiverMDB;
     private JScrollPane scrollPaneReceiverMDR;
+    private int PeerID;
+	private String localhost;
+	private float protocolVersion;
 
-    public GUI() {
+    public GUI(Peer peer) {
+    	
+    	this.PeerID = peer.getPeerId();
+    	this.protocolVersion = peer.getProtocolVersion();
+    	this.localhost = peer.getLocalhost();
     	
         this.outputAreaSender = new JTextArea(12, 100);
         this.outputAreaSender.setEditable(false);
@@ -38,7 +48,7 @@ public class GUI implements Runnable{
         windows.setAlwaysOnTop(false);
 		windows.setIconImage(Toolkit.getDefaultToolkit().getImage("..\\resources\\Upload-to_Cloud-512.png"));
 		windows.setResizable(false);
-		windows.setTitle("SDIS - Distributed Backup Service"); 
+		windows.setTitle("SDIS - Distributed Backup Service   -   PeerID : " + this.PeerID + "   ProtocolVersion : " + this.protocolVersion + "   Localhost : " + this.localhost); 
 		windows.setBackground(Color.WHITE);
 		windows.setBounds(0, 0, 1125, 900);
 		windows.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -26,7 +26,7 @@ public class Peer{
 		files  = new FileManager();
 		chunks = new Chunks();
 		this.PeerID = Integer.parseInt(PeerID);
-		this.protocolVersion = Float.parseFloat(protocolVersion);
+		this.setProtocolVersion(Float.parseFloat(protocolVersion));
 	}
 
 	public String getLocalhost() {return localhost;}
@@ -78,5 +78,13 @@ public class Peer{
 			this.indexToChose = this.chunks.getNChunk();
 		}
 		return this.indexToChose;
+	}
+
+	public float getProtocolVersion() {
+		return protocolVersion;
+	}
+
+	public void setProtocolVersion(float protocolVersion) {
+		this.protocolVersion = protocolVersion;
 	}
 }

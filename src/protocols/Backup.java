@@ -43,7 +43,7 @@ public class Backup {
 		int nStored, count=0, alea;
 		alea = random.nextInt(400);
 		do{ 
-			peer.inbox.buildMessage("PUTCHUNK","1.0", backupFile.getSenderId() ,backupFile.getFileId(),i,desiredReplicationDeg,msg);
+			peer.inbox.buildMessage("PUTCHUNK", "1.0", backupFile.getSenderId(), backupFile.getFileId(), i, desiredReplicationDeg,msg);
 
 			try{
 				System.out.printf(" Try #%d. Sleeping for %4d ms.", count+1, alea);
@@ -65,7 +65,7 @@ public class Backup {
 		BackupFile backupFile = new BackupFile(info.getFileName(), senderID ,desiredReplicationDeg);
 
 		peer.files.getFileList().set(fileIndex, backupFile);
-		backupFile.splitFile();
+		backupFile.splitFile(peer);
 		return backupFile;
 	} 
 }
