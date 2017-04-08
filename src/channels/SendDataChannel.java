@@ -100,7 +100,7 @@ public class SendDataChannel extends Thread{
 								ChunkFile c  = peer.getChunks().findOne( unseenMessage.getAddress() , Utils.convertBytetoString(unseenMessage.getHeader().getFileId()) , Utils.convertBytetoInt(unseenMessage.getHeader().getChunkNo()));
 								if(c != null){
 									String content;
-									content = new String(peer.getChunks().file(unseenMessage.getAddress(), c), "UTF-8");
+									content = new String(peer.getChunks().file(unseenMessage.getAddress(), c), "US-ASCII");
 									reply = unseenMessage.sendAnswer(peer) + content;
 									group = Utils.MDR;
 								}

@@ -13,13 +13,13 @@ public class Restore {
 
 	private Random random = new Random();
 	BackupFile backupFile;
-	RestoreFile restoreFile;
+	//RestoreFile restoreFile;
 
-	public Restore(int indexChosed, Peer peer, RestoreFile restoreFile) {
+	public Restore(int indexChosed, Peer peer) {
 
 		if (peer.getFiles().getFileList().get(indexChosed).getClass().getName().equals(BackupFile.class.getName())){
 			backupFile = (BackupFile) peer.getFiles().getFileList().get(indexChosed);
-			restoreFile = new RestoreFile( (InfoFile) backupFile );
+			peer.restoreFile = new RestoreFile( (InfoFile) backupFile );
 
 			for (int i=0; i < backupFile.getNumberChunks(); i++){
 				peer.inbox.buildMessage("GETCHUNK","1.0",backupFile.getSenderId(), backupFile.getFileId(),i,1,"");
@@ -27,18 +27,18 @@ public class Restore {
 
 			System.out.println(" Receiving chunk restore information");
 			System.out.println("\n**************************************************");
-			restoreLoop(restoreFile);
+			restoreLoop(peer.restoreFile);
 			System.out.println("\n**************************************************");
-			System.out.println(" File restore finished. " + ((restoreFile.completedChunks()) ? "Successful" : "Incomplete") + ".\n");
+			System.out.println(" File restore finished. " + ((peer.restoreFile.completedChunks()) ? "Successful" : "Incomplete") + ".\n");
 
-			restoreFile.displayBackupChunks();
+			peer.restoreFile.displayBackupChunks();
 
-			if(restoreFile.completedChunks()){
+			if(peer.restoreFile.completedChunks()){
 				try {
-					restoreFile.merge();
+					peer.restoreFile.merge();
 				} catch (IOException e) {e.printStackTrace();}
-				restoreFile.deleteDirectory( new File(backupFile.getFileId()));
-				restoreFile = null;
+				peer.restoreFile.deleteDirectory( new File(backupFile.getFileId()));
+				peer.restoreFile = null;
 			}
 		}
 	}

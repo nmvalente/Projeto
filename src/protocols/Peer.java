@@ -18,7 +18,7 @@ public class Peer{
 	protected Chunks chunks;
 	protected Scanner scanner = new Scanner(System.in);
 
-	public RestoreFile restoreFile = null;
+	public RestoreFile restoreFile;
 
 	public Peer(String PeerID, String protocolVersion, String localhost) throws UnknownHostException{
 		this.localhost = localhost;
@@ -51,7 +51,7 @@ public class Peer{
 				new Backup(this.indexChosed, desiredReplicationDeg, this);
 				break;			
 			case 2: 
-				new Restore(this.indexChosed, this, this.restoreFile);
+				new Restore(this.indexChosed, this);
 				break;
 			case 3:	
 				new Reclaim(this.indexChosed, this);

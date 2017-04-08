@@ -76,7 +76,7 @@ public class BackupFile extends InfoFile{
 		printTailList(i);
 	}
 
-	public byte[] getContent(int chunkNo) throws IOException{
+	public byte[] getContent(int chunkNo){
 		if (!(chunkNo >= 0 && chunkNo < super.getNumberChunks()))
 			return null;
 
@@ -84,9 +84,20 @@ public class BackupFile extends InfoFile{
 
 		if (f.exists()){
 			int fsize = (int) f.length();
-			FileInputStream fis = new FileInputStream( getFileId() + ".part" + chunkNo );
+			FileInputStream fis = null;
+			try {
+				fis = new FileInputStream( getFileId() + ".part" + chunkNo );
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			byte[] data = new byte[fsize];
-			fis.read(data, 0, fsize);
+			try {
+				fis.read(data, 0, fsize);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			f.delete();
 			return data;
 		}

@@ -118,14 +118,20 @@ public class Chunks{
 		return null;
 	}
 
-	public byte[] file(String address, ChunkFile c) throws IOException{
-		File f = new File(address + File.separator + c.getFileId() + ".part" + c.getChunkNo());
+	public byte[] file(String address, ChunkFile c){
+		File f = new File(address + File.separator + Utils.convertBytetoString(c.getFileId()) + ".part" + Utils.convertBytetoInt(c.getChunkNo()));
 		if (f.exists()){
 			int fsize = (int) f.length();
-			FileInputStream fis = new FileInputStream(address + File.separator + c.getFileId() + ".part" + c.getChunkNo());
-			byte[] data = new byte[fsize];
-			fis.read(data, 0, fsize);
-			return data;
+			FileInputStream fis;
+			try {
+				fis = new FileInputStream(address + File.separator + Utils.convertBytetoString(c.getFileId()) + ".part" + Utils.convertBytetoInt(c.getChunkNo()));
+				byte[] data = new byte[fsize];
+				fis.read(data, 0, fsize);
+				return data;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
 		}
 		return null;
 	}
