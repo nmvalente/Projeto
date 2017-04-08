@@ -96,12 +96,14 @@ public class SendDataChannel extends Thread{
 							}
 							break;
 						case "GETCHUNK": // responde com CHUNK
-							ChunkFile c  = peer.getChunks().findOne( unseenMessage.getAddress() , Utils.convertBytetoString(unseenMessage.getHeader().getFileId()) , Utils.convertBytetoInt(unseenMessage.getHeader().getChunkNo()));
-							if(c != null){
-								String content;
-								content = new String(peer.getChunks().file(unseenMessage.getAddress(), c), "UTF-8");
-								reply = unseenMessage.sendAnswer(peer) + content;
-								group = Utils.MDR;
+							if(peer.getPeerId() != Utils.convertBytetoInt(unseenMessage.getHeader().getSenderId())){
+								ChunkFile c  = peer.getChunks().findOne( unseenMessage.getAddress() , Utils.convertBytetoString(unseenMessage.getHeader().getFileId()) , Utils.convertBytetoInt(unseenMessage.getHeader().getChunkNo()));
+								if(c != null){
+									String content;
+									content = new String(peer.getChunks().file(unseenMessage.getAddress(), c), "UTF-8");
+									reply = unseenMessage.sendAnswer(peer) + content;
+									group = Utils.MDR;
+								}
 							}
 							break;
 						case "DELETE": // apaga o ficheiro

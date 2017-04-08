@@ -43,6 +43,7 @@ public class ReceiveDataChannel extends Thread{
 			DatagramPacket dg;
 			String dgString;
 			String message;
+			String[] parts;
 			do{
 				try{Thread.sleep(10);}catch(InterruptedException e){e.getMessage(); System.err.println("Error in sleep");}
 				buf = new byte[Utils.BUFFER_SIZE];
@@ -50,27 +51,31 @@ public class ReceiveDataChannel extends Thread{
 				dg = new DatagramPacket( buf , buf.length );
 				socket.receive(dg);
 				dgString = new String( dg.getData() );
+				parts = dgString.split("\\s");
+				int PeerIDThatSends = Integer.parseInt(parts[2]);
 
 				if ( !dg.getAddress().toString().substring(1).equals(peer.getLocalhost()) ){
-					message = peer.getInbox().addToUnseenMessages(dg.getAddress().toString(), dg.getPort() , dgString );
+					if(peer.getPeerId() != PeerIDThatSends){
 
-					try{
-						if(name == "MC")
-							Main.windows.printlnReceiverMC(getCurrentTime() + " - RECEIVED - " + message);
-						if(name == "MDB")
-							Main.windows.printlnReceiverMDB(getCurrentTime() + " - RECEIVED - " + message);
-						if(name == "MDR")
-							Main.windows.printlnReceiverMDR(getCurrentTime() + " - RECEIVED - " + message);
-					}
-					catch(ArithmeticException e){
-						if(name == "MC")
-							Main.windows.printlnReceiverMC(getCurrentTime() + " - Error in  Receiver MC"); 
-						if(name == "MDB")
-							Main.windows.printlnReceiverMDB(getCurrentTime() + " - Error in  Receiver MDB"); 
-						if(name == "MDR")
-							Main.windows.printlnReceiverMDR(getCurrentTime() + " - Error in  Receiver MDR");
-					}
-				} 
+						message = peer.getInbox().addToUnseenMessages(dg.getAddress().toString(), dg.getPort() , dgString );
+						try{
+							if(name == "MC")
+								Main.windows.printlnReceiverMC(getCurrentTime() + " - RECEIVED - " + message);
+							if(name == "MDB")
+								Main.windows.printlnReceiverMDB(getCurrentTime() + " - RECEIVED - " + message);
+							if(name == "MDR")
+								Main.windows.printlnReceiverMDR(getCurrentTime() + " - RECEIVED - " + message);
+						}
+						catch(ArithmeticException e){
+							if(name == "MC")
+								Main.windows.printlnReceiverMC(getCurrentTime() + " - Error in  Receiver MC"); 
+							if(name == "MDB")
+								Main.windows.printlnReceiverMDB(getCurrentTime() + " - Error in  Receiver MDB"); 
+							if(name == "MDR")
+								Main.windows.printlnReceiverMDR(getCurrentTime() + " - Error in  Receiver MDR");
+						}
+					} 
+				}
 				try{Thread.sleep(10);}catch(InterruptedException e){e.getMessage();System.err.println("Error in sleep");}
 			} while(true);
 		}

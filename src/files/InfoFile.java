@@ -64,8 +64,6 @@ public class InfoFile{
 				newFileName = fileId + ".part" + chunkNo;
 
 				System.out.printf("%2d ~ %s , %d bytes\n", i, newFileName, readLength);
-
-				System.out.print(peer.getPeerId());
 				
 				outStream = new FileOutputStream(new File(newFileName));
 				outStream.write(chunkPart);

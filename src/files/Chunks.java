@@ -21,7 +21,7 @@ public class Chunks{
 		return hashmap;
 	}
 
-	public void add(Message m){
+	public void add(Message m){ //
 		String ip   = m.getAddress();
 		String name = ip + File.separator + Utils.convertBytetoString(m.getHeader().getFileId()) + ".part" + Utils.convertBytetoInt(m.getHeader().getChunkNo()) ;
 
@@ -89,21 +89,13 @@ public class Chunks{
 		return false;
 	}
 
-	/*public boolean remove(String address){
-		removeFolder(address);
-		if(hashmap.containsKey(address)){
-			hashmap.remove(address);
-		}
-		return false;
-	}
-	 */
-
 	public ChunkFile findOne(String address, String fileId, int chunkNo){
 		if(hashmap.containsKey(address)){
 			ChunkFile temp;
 			for(Iterator<ChunkFile> it = hashmap.get(address).iterator(); it.hasNext();){
 				temp = it.next();
-				if(Utils.convertBytetoString(temp.getFileId()) == fileId && Utils.convertBytetoInt(temp.getChunkNo()) == chunkNo){
+
+				if(Utils.convertBytetoString(temp.getFileId()).equals(fileId) && Utils.convertBytetoInt(temp.getChunkNo()) == chunkNo){
 					return temp;
 				}
 			}
@@ -126,19 +118,6 @@ public class Chunks{
 		return null;
 	}
 
-	/*public ArrayList<ChunkFile> find(String address){
-		if(hashmap.containsKey(address)){
-			ArrayList<ChunkFile> chunkList = new ArrayList<ChunkFile>();
-			ChunkFile temp;
-			for (Iterator<ChunkFile> it = hashmap.get(address).iterator(); it.hasNext();){
-				temp = it.next();
-				chunkList.add(temp);
-			}
-			return chunkList;
-		}
-		return null;
-	}
-	 */
 	public byte[] file(String address, ChunkFile c) throws IOException{
 		File f = new File(address + File.separator + c.getFileId() + ".part" + c.getChunkNo());
 		if (f.exists()){
@@ -212,7 +191,6 @@ public class Chunks{
 				if(counter == selection)
 					return entry.getKey();
 				counter++;
-				//System.out.println(i + " " + temp.simple() );
 			}
 		}
 		return null;
@@ -225,33 +203,6 @@ public class Chunks{
 		fos.close();
 	}
 
-	/*private void removeFolder(String name){
-		File dir = new File(name);
-		removeDirectory(dir);
-	}
-
-	private static boolean removeDirectory(File directory){
-		if(directory == null | !directory.exists() | !directory.isDirectory())
-			return false;
-
-		String[] list = directory.list();
-
-		if(list != null) {
-			for(int i = 0; i < list.length; i++) {
-				File entry = new File(directory, list[i]);
-				if(entry.isDirectory()){
-					if(!removeDirectory(entry))
-						return false;
-				}
-				else{
-					if(!entry.delete())
-						return false;
-				}
-			}
-		}
-		return directory.delete();
-	}
-	 */
 	private void removeChunk(String filepath){
 		System.out.println(filepath);
 		File f = new File(filepath);

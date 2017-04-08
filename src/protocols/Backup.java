@@ -23,7 +23,7 @@ public class Backup {
 				for (int i = 0; i < backupFile.getNumberChunks(); i++){
 					System.out.println("\n**************************************************");
 					System.out.println("> Waiting for next STORED reply" );
-
+					
 					message = new String(backupFile.getContent(i), Utils.CHARSET_NAME);
 
 					backupLoop(desiredReplicationDeg, i, message, backupFile, peer);
