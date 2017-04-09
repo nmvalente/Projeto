@@ -45,7 +45,7 @@ public class BackupFile extends InfoFile{
 	public boolean removeAddressOfChunk(int index, String address){
 		String temp;
 
-		//if(getNSTORED(index) < desiredReplicationDeg)
+		if(getNSTORED(index)-1 < desiredReplicationDeg)
 			new Backup(this, getNSTORED(index)-desiredReplicationDeg, peer);
 
 		for (Iterator<String> it = getListChunks().get(index).iterator(); it.hasNext();){

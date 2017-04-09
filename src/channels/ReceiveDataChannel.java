@@ -41,8 +41,7 @@ public class ReceiveDataChannel extends Thread{
 		try{
 			byte[] buf;
 			DatagramPacket dg;
-			String dgString;
-			String message;
+			String dgString, message;
 			String[] parts;
 			do{
 				try{Thread.sleep(10);}catch(InterruptedException e){e.getMessage(); System.err.println("Error in sleep");}
@@ -54,7 +53,7 @@ public class ReceiveDataChannel extends Thread{
 				parts = dgString.split("\\s");
 				int PeerIDThatSends = Integer.parseInt(parts[2]);
 
-				//if ( !dg.getAddress().toString().substring(1).equals(peer.getLocalhost()) ){
+				if ( !dg.getAddress().toString().substring(1).equals(peer.getLocalhost()) ){
 					if(peer.getPeerId() != PeerIDThatSends){
 
 						message = peer.getInbox().addToUnseenMessages(dg.getAddress().toString(), dg.getPort() , dgString );
@@ -75,7 +74,7 @@ public class ReceiveDataChannel extends Thread{
 								Main.windows.printlnReceiverMDR(getCurrentTime() + " - Error in  Receiver MDR");
 						}
 					} 
-				//}
+				}
 				try{Thread.sleep(10);}catch(InterruptedException e){e.getMessage();System.err.println("Error in sleep");}
 			} while(true);
 		}
