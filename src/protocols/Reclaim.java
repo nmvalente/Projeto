@@ -6,7 +6,7 @@ public class Reclaim {
 
 	public Reclaim(int indexChosed, Peer peer) {
 
-		peer.inbox.buildMessage("REMOVED", Float.toString(peer.getProtocolVersion()), peer.getPeerId(),
+		peer.messageHandler.buildMessage("REMOVED", Float.toString(peer.getProtocolVersion()), peer.getPeerId(),
 				Utils.convertBytetoString(peer.chunks.selectChunk(indexChosed).getFileId()),
 				Utils.convertBytetoInt(peer.chunks.selectChunk(indexChosed).getChunkNo()), 0, "");
 
