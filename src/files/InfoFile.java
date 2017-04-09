@@ -50,7 +50,7 @@ public class InfoFile{
 			System.out.println(" file   : " + getFileName() );
 			System.out.println(" fileId : " + fileId.substring(0, Utils.WIDTH_SIZE) );
 			System.out.println("******************************");
-
+ 
 			for (i = 0; currentFileSize > 0; i++, chunkNo++){
 				readLength = Math.min(currentFileSize, Utils.CHUNK_MAX_SIZE);
 
@@ -68,6 +68,8 @@ public class InfoFile{
 				outStream = new FileOutputStream(new File(newFileName));
 				outStream.write(chunkPart);
 				outStream.flush();
+				File file = new File(newFileName);
+				file.delete();
 
 				try{if(outStream != null) outStream.close();}catch (Exception e) {}
 			}
