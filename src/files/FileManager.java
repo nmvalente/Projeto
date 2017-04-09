@@ -1,4 +1,5 @@
 package files;
+
 import java.util.ArrayList;
 import java.io.File;
 
@@ -14,32 +15,14 @@ public class FileManager{
 
 	public int getNumberOfFiles(){return fileList.size();}
 
-	public void add(InfoFile info){
-		fileList.add(info);
-	}
-
 	public boolean add(String pathfile){
 		File f = new File(pathfile);
 		if (!f.isFile()){
 			return false;
 		}
 		InfoFile info = new InfoFile(pathfile);
-		add(info);
-
+		fileList.add(info);
 		return true;
-	}
-
-	public boolean remove(String fileName){
-		InfoFile temp;
-		int i;
-		for(i = 0 ; i < fileList.size() ; i++){
-			temp = fileList.get(i);
-			if(temp.getFileName().equals(fileName)){
-				fileList.remove(i);
-				return true;
-			}
-		}
-		return false;
 	}
 
 	public void getAllFilesFromStorage(String allOrRegular){
@@ -56,7 +39,7 @@ public class FileManager{
 			}
 		}
 	}
-	
+
 	public String rightpad(String text, int length) {
 		return String.format("%-" + length + "." + length + "s", text);
 	}
@@ -115,7 +98,7 @@ public class FileManager{
 				if(((BackupFile) temp).getFileId().equals(fileId)){
 					backupFile = (BackupFile) temp;
 					if(addOrRemove.equals("add"))
-						backupFile.addAddressOfChunk(chunkNo,address);
+						backupFile.getListChunks().get(chunkNo).add(address);
 					else if(addOrRemove.equals("remove"))
 						backupFile.removeAddressOfChunk(chunkNo,address);
 					return;
@@ -123,22 +106,4 @@ public class FileManager{
 			}
 		}
 	}
-
-	/*
-	public void removeSTORED(String address, String fileId, int chunkNo, String addOrRemove){
-		InfoFile temp;
-		BackupFile backupFile;
-
-		int i;
-		for(i = 0 ; i < fileList.size() ; i++){
-			temp = fileList.get(i);
-			if(temp instanceof BackupFile){
-				if(((BackupFile) temp).getFileId().equals(fileId)){
-					backupFile = (BackupFile) temp;
-					backupFile.removeAddressOfChunk(chunkNo,address);
-					return;
-				}
-			}
-		}
-	}*/	
 }

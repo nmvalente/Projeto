@@ -1,4 +1,5 @@
 package files;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -17,9 +18,7 @@ public class Chunks{
 		hashmap = new ConcurrentHashMap<String, List<ChunkFile>>();
 	}
 
-	public ConcurrentHashMap<String, List<ChunkFile>> getChunksList(){
-		return hashmap;
-	}
+	public ConcurrentHashMap<String, List<ChunkFile>> getChunksList(){return hashmap;}
 
 	public void add(Message m){ //
 		String ip   = m.getAddress();
@@ -35,22 +34,22 @@ public class Chunks{
 
 			ChunkFile c = new ChunkFile(m);
 
-			if(!hashmap.containsKey(ip)){
+			if(!getChunksList().containsKey(ip)){
 				List<ChunkFile> list= new ArrayList<ChunkFile>();
 				list.add(c);
-				hashmap.put(ip,list);
+				getChunksList().put(ip,list);
 			}
 			else{ //////
 				boolean v = false;
-				for(ChunkFile elem : hashmap.get(ip)){
+				for(ChunkFile elem : getChunksList().get(ip)){
 					if(elem.equals(c)){
 						v = true;
 					}
 				}
 				if(!v){
-					hashmap.get(ip).add(c);
+					getChunksList().get(ip).add(c);
 					System.out.print("\n\n Adiciona" + c);
-					System.out.print("\n\n Lista" + hashmap.get(ip));
+					System.out.print("\n\n Lista" + getChunksList().get(ip));
 				}
 			}
 
@@ -60,9 +59,9 @@ public class Chunks{
 	}
 
 	public boolean removeAll(String address, String fileId){
-		if(hashmap.containsKey(address)){
+		if(getChunksList().containsKey(address)){
 			ChunkFile temp;
-			for(Iterator<ChunkFile> it = hashmap.get(address).iterator(); it.hasNext();){
+			for(Iterator<ChunkFile> it = getChunksList().get(address).iterator(); it.hasNext();){
 				temp = it.next();
 				if(Utils.convertBytetoString(temp.getFileId()).equals(fileId)){
 					removeChunk(address + File.separator + fileId + ".part" + Utils.convertBytetoInt(temp.getChunkNo()));
@@ -75,9 +74,9 @@ public class Chunks{
 	}
 
 	public ChunkFile findOne(String address, String fileId, int chunkNo){
-		if(hashmap.containsKey(address)){
+		if(getChunksList().containsKey(address)){
 			ChunkFile temp;
-			for(Iterator<ChunkFile> it = hashmap.get(address).iterator(); it.hasNext();){
+			for(Iterator<ChunkFile> it = getChunksList().get(address).iterator(); it.hasNext();){
 				temp = it.next();
 
 				if(Utils.convertBytetoString(temp.getFileId()).equals(fileId) && Utils.convertBytetoInt(temp.getChunkNo()) == chunkNo){
@@ -89,10 +88,10 @@ public class Chunks{
 	}
 
 	public ArrayList<ChunkFile> findAll(String address, String fileId){
-		if(hashmap.containsKey(address)){
+		if(getChunksList().containsKey(address)){
 			ArrayList<ChunkFile> chunkList = new ArrayList<ChunkFile>();
 			ChunkFile temp;
-			for (Iterator<ChunkFile> it = hashmap.get(address).iterator(); it.hasNext();){
+			for (Iterator<ChunkFile> it = getChunksList().get(address).iterator(); it.hasNext();){
 				temp = it.next();
 				if (Utils.convertBytetoString(temp.getFileId()) == fileId){
 					chunkList.add(temp);
@@ -128,7 +127,7 @@ public class Chunks{
 		System.out.println("\n List of chunks" );
 		System.out.println("\n**************************************************");
 
-		for(Map.Entry<String, List<ChunkFile>> entry : hashmap.entrySet()){
+		for(Map.Entry<String, List<ChunkFile>> entry : getChunksList().entrySet()){
 			System.out.println(" $ " + entry.getKey());
 
 			for(Iterator<ChunkFile> it = entry.getValue().iterator(); it.hasNext();){
@@ -148,7 +147,7 @@ public class Chunks{
 		ChunkFile temp = null;
 		int counter = 0;
 
-		for(Map.Entry<String, List<ChunkFile>> entry : hashmap.entrySet()){
+		for(Map.Entry<String, List<ChunkFile>> entry : getChunksList().entrySet()){
 			for(Iterator<ChunkFile> it = entry.getValue().iterator(); it.hasNext();){
 				temp = it.next();
 				if(counter == selection)
@@ -164,7 +163,7 @@ public class Chunks{
 		ChunkFile temp = null;
 		int counter = 0;
 
-		for(Map.Entry<String, List<ChunkFile>> entry : hashmap.entrySet()){
+		for(Map.Entry<String, List<ChunkFile>> entry : getChunksList().entrySet()){
 			for(Iterator<ChunkFile> it = entry.getValue().iterator(); it.hasNext();){
 				temp = it.next();
 				counter++;
@@ -177,7 +176,7 @@ public class Chunks{
 		ChunkFile temp;
 		int counter = 0;
 
-		for(Map.Entry<String, List<ChunkFile>> entry : hashmap.entrySet()){
+		for(Map.Entry<String, List<ChunkFile>> entry : getChunksList().entrySet()){
 			for(Iterator<ChunkFile> it = entry.getValue().iterator(); it.hasNext();){
 				temp = it.next();
 				if(counter == selection)

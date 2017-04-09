@@ -23,36 +23,22 @@ public class BackupFile extends InfoFile{
 	}
 
 	public String getFileId() {return fileId;}
-	public String getAllAddress(){
-		int i = 0;
-		String build = "{ ";
-		for (; i<getNumberChunks()-1; i++)
-			build += listChunks.get(i) + " , " ;
-
-		build += listChunks.get(i) + " }";
-
-		return build;
-	}
 	public int getDesiredReplicationDeg() { return this.desiredReplicationDeg; }
-	public int getNSTORED(int index){
-		return listChunks.get(index).size();
-	}
+	public int getNSTORED(int index){return getListChunks().get(index).size();}
+	public int getSenderId(){return senderId;}
+	public ArrayList<Set<String>> getListChunks(){ return listChunks;}
 
 	public boolean enoughReplication(){
-		for (int i = 0; i < listChunks.size(); i++)
-			if (listChunks.get(i).size() < desiredReplicationDeg)
+		for (int i = 0; i < getListChunks().size(); i++)
+			if (getListChunks().get(i).size() < desiredReplicationDeg)
 				return false;
 		return true;
-	}
-
-	public void addAddressOfChunk(int index, String address){
-		listChunks.get(index).add(address);
 	}
 
 	public boolean removeAddressOfChunk(int index, String address){
 		String temp;
 
-		for (Iterator<String> it = listChunks.get(index).iterator(); it.hasNext();){
+		for (Iterator<String> it = getListChunks().get(index).iterator(); it.hasNext();){
 			temp = it.next();
 			if (temp.equals(address)){
 				it.remove();
@@ -60,20 +46,6 @@ public class BackupFile extends InfoFile{
 			}
 		}
 		return false;
-	}
-
-	@Override
-	public void displayBackupChunks(){
-		int i=0;
-		printHeadList(getFileId());
-
-		for (; i<getNumberChunks()-1; i++){
-			System.out.printf("%2d ~ %d/%d , %s bytes\n", i, listChunks.get(i).size(), desiredReplicationDeg, getPartSize());
-		}
-		int lastpart = getFileSize() - ((getNumberChunks()-1) * getPartSize());
-		System.out.printf("%2d ~ %d/%d , %s bytes\n", i, listChunks.get(i).size(), desiredReplicationDeg, lastpart);
-
-		printTailList(i);
 	}
 
 	public byte[] getContent(int chunkNo){
@@ -104,6 +76,4 @@ public class BackupFile extends InfoFile{
 		}
 		return null;
 	}
-
-	public int getSenderId(){return senderId;}
 }

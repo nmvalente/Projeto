@@ -26,7 +26,7 @@ public class Peer{
 		files  = new FileManager();
 		chunks = new Chunks();
 		this.PeerID = Integer.parseInt(PeerID);
-		this.setProtocolVersion(Float.parseFloat(protocolVersion));
+		this.protocolVersion = Float.parseFloat(protocolVersion);
 	}
 
 	public String getLocalhost() {return localhost;}
@@ -34,6 +34,7 @@ public class Peer{
 	public FileManager getFiles(){return files;}
 	public Chunks getChunks(){return chunks;}
 	public int getPeerId(){return this.PeerID;}
+	public float getProtocolVersion(){return protocolVersion;}
 
 	public int genericSubProtocol(int subProtocol) throws IOException{
 
@@ -46,7 +47,7 @@ public class Peer{
 
 			switch(subProtocol){
 			case 1:	
-				System.out.printf("\nReplication Degree [1-9] > ");
+				System.out.printf("Replication Degree [1-9] > ");
 				int desiredReplicationDeg = scanner.nextInt();
 				new Backup(this.indexChosed, desiredReplicationDeg, this);
 				break;			
@@ -78,13 +79,5 @@ public class Peer{
 			this.indexToChose = this.chunks.getNChunk();
 		}
 		return this.indexToChose;
-	}
-
-	public float getProtocolVersion() {
-		return protocolVersion;
-	}
-
-	public void setProtocolVersion(float protocolVersion) {
-		this.protocolVersion = protocolVersion;
 	}
 }

@@ -31,8 +31,6 @@ public class Restore {
 			System.out.println("\n**************************************************");
 			System.out.println(" File restore finished. " + ((peer.restoreFile.completedChunks()) ? "Successful" : "Incomplete") + ".\n");
 
-			peer.restoreFile.displayBackupChunks();
-
 			if(peer.restoreFile.completedChunks()){
 				try {
 					peer.restoreFile.merge();
@@ -42,7 +40,6 @@ public class Restore {
 			}
 		}
 	}
-	
 	
 	public void restoreLoop(RestoreFile restoreFile){
 		int count = 0, alea;

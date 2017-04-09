@@ -28,12 +28,12 @@ public class InfoFile{
 		this.file = file.getFile();
 	}
 
-	// Get methods
-
 	public String getFileName(){return fileName;}
-	public int getPartSize(){return Utils.CHUNK_MAX_SIZE;}
+	
 	public int getFileSize(){return fileSize;}
+	
 	public int getNumberChunks(){return numberOfChunks;}
+	
 	public File getFile() {return file;}
 
 	public void splitFile(Peer peer){
@@ -113,8 +113,6 @@ public class InfoFile{
 		fOutStream = null;
 	}
 
-
-
 	protected void writeChunk(String name, String content) throws IOException{
 		FileOutputStream fos;
 		fos = new FileOutputStream(new File(name));
@@ -147,19 +145,5 @@ public class InfoFile{
 		if (f.exists()){
 			f.delete();
 		}
-	}
-
-	public void displayBackupChunks(){}
-
-	public void printHeadList(String id){
-		System.out.println("\n List of chunks");
-		System.out.println(" file   : " + getFileName());
-		System.out.println(" fileId : " + id.substring(0, Utils.WIDTH_SIZE));
-		System.out.println("\n**************************************************");
-	}
-
-	public void printTailList(int i){
-		System.out.println("\n**************************************************");
-		System.out.println( " List" + i + " chunks.\n");
 	}
 }

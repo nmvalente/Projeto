@@ -30,8 +30,6 @@ public class Backup {
 				}
 				System.out.println("\n**************************************************");
 				System.out.println(" File backup finished. " + ((backupFile.enoughReplication()) ? "Successful" : "Incomplete") + ".\n");
-
-				backupFile.displayBackupChunks();
 			}
 			catch(IOException e){e.getMessage(); System.err.println("Generic subProtocol case 1");}
 		}

@@ -28,21 +28,6 @@ public class RestoreFile extends InfoFile{
 				fileId;
 	}
 
-	@Override
-	public void displayBackupChunks(){
-		int i = 0;
-		printHeadList(getFileId());
-
-		for (; i < getNumberChunks() - 1; i++) {
-			System.out.printf(" [%s] %2d ~ %d , %d\n", ((chunkList[i]) ? "yes" : ".no"), i, chunkList.length, getPartSize());
-		}
-		int lastpart = getFileSize() - ((getNumberChunks() - 1) * getPartSize());
-		System.out.printf(" [%s] %2d ~ %d , %d bytes\n", ((chunkList[i]) ? "yes" : ".no"), i, chunkList.length, lastpart);
-
-		printTailList(i);
-	}
-
-
 	public boolean completedChunks(){
 		for(int i = 0 ; i < getNumberChunks() ; i++){
 			if (!chunkList[i])
