@@ -113,7 +113,8 @@ public class SendDataChannel extends Thread{
 							peer.getFiles().stored(unseenMessage.getAddress(), Utils.convertBytetoString(unseenMessage.getHeader().getFileId()), Utils.convertBytetoInt(unseenMessage.getHeader().getChunkNo()), "remove");
 							break;
 						case "CHUNK": // guarda o chunk para o Restauro
-							peer.restoreFile.deliveryChunk(unseenMessage);
+							if(peer.restoreFile != null)
+								peer.restoreFile.deliveryChunk(unseenMessage);
 							break;
 						case "STORED": // actualiza dados do Backup
 							peer.getFiles().stored(unseenMessage.getAddress(), Utils.convertBytetoString(unseenMessage.getHeader().getFileId()), Utils.convertBytetoInt(unseenMessage.getHeader().getChunkNo()), "add");
