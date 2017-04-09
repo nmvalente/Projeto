@@ -120,7 +120,7 @@ public class Chunks{
 		return null;
 	}
 
-	public void list(){
+	public void printAllChunks(){
 		ChunkFile temp;
 		int counter = 0;
 

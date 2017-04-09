@@ -75,7 +75,7 @@ public class Peer{
 			this.indexToChose = this.files.getNumberOfFiles();
 		}
 		else{// RECLAIM
-			chunks.list();
+			chunks.printAllChunks();
 			this.indexToChose = this.chunks.getNChunk();
 		}
 		return this.indexToChose;

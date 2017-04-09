@@ -8,7 +8,6 @@ import utils.Utils;
 
 public class InfoFile{
 
-
 	private String fileName;
 	private int fileSize;
 	private int numberOfChunks;
@@ -29,11 +28,8 @@ public class InfoFile{
 	}
 
 	public String getFileName(){return fileName;}
-	
 	public int getFileSize(){return fileSize;}
-	
 	public int getNumberChunks(){return numberOfChunks;}
-	
 	public File getFile() {return file;}
 
 	public void splitFile(Peer peer){
@@ -120,7 +116,6 @@ public class InfoFile{
 		fos.close();
 	}
 
-	// removi static
 	public boolean deleteDirectory(File directory){
 		if((directory == null) || (!directory.exists()) || (!directory.isDirectory()))
 			return false;

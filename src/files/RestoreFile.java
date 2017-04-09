@@ -2,7 +2,6 @@ package files;
 
 import java.io.*;
 import java.util.*;
-
 import message.Message;
 import utils.Utils;
 
@@ -19,7 +18,6 @@ public class RestoreFile extends InfoFile{
 	}
 
 	public boolean[] getChunkList() {return chunkList;}
-
 	public String getFileId() {return fileId;}
 
 	@Override
