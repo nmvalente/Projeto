@@ -25,9 +25,9 @@ public class Main{
 
 		MulticastSocket[] multicastSockets = new MulticastSocket[3];
 		InetAddress[] group = new InetAddress[3];
-		
+
 		init(args, multicastSockets, group);
-		
+
 		finish_program(multicastSockets, group);
 	}
 
@@ -46,7 +46,7 @@ public class Main{
 
 		// Sai do programa
 		System.exit(0);
-		
+
 	}
 
 	private static void init(String[] args, MulticastSocket[] multicastSockets, InetAddress[] group) {
@@ -136,11 +136,11 @@ public class Main{
 		group[2] = InetAddress.getByName( address );
 		multicastSockets[2] = new MulticastSocket(Integer.parseInt( port ));
 		multicastSockets[2].joinGroup(group[2]);
-		
-		
-		
-	////////////////////////////// analisar //////////////////////////////////
-		
+
+
+
+		////////////////////////////// analisar //////////////////////////////////
+
 		multicastSockets[0].setTimeToLive(1);
 		multicastSockets[1].setTimeToLive(1);
 		multicastSockets[2].setTimeToLive(1);
@@ -194,20 +194,16 @@ public class Main{
 
 			switch (option){
 			case 1 :
-				if(peer.genericSubProtocol(1) == -1)
-					Main.exitNow = true;
+				peer.genericSubProtocol(1);
 				break;
 			case 2 :
-				if(peer.genericSubProtocol(2) == -1)
-					Main.exitNow = true;
+				peer.genericSubProtocol(2);
 				break;
 			case 3 :
-				if(peer.genericSubProtocol(3) == -1)
-					Main.exitNow = true;
+				peer.genericSubProtocol(3);
 				break;
 			case 4 :
-				if(peer.genericSubProtocol(4) == -1)
-					Main.exitNow = true;
+				peer.genericSubProtocol(4);
 				break;
 			case 0 :
 				Main.exitNow = true;

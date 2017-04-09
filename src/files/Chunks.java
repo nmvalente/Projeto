@@ -48,8 +48,6 @@ public class Chunks{
 				}
 				if(!v){
 					getChunksList().get(ip).add(c);
-					System.out.print("\n\n Adiciona" + c);
-					System.out.print("\n\n Lista" + getChunksList().get(ip));
 				}
 			}
 
@@ -124,6 +122,11 @@ public class Chunks{
 		ChunkFile temp;
 		int counter = 0;
 
+		if(getChunksList().isEmpty()){
+			System.out.println("You have no chunks stored in your local storage!");
+			return;
+		}
+
 		System.out.println("\n List of chunks" );
 		System.out.println("\n**************************************************");
 
@@ -195,7 +198,6 @@ public class Chunks{
 	}
 
 	private void removeChunk(String filepath){
-		System.out.println(filepath);
 		File f = new File(filepath);
 		if (f.exists())
 			f.delete();

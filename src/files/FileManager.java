@@ -73,9 +73,9 @@ public class FileManager{
 
 			}
 			if(i == 1)
-				System.out.println("\nTotal: " + i + " file\n");
+				System.out.println("\nTotal: " + i + " file");
 			else
-				System.out.println("\nTotal: " + i + " files\n");
+				System.out.println("\nTotal: " + i + " files");
 		}else{
 
 			System.out.printf("\nNo files in current directory!\n");

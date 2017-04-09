@@ -36,9 +36,11 @@ public class Peer{
 	public int getPeerId(){return this.PeerID;}
 	public float getProtocolVersion(){return protocolVersion;}
 
-	public int genericSubProtocol(int subProtocol) throws IOException{
+	public void genericSubProtocol(int subProtocol) throws IOException{
 
 		calc_bound_index(subProtocol);
+		if(this.indexToChose == 0)
+			return;
 
 		System.out.printf("\nOption [0-" + (this.indexToChose-1) +"] > ");  
 		indexChosed = scanner.nextInt();
@@ -65,7 +67,6 @@ public class Peer{
 			}
 		}
 		else{System.out.println("> Invalid index!");}
-		return 0;
 	}
 
 	private int calc_bound_index(int subProtocol) {

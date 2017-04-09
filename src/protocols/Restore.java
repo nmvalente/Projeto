@@ -22,7 +22,7 @@ public class Restore {
 			peer.restoreFile = new RestoreFile( (InfoFile) backupFile );
 
 			for (int i=0; i < backupFile.getNumberChunks(); i++){
-				peer.inbox.buildMessage("GETCHUNK","1.0",backupFile.getSenderId(), backupFile.getFileId(),i,1,"");
+				peer.inbox.buildMessage("GETCHUNK",Float.toString(peer.getProtocolVersion()),backupFile.getSenderId(), backupFile.getFileId(),i,1,"");
 			}
 
 			System.out.println(" Receiving chunk restore information");
