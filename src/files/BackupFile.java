@@ -94,6 +94,7 @@ public class BackupFile extends InfoFile{
 			byte[] data = new byte[fsize];
 			try {
 				fis.read(data, 0, fsize);
+				fis.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
