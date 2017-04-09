@@ -3,8 +3,7 @@ package message;
 public class Body{
 	
 	protected byte[] body;
-
-	protected Body(){}//body = "";}
+	protected Body(){}
 
 	protected Body(String body){this.body = body.getBytes();}
 

@@ -35,18 +35,27 @@ public class MessageManager{
 	public String addToUnseenMessages(String address, int port, String s){
 		Message message = null;
 
-		message = new Message(address.substring(1),port,s); // to remove the / before ipNumber
-		unseenMessages.add(message);
-		return message.getHeader().getHeaderBuild();
+		try	{
+			message = new Message(address.substring(1),port,s); // to remove the / before ipNumber
+			unseenMessages.add(message);
+			return message.getHeader().getHeaderBuild();
+		}
+		catch (IllegalArgumentException e){
+			e.getMessage();
+		}
+
+		return "Error in newMessage";
 	}
 
 	public Message buildMessage(String msgtype, String version, int senderId, String fileId, int chunkNo, int replicationDeg, String msg){
 
 		Message message = null;
-		message = new Message(msgtype, version, senderId, fileId, chunkNo, replicationDeg, msg);
-
-		unseenMessages.add(message);
-
+		try{
+			message = new Message(msgtype, version, senderId, fileId, chunkNo, replicationDeg, msg);
+			unseenMessages.add(message);
+			return message;}catch(IllegalArgumentException e){
+				e.getMessage(); System.err.println("error in build message");
+			}
 		return message;
 	}
 }

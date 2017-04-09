@@ -11,7 +11,7 @@ public class Peer{
 	private String localhost;
 	private int PeerID;
 	private float protocolVersion;
-	protected MessageManager  inbox;
+	protected MessageManager messageHandler;
 	public FileManager  files;
 	protected int indexToChose;
 	protected int indexChosed;
@@ -22,7 +22,7 @@ public class Peer{
 
 	public Peer(String PeerID, String protocolVersion, String localhost) throws UnknownHostException{
 		this.localhost = localhost;
-		inbox  = new MessageManager();
+		messageHandler  = new MessageManager();
 		files  = new FileManager();
 		chunks = new Chunks();
 		this.PeerID = Integer.parseInt(PeerID);
@@ -30,7 +30,7 @@ public class Peer{
 	}
 
 	public String getLocalhost() {return localhost;}
-	public MessageManager getInbox(){return inbox;}
+	public MessageManager getInbox(){return messageHandler;}
 	public FileManager getFiles(){return files;}
 	public Chunks getChunks(){return chunks;}
 	public int getPeerId(){return this.PeerID;}
