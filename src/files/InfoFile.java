@@ -43,7 +43,9 @@ public class InfoFile{
 			inStream = new FileInputStream(file);
 
 			System.out.println("\n File partitioned");
-			System.out.println(" file   : " + getFileName() );
+			if(getFileName().length() > 10)
+				System.out.println(" file   : " + getFileName().subSequence(0, 10) + "...");
+			else System.out.println(" file   : " + getFileName());
 			System.out.println(" fileId : " + fileId.substring(0, Utils.WIDTH_SIZE) );
 			System.out.println("\n**************************************************");
 

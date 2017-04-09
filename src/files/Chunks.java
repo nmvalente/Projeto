@@ -131,13 +131,11 @@ public class Chunks{
 		System.out.println("\n**************************************************");
 
 		for(Map.Entry<String, List<ChunkFile>> entry : getChunksList().entrySet()){
-			System.out.println(" $ " + entry.getKey());
-
 			for(Iterator<ChunkFile> it = entry.getValue().iterator(); it.hasNext();){
 				temp = it.next();
-				if(temp.toString().length() > 10)
-					System.out.printf("%2d ~ %s...\n", counter, temp.toString().subSequence(0, 10));
-				else System.out.printf("%2d ~ %s\n", counter, temp.toString());
+				if(Utils.convertBytetoString(temp.getFileId()).length() > 10)
+					System.out.printf("%2d - %s...\n", counter, Utils.convertBytetoString(temp.getFileId()).subSequence(0, 10));
+				else System.out.printf("%2d - %s\n", counter, Utils.convertBytetoString(temp.getFileId()));
 				counter++;		
 			}
 		}
