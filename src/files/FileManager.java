@@ -42,20 +42,6 @@ public class FileManager{
 		return false;
 	}
 
-	public InfoFile find(String fileName){
-		InfoFile temp;
-
-		int i;
-		for(i = 0 ; i < fileList.size() ; i++){
-			temp = fileList.get(i);
-			if(temp.getFileName().equals(fileName)){
-				fileList.remove(i);
-				return temp;
-			}
-		}
-		return null;
-	}
-
 	public void getAllFilesFromStorage(String allOrRegular){
 		File folder = new File(".");
 		File[] listOfFiles = folder.listFiles();

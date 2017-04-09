@@ -59,21 +59,6 @@ public class Chunks{
 		catch(IOException e){e.getMessage();}
 	}
 
-	public boolean removeOne(String address, String fileId, int chunkNo){
-		if(hashmap.containsKey(address)){
-			ChunkFile temp;
-			for (Iterator<ChunkFile> it = hashmap.get(address).iterator(); it.hasNext();){
-				temp = it.next();
-				if (Utils.convertBytetoString(temp.getFileId()) == fileId && Utils.convertBytetoInt(temp.getChunkNo()) == chunkNo){
-					removeChunk(address+File.separator+fileId+".part"+chunkNo);
-					it.remove();
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
 	public boolean removeAll(String address, String fileId){
 		if(hashmap.containsKey(address)){
 			ChunkFile temp;
@@ -131,7 +116,7 @@ public class Chunks{
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
+
 		}
 		return null;
 	}
@@ -141,20 +126,21 @@ public class Chunks{
 		int counter = 0;
 
 		System.out.println("\n List of chunks" );
-		System.out.println("==========================================" );
+		System.out.println("\n**************************************************");
 
 		for(Map.Entry<String, List<ChunkFile>> entry : hashmap.entrySet()){
 			System.out.println(" $ " + entry.getKey());
 
 			for(Iterator<ChunkFile> it = entry.getValue().iterator(); it.hasNext();){
 				temp = it.next();
-				System.out.printf("     %2d ~ %s\n", counter, temp.toString());
-				counter++;
-				//System.out.println(i + " " + temp.simple() );
+				if(temp.toString().length() > 10)
+					System.out.printf("%2d ~ %s...\n", counter, temp.toString().subSequence(0, 10));
+				else System.out.printf("%2d ~ %s\n", counter, temp.toString());
+				counter++;		
 			}
 		}
 
-		System.out.println("==========================================" );
+		System.out.println("\n**************************************************");
 		System.out.println( " Listed " + counter + " chunks.");
 	}
 

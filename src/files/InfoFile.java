@@ -49,8 +49,8 @@ public class InfoFile{
 			System.out.println("\n File partitioned");
 			System.out.println(" file   : " + getFileName() );
 			System.out.println(" fileId : " + fileId.substring(0, Utils.WIDTH_SIZE) );
-			System.out.println("******************************");
- 
+			System.out.println("\n**************************************************");
+
 			for (i = 0; currentFileSize > 0; i++, chunkNo++){
 				readLength = Math.min(currentFileSize, Utils.CHUNK_MAX_SIZE);
 
@@ -63,8 +63,10 @@ public class InfoFile{
 
 				newFileName = fileId + ".part" + chunkNo;
 
-				System.out.printf("%2d ~ %s , %d bytes\n", i, newFileName, readLength);
-				
+				if(newFileName.length() > 10)
+					System.out.printf("%2d ~ %s... , %d bytes\n", i, newFileName.subSequence(0, 10), readLength);
+				else System.out.printf("%2d ~ %s , %d bytes\n", i, newFileName, readLength);
+
 				outStream = new FileOutputStream(new File(newFileName));
 				outStream.write(chunkPart);
 				outStream.flush();
@@ -73,7 +75,7 @@ public class InfoFile{
 
 				try{if(outStream != null) outStream.close();}catch (Exception e) {}
 			}
-			System.out.println("******************************");
+			System.out.println("\n**************************************************");
 			System.out.println(" File split into" + i + " chunks.\n");
 			try{
 				if(inStream != null)
