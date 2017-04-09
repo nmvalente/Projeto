@@ -46,6 +46,5 @@ public class Header{
 	public byte[] getChunkNo(){return chunkNo;}
 	public byte[] getReplicationDeg(){return replicationDeg;}
 	public String getHeaderBuild(){return headerBuild;}
-	
 	private boolean validateReplication(int replicationDeg2){return (replicationDeg2>=0 && replicationDeg2<=9);}
 }

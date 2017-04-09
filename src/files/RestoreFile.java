@@ -22,8 +22,7 @@ public class RestoreFile extends InfoFile{
 
 	@Override
 	public String getFileName() {
-		return Arrays.toString(chunkList) + " , " +
-				fileId;
+		return Arrays.toString(chunkList) + " , " +	fileId;
 	}
 
 	public boolean completedChunks(){
@@ -36,7 +35,6 @@ public class RestoreFile extends InfoFile{
 
 	public void deliveryChunk(Message m) throws FileNotFoundException{
 		int chunkNo = Utils.convertBytetoInt(m.getHeader().getChunkNo());
-
 		String name = fileId + File.separator +  fileId + ".part" + chunkNo ;
 
 		try{

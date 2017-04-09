@@ -34,7 +34,6 @@ public class Main{
 	private static void finish_program(MulticastSocket[] multicastSockets, InetAddress[] group) {
 		System.out.println("Turning off...");
 
-
 		// Fecha os sockets
 		try {
 			closeSockets(multicastSockets, group);
@@ -42,7 +41,6 @@ public class Main{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 
 		// Sai do programa
 		System.exit(0);
@@ -69,14 +67,11 @@ public class Main{
 			e.printStackTrace();
 		}
 
-
 		// Cria a janela grafica
 		windows = new GUI(peer);
 
-
 		// Inicia os threads
 		initThreads(peer, multicastSockets, group);
-
 
 		// Trata do display dos varios threads na janela grafica
 		try {
@@ -88,7 +83,6 @@ public class Main{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 
 		// Obtem lista de todos os ficheiros da pasta storage
 		peer.getFiles().getAllFilesFromStorage("regular");
@@ -137,10 +131,7 @@ public class Main{
 		multicastSockets[2] = new MulticastSocket(Integer.parseInt( port ));
 		multicastSockets[2].joinGroup(group[2]);
 
-
-
 		////////////////////////////// analisar //////////////////////////////////
-
 		multicastSockets[0].setTimeToLive(1);
 		multicastSockets[1].setTimeToLive(1);
 		multicastSockets[2].setTimeToLive(1);
@@ -148,14 +139,12 @@ public class Main{
 
 	public static void initThreads(Peer peer, MulticastSocket[] multicastSockets, InetAddress[] group) {
 		// configuracao de Threads
-
 		ReceiveDataChannel MCchannel   = new ReceiveDataChannel("MC" ,multicastSockets[0],peer);
 		ReceiveDataChannel MDBchannel  = new ReceiveDataChannel("MDB",multicastSockets[1],peer);
 		ReceiveDataChannel MDRchannel  = new ReceiveDataChannel("MDR",multicastSockets[2],peer);
 		SendDataChannel   SENDchannel = new SendDataChannel  (group,multicastSockets,peer);
 
 		// Inicio de threads
-
 		MCchannel.start();
 		MDBchannel.start();
 		MDRchannel.start();

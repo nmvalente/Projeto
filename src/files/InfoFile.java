@@ -51,14 +51,9 @@ public class InfoFile{
 
 			for (i = 0; currentFileSize > 0; i++, chunkNo++){
 				readLength = Math.min(currentFileSize, Utils.CHUNK_MAX_SIZE);
-
 				chunkPart = new byte[readLength];
-
 				read = inStream.read(chunkPart, 0, readLength);
 				currentFileSize -= read;
-
-				//assert (read == chunkPart.length);
-
 				newFileName = fileId + ".part" + chunkNo;
 
 				if(newFileName.length() > 10)

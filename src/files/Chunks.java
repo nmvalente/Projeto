@@ -85,21 +85,6 @@ public class Chunks{
 		return null;
 	}
 
-	public ArrayList<ChunkFile> findAll(String address, String fileId){
-		if(getChunksList().containsKey(address)){
-			ArrayList<ChunkFile> chunkList = new ArrayList<ChunkFile>();
-			ChunkFile temp;
-			for (Iterator<ChunkFile> it = getChunksList().get(address).iterator(); it.hasNext();){
-				temp = it.next();
-				if (Utils.convertBytetoString(temp.getFileId()) == fileId){
-					chunkList.add(temp);
-				}
-			}
-			return chunkList;
-		}
-		return null;
-	}
-
 	public byte[] file(String address, ChunkFile c){
 		File f = new File(address + File.separator + Utils.convertBytetoString(c.getFileId()) + ".part" + Utils.convertBytetoInt(c.getChunkNo()));
 		if (f.exists()){
